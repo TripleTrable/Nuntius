@@ -10,7 +10,7 @@ namespace nuntiusModel
 
 		#region SetResponseType
 
-		public void LoginSuccessResponse(Token token)
+		public void LoginSuccessResponse(string token)
 		{
 			type = "loginSuccess";
 			parameters = new object[1];
@@ -26,7 +26,7 @@ namespace nuntiusModel
 			parameters[0] = error;
 		}
 
-		public void RegistrationSuccessResponse(Token token)
+		public void RegistrationSuccessResponse(string token)
 		{
 			type = "registationSuccess";
 			parameters = new object[1];
