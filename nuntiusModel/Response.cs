@@ -37,11 +37,13 @@ namespace nuntiusModel
 		public void RegistrationErrorResponse()
 		{
 			type = "registationError";
+			parameters = null;
 		}
 
 		public void SendSuccessResponse()
 		{
 			type = "sendSuccess";
+			parameters = null;
 		}
 
         //ToDo: Überlegen die das sinnvoll gelöst werden kann
@@ -51,6 +53,12 @@ namespace nuntiusModel
 			parameters = new object[1];
 
 			parameters[0] = messages;
+		}
+
+		public void UnknownErrorRespone()
+		{
+			 type="unknownError";
+			 parameters = null;
 		}
 
 		#endregion
