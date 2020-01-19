@@ -3,8 +3,6 @@ using System.Text.Json;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using nuntiusModel;
 
@@ -58,26 +56,21 @@ namespace NuntiusServer
 			string text = Encoding.ASCII.GetString(dataBuf);
 			Console.WriteLine(text);
 
-			//string response = "";
-
-			//if (text.ToLower() == "time")
-			//    response = DateTime.Now.ToLongTimeString();
-			//else
-			//    response = "Invalid Request";
-
-
-			//byte[] data = Encoding.ASCII.GetBytes(response);
-
-			Request request = JsonSerializer.Deserialize<Request>(text);
-
-			if (request.Type == "register")
+			//Parse the request
+			try
 			{
-                Response response = new Response();
-                response.RegistrationErrorResponse();
-                string json = JsonSerializer.Serialize(response);
+				//React to the request
+				Request request = JsonSerializer.Deserialize<Request>(text);
+				Response response = RequstHandler.NewRequest(request);
 
-                byte[] data = Encoding.ASCII.GetBytes(json);
+				//Send the awnser
+				string json = JsonSerializer.Serialize(response);
+				byte[] data = Encoding.ASCII.GetBytes(json);
 				socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+			}
+			catch (Exception e)
+			{
+				throw e;
 			}
 
 
@@ -92,3 +85,4 @@ namespace NuntiusServer
 		#endregion
 	}
 }
+
