@@ -19,8 +19,26 @@ namespace NuntiusServer
 
 			loggedinUser.AddLast(user);
 
-			return "";
+			return GenerateToken();
 		}
 
+		/// <summary>
+		/// Grenrate a Token
+		/// </summary>
+		private static string GenerateToken(int length = 32)
+		{
+			string chars = "ABCDEFGHJKLMNOPRSTUVWXYZabcdefghijkmnopqrstuvwxyz1234567890@€%!#§$&";
+			char[] token = new char[length];
+			var random = new Random();
+
+			for (int i = 0; i < length; i++)
+			{
+				token[i] = chars[random.Next(chars.Length)];
+			}
+
+			//ToDo: Check if the token ist used and add it to the db
+
+			return new String(token);
+		}
 	}
 }
