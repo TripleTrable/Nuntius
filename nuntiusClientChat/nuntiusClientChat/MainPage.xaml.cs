@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using nuntiusModel;
+using nuntiusClientChat.Controller;
 
 namespace nuntiusClientChat
 {
@@ -29,7 +30,10 @@ namespace nuntiusClientChat
 
         private void sendButtonClicked(object sender, EventArgs e)
         {
+            Token t = new Token();
+
             messagegSend();
+          
         }
 
         private void messagegSend()
@@ -60,7 +64,7 @@ namespace nuntiusClientChat
                     new ColumnDefinition { Width = new GridLength(10, GridUnitType.Absolute) }
                 }
             };
-                       
+
             grid.Children.Add(new BoxView { Color = Color.Aqua, HeightRequest = 10 }, 0, 1, 0, 3);
 
             grid.Children.Add(new BoxView { Color = Color.LightBlue, HeightRequest = 10 }, 1, 2, 0, 2);
