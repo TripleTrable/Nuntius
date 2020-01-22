@@ -17,23 +17,19 @@ namespace nuntiusClientChat
     public partial class MainPage : ContentPage
     {
         Entry msgEntry;
-        StackLayout ChatStack;
-
+        StackLayout ChatStack;      
 
         public MainPage()
         {
             InitializeComponent();
-            msgEntry = new Entry();
+            msgEntry = new Entry(); msgEntry.Placeholder = "";
             ChatStack = new StackLayout { FlowDirection = FlowDirection.RightToLeft, Spacing = 2 };
             ChatGridLayout();
         }
 
         private void sendButtonClicked(object sender, EventArgs e)
         {
-            Token t = new Token();
-
-            messagegSend();
-          
+            messagegSend();          
         }
 
         private void messagegSend()

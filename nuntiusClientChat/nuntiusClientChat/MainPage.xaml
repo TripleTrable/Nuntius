@@ -5,9 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.MainPage">
-
-
-    <StackLayout Padding="5" Orientation="Vertical">
+    <StackLayout >
         <Entry x:Name="msgEntryBox" FlexLayout.Grow="10" VerticalOptions="CenterAndExpand" HorizontalOptions="Fill"></Entry>
         <Button x:Name="sendButton" Text="Senden" Clicked="sendButtonClicked" />
     </StackLayout>
