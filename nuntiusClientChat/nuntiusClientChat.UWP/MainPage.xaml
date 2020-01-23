@@ -8,27 +8,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RenderTransformOrigin="0.456,0.381" Margin="0,30,0,0">
-        <Button Content="Button" Margin="511,611,0,0" VerticalAlignment="Top"/>
-        <CheckBox Content="CheckBox" Margin="126,535,0,0" VerticalAlignment="Top" Height="38" Width="162"/>
-        <Hub Header="Hub">
-            <HubSection Header="HubSection 0">
-                <DataTemplate>
-                    <Grid/>
-                </DataTemplate>
-            </HubSection>
-            <HubSection Header="HubSection 1">
-                <DataTemplate>
-                    <Grid/>
-                </DataTemplate>
-            </HubSection>
-            <HubSection Header="HubSection 1">
-                <DataTemplate>
-                    <Grid/>
-                </DataTemplate>
-            </HubSection>
-        </Hub>
-
-    </Grid>
+    <Grid/>
 </forms:WindowsPage>

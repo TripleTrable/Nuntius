@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Essentials;
+﻿using nuntiusClientChat.Controls;
 using nuntiusModel;
-using nuntiusClientChat.Controller;
+using System;
+using System.ComponentModel;
+using Xamarin.Forms;
 
 namespace nuntiusClientChat
 {
@@ -16,32 +11,16 @@ namespace nuntiusClientChat
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
-        Entry msgEntry;
-        StackLayout ChatStack;
-
+        public static StackLayout ChatStack;
+        static EditorBoxWithButton msgEditor = new EditorBoxWithButton();
 
         public MainPage()
         {
             InitializeComponent();
-            msgEntry = new Entry();
-            ChatStack = new StackLayout { FlowDirection = FlowDirection.RightToLeft, Spacing = 2 };
+            ChatStack = new StackLayout { Spacing = 2 };
             ChatGridLayout();
         }
 
-        private void sendButtonClicked(object sender, EventArgs e)
-        {
-            Token t = new Token();
-
-            messagegSend();
-          
-        }
-
-        private void messagegSend()
-        {
-            Message newMessage = new Message { Text = msgEntry.Text };
-            ChatStack.Children.Add(new MessageControll(true, newMessage));
-            msgEntry.Text = "";
-        }
 
         public void ChatGridLayout()
         {
@@ -75,18 +54,19 @@ namespace nuntiusClientChat
 
             grid.Children.Add(ChatStack, 1, 2, 1, 3);
 
-            grid.Children.Add(msgEntry, 1, 2, 2, 3);
+            grid.Children.Add(msgEditor, 1, 2, 2, 3);
 
 
-            grid.Children.Add(sendButton, 1, 2, 0, 1);
 
             // Accomodate iPhone status bar.
+
             // this.Padding = new Thickness(5, Device.OnPlatform(20, 0, 0), 5, 5);
 
             // Build the page.
             this.Content = grid;
 
-
         }
+
+
     }
 }
