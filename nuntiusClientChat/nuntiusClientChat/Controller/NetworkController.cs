@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using nuntiusModel;
 using Xamarin.Forms;
 
@@ -15,40 +16,40 @@ namespace nuntiusClientChat.Controller
 
 
         //TODO: sting pwd to mb5;
-        public static void sendRegisterRequest(string alias, string pwd)
+        public async static Task SendRegisterRequest(string alias, string pwd)
         {
             Request request = new Request();
             request.RegisterRequest(alias, pwd);
 
             string send = JsonSerializer.Serialize(request);
-            SendReqestToServer(send);
+            await Task.Run(() => SendReqestToServer(send));
 
         }
         //TODO string pwd to mb5
-        public static void sendLoginRequest(string alias, string pwd)
+        public async static Task SendLoginRequest(string alias, string pwd)
         {
             Request request = new Request();
             request.LoginRequest(alias, pwd);
 
             string send = JsonSerializer.Serialize(request);
-            SendReqestToServer(send);
+            await Task.Run(() => SendReqestToServer(send));
         }
-        public static void sendMsgRequest(Token token, string toAlias, DateTime sendTime, string msgText)
+        public async static Task sendMsgRequest(Token token, string toAlias, DateTime sendTime, string msgText)
         {
             Request request = new Request();
             request.SendRequest(token, toAlias, sendTime, msgText);
 
             string send = JsonSerializer.Serialize(request);
-            SendReqestToServer(send);
+            await Task.Run(() => SendReqestToServer(send));
         }
 
-        public static void sendNaggRequst(Token token)
+        public async static Task sendNaggRequst(Token token)
         {
             Request request = new Request();
             request.NaggRequst(token);
 
             string send = JsonSerializer.Serialize(request);
-            SendReqestToServer(send);
+            await Task.Run(() => SendReqestToServer(send));
         }
 
         public static void SendReqestToServer(string message)

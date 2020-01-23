@@ -6,7 +6,6 @@
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.MainPage">
     <StackLayout >
-        <Entry x:Name="msgEntryBox" FlexLayout.Grow="10" VerticalOptions="CenterAndExpand" HorizontalOptions="Fill"></Entry>
-        <Button x:Name="sendButton" Text="Senden" Clicked="sendButtonClicked" />
+        
     </StackLayout>
 </ContentPage>

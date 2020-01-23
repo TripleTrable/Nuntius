@@ -4,6 +4,7 @@ using System.Text;
 using Xamarin.Forms;
 using nuntiusModel;
 using nuntiusClientChat.Controller;
+using System.Threading.Tasks;
 
 namespace nuntiusClientChat.Controls
 {
@@ -26,11 +27,13 @@ namespace nuntiusClientChat.Controls
             Children.Add(msgEditor, 0, 1, 0, 1);
             Children.Add(sendButton, 1, 2, 0, 1);
 
-            sendButton.Clicked += SendButton_Clicked;
+            sendButton.Clicked += SendButton_ClickedAsync;
         }
 
-        private void SendButton_Clicked(object sender, EventArgs e)
+        private async void SendButton_ClickedAsync(object sender, EventArgs e)
         {
+
+          
             //Checks if the editor was used to type a msg 
             //TODO: CHECK if the box may otherwise be empty
             if (msgEditor.Text == " " || msgEditor.Text == null)
@@ -47,9 +50,10 @@ namespace nuntiusClientChat.Controls
                 message.From = new User();
 
                 MainPage.ChatStack.Children.Add(new MessageControll(true, message));
-                NetworkController.sendMsgRequest(new Token(), "testUser", message.Sent, message.Text);
                 //Empty the Editor
                 msgEditor.Text = null;
+               await NetworkController.sendMsgRequest(new Token(), "testUser", message.Sent, message.Text);
+                
             }
         }
     }
