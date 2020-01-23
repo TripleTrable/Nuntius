@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
+using nuntiusModel;
+using nuntiusClientChat.Controller;
 
 namespace nuntiusClientChat.Controls
 {
     class EditorBoxWithButton : Grid
     {
         BoxView Box = new BoxView();
-        Button sendButton = new Button();       
+        Button sendButton = new Button();
         Editor msgEditor = new Editor();
 
         public EditorBoxWithButton()
@@ -29,7 +31,26 @@ namespace nuntiusClientChat.Controls
 
         private void SendButton_Clicked(object sender, EventArgs e)
         {
-           
+            //Checks if the editor was used to type a msg 
+            //TODO: CHECK if the box may otherwise be empty
+            if (msgEditor.Text == " " || msgEditor.Text == null)
+            {
+                return;
+            }
+            else
+            {
+                Message message = new Message();
+
+                message.Text = msgEditor.Text;
+                message.Sent = DateTime.Now;
+                message.To = new User();
+                message.From = new User();
+
+                MainPage.ChatStack.Children.Add(new MessageControll(true, message));
+                NetworkController.sendMsgRequest(new Token(), "testUser", message.Sent, message.Text);
+                //Empty the Editor
+                msgEditor.Text = null;
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace nuntiusClientChat
 {
     class MessageControll : Label
     {
-        public MessageControll(bool receved, Message message)
+        public MessageControll(bool send, Message message)
         {
             LineBreakMode = LineBreakMode.WordWrap;
         
@@ -20,7 +20,7 @@ namespace nuntiusClientChat
             FontSize = 16;
            
 
-            if (receved)
+            if (send)
             {
                 BackgroundColor = Color.LightSkyBlue;
                 //TranslationX = 100;

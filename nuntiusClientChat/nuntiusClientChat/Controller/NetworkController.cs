@@ -33,7 +33,7 @@ namespace nuntiusClientChat.Controller
             string send = JsonSerializer.Serialize(request);
             SendReqestToServer(send);
         }
-        public static void sendRequest(Token token, string toAlias, DateTime sendTime, string msgText)
+        public static void sendMsgRequest(Token token, string toAlias, DateTime sendTime, string msgText)
         {
             Request request = new Request();
             request.SendRequest(token, toAlias, sendTime, msgText);
