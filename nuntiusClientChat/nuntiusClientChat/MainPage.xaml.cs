@@ -3,6 +3,7 @@ using nuntiusModel;
 using System;
 using System.ComponentModel;
 using Xamarin.Forms;
+using nuntiusClientChat.Controller;
 
 namespace nuntiusClientChat
 {
@@ -14,11 +15,14 @@ namespace nuntiusClientChat
         public static StackLayout ChatStack;
         static EditorBoxWithButton msgEditor = new EditorBoxWithButton();
         Entry pwdEntry;
+        Entry aliasEntry;
 
         public MainPage()
         {
             InitializeComponent();
             ChatStack = new StackLayout { Spacing = 2 };
+          
+
             LoginPage();
         }
 
@@ -96,35 +100,36 @@ namespace nuntiusClientChat
                 }
             };
             Grid pwdGrid = new Grid
-            {                   
+            {
                 VerticalOptions = LayoutOptions.FillAndExpand,
-               
+
                 ColumnDefinitions =
                 {
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Absolute) }, 
+                    new ColumnDefinition { Width = new GridLength(50, GridUnitType.Absolute) },
                 }
 
-        };
+            };
 
-            Entry aliasEntry = new Entry();
+            aliasEntry = new Entry();
 
             aliasEntry.MaxLength = 256;
 
             pwdEntry = new Entry();
 
-            pwdEntry.IsPassword = true;
+            pwdEntry.IsPassword = true;        
 
             Button loginButton = new Button();
 
             loginButton.Text = "Log In";
+            loginButton.Clicked += LoginButton_Clicked;
 
             Button registerButton = new Button();
             Label registerLabel = new Label();
 
-            ImageButton showPwd = new ImageButton();
+            ImageButton showPwd = new ImageButton { Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png", VerticalOptions = LayoutOptions.FillAndExpand };
             showPwd.Clicked += ShowPwd_Clicked;
-            showPwd.Source = "Show.png"; 
+            //showPwd.Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png";
 
             registerButton.Opacity = 0.1;
             registerLabel.Text = "Regesteriren";
@@ -146,10 +151,22 @@ namespace nuntiusClientChat
 
             grid.Children.Add(loginButton, 1, 2, 7, 8);
 
-
-
-
             this.Content = grid;
+        }
+
+        private async void LoginButton_Clicked(object sender, EventArgs e)
+        {
+            if (aliasEntry.Text == null || pwdEntry.Text == null)
+            {
+                return;
+            }
+            else
+            {
+                //TODO: Loding icon until the User has a token from the Server 
+                await NetworkController.SendLoginRequest(aliasEntry.Text, pwdEntry.Text);
+                aliasEntry.Text = null;
+                pwdEntry.Text = null;
+            }
         }
 
         private void ShowPwd_Clicked(object sender, EventArgs e)
@@ -161,7 +178,7 @@ namespace nuntiusClientChat
             else
                 pwdEntry.IsPassword = true;
 
-           // pwdEntry.IsPassword ? pwdEntry.IsPassword = false : pwdEntry.IsPassword = true;
+            //pwdEntry.IsPassword ? pwdEntry.IsPassword = false : pwdEntry.IsPassword = true;
         }
 
     }

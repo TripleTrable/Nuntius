@@ -24,6 +24,7 @@ namespace nuntiusClientChat.Controller
             string send = JsonSerializer.Serialize(request);
             await Task.Run(() => SendReqestToServer(send));
 
+            
         }
         //TODO string pwd to mb5
         public async static Task SendLoginRequest(string alias, string pwd)
@@ -82,7 +83,7 @@ namespace nuntiusClientChat.Controller
                     sender.Connect(remoteEP);
 
                     // Encode the data string into a byte array.    
-                    byte[] msg = Encoding.UTF32.GetBytes(message);
+                    byte[] msg = Encoding.ASCII.GetBytes(message);
 
                     // Send the data through the socket.    
                     int bytesSent = sender.Send(msg);
@@ -90,7 +91,7 @@ namespace nuntiusClientChat.Controller
                     // Receive the response from the remote device.    
                     int bytesRec = sender.Receive(bytes);
 
-                    string text = Encoding.UTF32.GetString(bytes, 0, bytesRec);
+                    string text = Encoding.ASCII.GetString(bytes, 0, bytesRec);
 
                     //Server Response
                     Response response = JsonSerializer.Deserialize<Response>(text);

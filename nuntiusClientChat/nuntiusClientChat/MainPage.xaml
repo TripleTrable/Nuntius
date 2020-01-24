@@ -5,7 +5,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.MainPage">
-    <StackLayout >
-        
-    </StackLayout>
+
+    <ImageButton Source="Show.png" HorizontalOptions="Center" VerticalOptions="Fill"  />
 </ContentPage>
