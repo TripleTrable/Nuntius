@@ -6,5 +6,4 @@
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.MainPage">
 
-    <ImageButton Source="Show.png" HorizontalOptions="Center" VerticalOptions="Fill"  />
 </ContentPage>
