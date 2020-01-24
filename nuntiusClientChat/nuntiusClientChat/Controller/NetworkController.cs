@@ -19,8 +19,16 @@ namespace nuntiusClientChat.Controller
         //TODO: sting pwd to mb5;
         public async static Task SendRegisterRequest(string alias, string pwd)
         {
+            string hashPwd;
+
+            using (MD5 md5hash = MD5.Create())
+            {
+                hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+            }
+
+
             Request request = new Request();
-            request.RegisterRequest(alias, pwd);
+            request.RegisterRequest(alias, hashPwd);
 
             string send = JsonSerializer.Serialize(request);
             await Task.Run(() => SendReqestToServer(send));
