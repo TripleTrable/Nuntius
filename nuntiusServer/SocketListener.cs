@@ -17,9 +17,11 @@ namespace NuntiusServer
 
 		public SocketListener()
 		{
-			listenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
-			listenSocket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
-			listenEndPoint = new IPEndPoint(IPAddress.IPv6Any, 11000);
+			//listenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
+			//listenSocket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+			//listenEndPoint = new IPEndPoint(IPAddress.IPv6Any, 11000);
+			listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+			listenEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 			clientSockets = new List<Socket>();
 			buffer = new byte[1024];
 		}

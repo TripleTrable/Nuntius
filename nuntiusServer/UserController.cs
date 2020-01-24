@@ -13,11 +13,10 @@ namespace NuntiusServer
 		/// </summary>
 		public static string RegisterNewUser(string alias, string password)
 		{
-			User user = new User(alias, password);
+			if (!DbController.RegisterUser(alias, password))
+				return null;
 
-			//ToDo: Database insert and check if user already exits
-
-			loggedinUser.AddLast(user);
+			loggedinUser.AddLast(new User(alias, password));
 
 			return GenerateToken();
 		}
@@ -31,12 +30,15 @@ namespace NuntiusServer
 			char[] token = new char[length];
 			var random = new Random();
 
-			for (int i = 0; i < length; i++)
+			do
 			{
-				token[i] = chars[random.Next(chars.Length)];
-			}
 
-			//ToDo: Check if the token ist used and add it to the db
+				for (int i = 0; i < length; i++)
+				{
+					token[i] = chars[random.Next(chars.Length)];
+				}
+
+			} while (!DbController.CheckToken(new String(token)));
 
 			return new String(token);
 		}
