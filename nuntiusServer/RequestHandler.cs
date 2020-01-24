@@ -21,15 +21,7 @@ namespace NuntiusServer
 					break;
 
 				case "register":
-					string alias = request.Parameters[0].ToString();
-					string password = request.Parameters[1].ToString();
-
-					//Was the registration successfull?
-					string token = UserController.RegisterNewUser(alias, password);
-					if (token != null)
-						response.RegistrationSuccessResponse(token);
-					else
-						response.RegistrationErrorResponse();
+					response = RegisterResponse(request);
 					break;
 
 				case "send":
@@ -40,6 +32,23 @@ namespace NuntiusServer
 					response.UnknownErrorRespone();
 					break;
 			}
+
+			return response;
+		}
+
+		private static Response RegisterResponse(Request request)
+		{
+			Response response = new Response();
+
+			string alias = request.Parameters[0].ToString();
+			string password = request.Parameters[1].ToString();
+
+			//Was the registration successfull?
+			string token = UserController.RegisterNewUser(alias, password);
+			if (token != null)
+				response.RegistrationSuccessResponse(token);
+			else
+				response.RegistrationErrorResponse();
 
 			return response;
 		}
