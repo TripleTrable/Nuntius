@@ -24,6 +24,7 @@ namespace nuntiusClientChat.Controller
             string send = JsonSerializer.Serialize(request);
             await Task.Run(() => SendReqestToServer(send));
 
+            
         }
         //TODO string pwd to mb5
         public async static Task SendLoginRequest(string alias, string pwd)

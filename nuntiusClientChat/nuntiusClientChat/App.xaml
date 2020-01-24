@@ -6,6 +6,7 @@
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.App">
     <Application.Resources>
-
+        <Image Source="C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png" x:Name="ShowPng"/>
+        <Image Source="C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show_Hide.png" x:Name="HidePng"/>
     </Application.Resources>
 </Application>
