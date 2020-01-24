@@ -7,7 +7,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using nuntiusModel;
 using Xamarin.Forms;
-
+using nuntiusClientChat.Controller;
+using System.Security.Cryptography;
 
 namespace nuntiusClientChat.Controller
 {
@@ -24,13 +25,20 @@ namespace nuntiusClientChat.Controller
             string send = JsonSerializer.Serialize(request);
             await Task.Run(() => SendReqestToServer(send));
 
-            
+
         }
         //TODO string pwd to mb5
         public async static Task SendLoginRequest(string alias, string pwd)
         {
+            string hashPwd;
+
+            using (MD5 md5hash = MD5.Create())
+            {
+                 hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+            }
+
             Request request = new Request();
-            request.LoginRequest(alias, pwd);
+            request.LoginRequest(alias, hashPwd);
 
             string send = JsonSerializer.Serialize(request);
             await Task.Run(() => SendReqestToServer(send));
