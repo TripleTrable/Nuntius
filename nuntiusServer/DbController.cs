@@ -8,6 +8,7 @@ namespace NuntiusServer
 	public static class DbController
 	{
 		private static string connectionString = "Driver={PostgreSQL};Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
+		//private static string connectionString = "Driver={MySQL ODBC 5.2 UNICODE Driver};Server=localhost;Database=nuntius;User=nuntiusserver;Password=;Option=3;";
 
 		/// <summary>
 		/// temporörer platzhalter
