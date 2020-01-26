@@ -17,7 +17,7 @@ namespace nuntiusModel
 			parameters[1] = passwd;
 		}
 
-		public void NaggRequst(Token token)
+		public void NaggRequst(string token)
 		{
 			type = "nagg";
 			parameters = new object[1];
@@ -33,7 +33,7 @@ namespace nuntiusModel
 			parameters[1] = passwd;
 		}
 
-		public void SendRequest(Token token, string toAlias, DateTime sent, string text)
+		public void SendRequest(string token, string toAlias, DateTime sent, string text)
 		{
 			type = "send";
 			parameters = new object[4];
