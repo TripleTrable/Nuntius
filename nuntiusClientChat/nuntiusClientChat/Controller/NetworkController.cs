@@ -9,12 +9,32 @@ using nuntiusModel;
 using Xamarin.Forms;
 using nuntiusClientChat.Controller;
 using System.Security.Cryptography;
+using System.Timers;
+
 
 namespace nuntiusClientChat.Controller
 {
     static class NetworkController
     {
+        private static Timer nagTimer = new Timer();
 
+
+        /// <summary>
+        /// When user is successfully Logged in the metode shoud be called to start Nag Requests
+        /// </summary>
+        public static void NagServer()
+        {
+            nagTimer.Interval = 1000;
+            nagTimer.Elapsed += NagTimer_Elapsed;
+            nagTimer.Enabled = true;
+            nagTimer.AutoReset = true;
+            nagTimer.Start();
+        }
+
+        private async static void NagTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+           await Task.Run(() => sendNaggRequst(new Token()));
+        }
 
         //TODO: sting pwd to mb5;
         public async static Task SendRegisterRequest(string alias, string pwd)
@@ -42,7 +62,7 @@ namespace nuntiusClientChat.Controller
 
             using (MD5 md5hash = MD5.Create())
             {
-                 hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+                hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
             }
 
             Request request = new Request();

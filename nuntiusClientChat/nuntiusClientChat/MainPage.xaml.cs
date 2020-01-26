@@ -20,8 +20,7 @@ namespace nuntiusClientChat
         public MainPage()
         {
             InitializeComponent();
-            ChatStack = new StackLayout { Spacing = 2 };
-          
+            ChatStack = new StackLayout { Spacing = 2 };          
 
             LoginPage();
         }
@@ -95,7 +94,7 @@ namespace nuntiusClientChat
 
             registerButton.Clicked += RegisterButton_Clicked_;
 
-            ImageButton showPwd = new ImageButton { Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png", VerticalOptions = LayoutOptions.FillAndExpand };
+            ImageButton showPwd = new ImageButton { /*Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png"*/ VerticalOptions = LayoutOptions.FillAndExpand };
             showPwd.Clicked += ShowPwd_Clicked;
             //showPwd.Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png";
 
