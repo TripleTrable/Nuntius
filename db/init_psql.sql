@@ -1,7 +1,7 @@
 --Create db an users
 CREATE DATABASE nuntius;
-CREATE ROLE nuntiusserver WITH password 'h:gDxAHG]Td)(+O:R5xuVJ';
 \c nuntius;
+CREATE USER nuntiusserver;
 
 
 -- Create tabels
@@ -32,8 +32,16 @@ CREATE TABLE messages (
 
 
 -- Grants
-GRANT CONNECT ON DATABASE nuntius TO nuntiusserver ;
+GRANT CONNECT ON DATABASE nuntius TO nuntiusserver;
 GRANT SELECT ON users TO nuntiusServer;
 GRANT INSERT ON users TO nuntiusServer;
+GRANT UPDATE ON users TO nuntiusServer;
+GRANT UPDATE ON users_id_seq TO nuntiusserver;
+
 GRANT SELECT ON token TO nuntiusServer;
 GRANT INSERT ON token TO nuntiusServer;
+GRANT DELETE ON token TO nuntiusServer;
+
+GRANT SELECT ON messages TO nuntiusServer;
+GRANT INSERT ON messages TO nuntiusServer;
+GRANT UPDATE ON messages_id_seq TO nuntiusServer;

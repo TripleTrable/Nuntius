@@ -7,7 +7,7 @@ namespace NuntiusServer
 	//ToDo: implement
 	public static class DbController
 	{
-		private static string connectionString = "Driver={PostgreSQL};Server=localhost;Port=5432;Database=nuntius;Uid=fynn;";
+		private static string connectionString = "Driver={PostgreSQL};Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
 
 		/// <summary>
 		/// temporörer platzhalter
