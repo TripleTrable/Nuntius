@@ -46,13 +46,13 @@ namespace nuntiusClientChat.Controls
 
                 message.Text = msgEditor.Text;
                 message.Sent = DateTime.Now;
-                message.To = new User();
-                message.From = new User();
+                message.To = new User("tom","rwqe234");
+                message.From = new User("fynn","123132fg");
 
                 MainPage.ChatStack.Children.Add(new MessageControll(true, message));
                 //Empty the Editor
                 msgEditor.Text = null;
-               await NetworkController.sendMsgRequest(new Token(), "testUser", message.Sent, message.Text);
+               await NetworkController.sendMsgRequest("wqqweqwe", "testUser", message.Sent, message.Text);
                 
             }
         }

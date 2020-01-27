@@ -33,7 +33,7 @@ namespace nuntiusClientChat.Controller
 
         private async static void NagTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-           await Task.Run(() => sendNaggRequst(new Token()));
+           await Task.Run(() => sendNaggRequst("zrtete54ret564"));
         }
 
         //TODO: sting pwd to mb5;
@@ -51,7 +51,7 @@ namespace nuntiusClientChat.Controller
             request.RegisterRequest(alias, hashPwd);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServer(send));
+            await Task.Run(() => SendReqestToServerAsync(send));
 
 
         }
@@ -69,27 +69,27 @@ namespace nuntiusClientChat.Controller
             request.LoginRequest(alias, hashPwd);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServer(send));
+            await Task.Run(() => SendReqestToServerAsync(send));
         }
-        public async static Task sendMsgRequest(Token token, string toAlias, DateTime sendTime, string msgText)
+        public async static Task sendMsgRequest(string s, string toAlias, DateTime sendTime, string msgText)
         {
             Request request = new Request();
-            request.SendRequest(token, toAlias, sendTime, msgText);
+            request.SendRequest("wqeqwa14", toAlias, sendTime, msgText);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServer(send));
+            await Task.Run(() => SendReqestToServerAsync(send));
         }
 
-        public async static Task sendNaggRequst(Token token)
+        public async static Task sendNaggRequst(string s)
         {
             Request request = new Request();
-            request.NaggRequst(token);
+            request.NaggRequst(s);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServer(send));
+            await Task.Run(() => SendReqestToServerAsync(send));
         }
 
-        public static void SendReqestToServer(string message)
+        public static async Task SendReqestToServerAsync(string message)
         {
             byte[] bytes = new byte[4096];
 
@@ -132,8 +132,9 @@ namespace nuntiusClientChat.Controller
                     //Server Response
                     Response response = JsonSerializer.Deserialize<Response>(text);
 
-
-
+                    //Calls the ResponseHandler
+                    await ResponseHandler.HandelServerResponseAsync(response);
+                    
                     // Release the socket.    
                     sender.Shutdown(SocketShutdown.Both);
                     sender.Close();

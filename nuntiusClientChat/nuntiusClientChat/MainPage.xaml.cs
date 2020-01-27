@@ -182,7 +182,8 @@ namespace nuntiusClientChat
 
         private void BackButton_Clicked(object sender, EventArgs e)
         {
-            LoginPage();
+            // LoginPage();
+            ChatPage();
         }
 
         private async void RegisterButton_Clicked(object sender, EventArgs e)
