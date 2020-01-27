@@ -51,7 +51,8 @@ namespace nuntiusClientChat.Controller
             request.RegisterRequest(alias, hashPwd);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServerAsync(send));
+            await Task.Run(() => SendReqestToServerAsync(request));
+
 
 
         }
@@ -69,7 +70,8 @@ namespace nuntiusClientChat.Controller
             request.LoginRequest(alias, hashPwd);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServerAsync(send));
+            await Task.Run(() => SendReqestToServerAsync(request));
+
         }
         public async static Task sendMsgRequest(string s, string toAlias, DateTime sendTime, string msgText)
         {
@@ -77,7 +79,8 @@ namespace nuntiusClientChat.Controller
             request.SendRequest("wqeqwa14", toAlias, sendTime, msgText);
 
             string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServerAsync(send));
+            await Task.Run(() => SendReqestToServerAsync(request));
+
         }
 
         public async static Task sendNaggRequst(string s)
@@ -85,14 +88,14 @@ namespace nuntiusClientChat.Controller
             Request request = new Request();
             request.NaggRequst(s);
 
-            string send = JsonSerializer.Serialize(request);
-            await Task.Run(() => SendReqestToServerAsync(send));
+     
+            await Task.Run(() => SendReqestToServerAsync(request));
         }
 
-        public static async Task SendReqestToServerAsync(string message)
+        public static async Task SendReqestToServerAsync(Request request)
         {
             byte[] bytes = new byte[4096];
-
+            string message = JsonSerializer.Serialize(request);
             try
             {
                 // Connect to a Remote server  
@@ -133,7 +136,7 @@ namespace nuntiusClientChat.Controller
                     Response response = JsonSerializer.Deserialize<Response>(text);
 
                     //Calls the ResponseHandler
-                    await ResponseHandler.HandelServerResponseAsync(response);
+                    await ResponseHandler.HandelServerResponseAsync(response,request);
                     
                     // Release the socket.    
                     sender.Shutdown(SocketShutdown.Both);

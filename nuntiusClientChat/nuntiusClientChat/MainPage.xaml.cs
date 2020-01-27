@@ -182,8 +182,7 @@ namespace nuntiusClientChat
 
         private void BackButton_Clicked(object sender, EventArgs e)
         {
-            // LoginPage();
-            ChatPage();
+             LoginPage();            
         }
 
         private async void RegisterButton_Clicked(object sender, EventArgs e)
@@ -198,6 +197,16 @@ namespace nuntiusClientChat
                 await NetworkController.SendRegisterRequest(aliasEntry.Text, pwdEntry.Text);
                 aliasEntry.Text = null;
                 pwdEntry.Text = null;
+                
+                if (UserController.LogedInUser != null && UserController.CurrentTocken != null)
+                {
+                    ChatPage();
+                }
+                else
+                {
+                    //Register failed
+                    return;
+                }
             }
 
         }
@@ -218,6 +227,16 @@ namespace nuntiusClientChat
                 await NetworkController.SendLoginRequest(aliasEntry.Text, pwdEntry.Text);
                 aliasEntry.Text = null;
                 pwdEntry.Text = null;
+
+                if (UserController.LogedInUser != null && UserController.CurrentTocken != null)
+                {
+                    ChatPage();
+                }
+                else
+                {
+                    //Login failed
+                    return;
+                }
             }
         }
 
