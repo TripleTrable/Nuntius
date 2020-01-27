@@ -6,7 +6,7 @@ CREATE USER nuntiusserver;
 
 -- Create tabels
 CREATE TABLE users (
-	id AUTO_INCREMENT PRIMARY KEY,
+	id INT AUTO_INCREMENT PRIMARY KEY,
 	alias VARCHAR(32) NOT NULL UNIQUE,
 	pwd_md5 text NOT NULL
 );
@@ -20,7 +20,7 @@ CREATE TABLE token (
 );
 
 CREATE TABLE messages (
-	id AUTO_INCREMENT PRIMARY KEY,
+	id INT AUTO_INCREMENT PRIMARY KEY,
 	from_user INT NOT NULL,
 	to_user INT NOT NULL,
 	send TIMESTAMP NOT NULL,
