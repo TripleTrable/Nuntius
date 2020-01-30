@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using nuntiusModel;
-using nuntiusClientChat.Controller;
-
-
-namespace nuntiusClientChat.Controller
+﻿namespace nuntiusClientChat.Controller
 {
     public static class UserController
     {
@@ -18,7 +11,7 @@ namespace nuntiusClientChat.Controller
             get { return currentToken; }
             set { currentToken = value; }
         }
-  
+
 
     }
 }
