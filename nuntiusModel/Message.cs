@@ -4,19 +4,19 @@ namespace nuntiusModel
 {
 	public class Message
 	{
-		private User from;
-		private User to;
+		private string from;
+		private string to;
 		private DateTime sent;
 		private string text;
 
 		#region Properties
 
-		public User From
+		public string From
 		{
 			get { return from; }
 			set { from = value; }
 		}
-		public User To
+		public string To
 		{
 			get { return to; }
 			set { to = value; }
