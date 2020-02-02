@@ -1,9 +1,8 @@
-﻿using nuntiusClientChat.Controls;
-using nuntiusModel;
+﻿using nuntiusClientChat.Controller;
+using nuntiusClientChat.Controls;
 using System;
 using System.ComponentModel;
 using Xamarin.Forms;
-using nuntiusClientChat.Controller;
 
 namespace nuntiusClientChat
 {
@@ -15,12 +14,12 @@ namespace nuntiusClientChat
         public static StackLayout ChatStack;
         static EditorBoxWithButton msgEditor = new EditorBoxWithButton();
         Entry pwdEntry;
-        Entry aliasEntry;
+        Entry aliasEntry_;
 
         public MainPage()
         {
             InitializeComponent();
-            ChatStack = new StackLayout { Spacing = 2 };          
+            ChatStack = new StackLayout { Spacing = 2 };
 
             LoginPage();
         }
@@ -75,9 +74,9 @@ namespace nuntiusClientChat
             Grid grid, pwdGrid;
             UserCredentialsMask(out grid, out pwdGrid);
 
-            aliasEntry = new Entry();
+            aliasEntry_ = new Entry();
 
-            aliasEntry.MaxLength = 32;
+            aliasEntry_.MaxLength = 32;
 
             pwdEntry = new Entry();
 
@@ -106,7 +105,7 @@ namespace nuntiusClientChat
             registerLabel.FontSize = 15;
             registerLabel.TextColor = Color.Black;
 
-            grid.Children.Add(aliasEntry, 1, 2, 1, 2);
+            grid.Children.Add(aliasEntry_, 1, 2, 1, 2);
             grid.Children.Add(pwdEntry, 1, 2, 3, 4);
             grid.Children.Add(pwdGrid, 1, 2, 3, 4);
             pwdGrid.Children.Add(pwdEntry, 0, 1, 0, 1);
@@ -121,12 +120,7 @@ namespace nuntiusClientChat
             this.Content = grid;
         }
 
-        private void RegisterButton_Clicked_(object sender, EventArgs e)
-        {
-            RegisterPage();
-        }
-
-        public void RegisterPage()
+        public void RegisterPage1()
         {
             Grid grid, pwdGrid, backGrid;
             UserCredentialsMask(out grid, out pwdGrid);
@@ -141,10 +135,10 @@ namespace nuntiusClientChat
 
             };
 
-            aliasEntry = new Entry();
+            aliasEntry_ = new Entry();
 
-            aliasEntry.MaxLength = 32;
-            aliasEntry.Placeholder = "Benutzer Name";
+            aliasEntry_.MaxLength = 32;
+            aliasEntry_.Placeholder = "Benutzer Name";
 
             pwdEntry = new Entry();
 
@@ -164,7 +158,7 @@ namespace nuntiusClientChat
             ImageButton showPwd = new ImageButton { Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png", VerticalOptions = LayoutOptions.FillAndExpand };
             showPwd.Clicked += ShowPwd_Clicked;
 
-            grid.Children.Add(aliasEntry, 1, 2, 1, 2);
+            grid.Children.Add(aliasEntry_, 1, 2, 1, 2);
             grid.Children.Add(pwdEntry, 1, 2, 3, 4);
             grid.Children.Add(pwdGrid, 1, 2, 3, 4);
             pwdGrid.Children.Add(pwdEntry, 0, 1, 0, 1);
@@ -173,7 +167,7 @@ namespace nuntiusClientChat
             //Grid to get back to Login
             grid.Children.Add(backGrid, 0, 1, 0, 1);
             backGrid.Children.Add(backButton, 0, 1, 0, 1);
-           
+
 
             grid.Children.Add(registerButton, 1, 2, 7, 8);
 
@@ -187,36 +181,61 @@ namespace nuntiusClientChat
 
         private async void RegisterButton_Clicked(object sender, EventArgs e)
         {
-            if (pwdEntry.Text == null || aliasEntry.Text == null)
+            if (pwdEntry.Text == null || aliasEntry_.Text == null)
             {
                 return;
+
             }
             else
             {
                 //TODO: Loding icon until the User has a token from the Server 
-                await NetworkController.SendRegisterRequest(aliasEntry.Text, pwdEntry.Text);
-                aliasEntry.Text = null;
+                bool succses = await NetworkController.SendRegisterRequestAsync(aliasEntry_.Text, pwdEntry.Text);
+                aliasEntry_.Text = null;
                 pwdEntry.Text = null;
+
+                succses = false;
+
+                if (UserController.LogedInUser != null && UserController.CurrentTocken != null && succses)
+                {
+                    ChatPage();
+                }
+                else
+                {
+                    //Register failed
+                    await DisplayAlert(" ", "Der Gewählte Benutzername ist schon vergeben.", "Ok").ConfigureAwait(false);
+                    return;
+                }
             }
 
         }
 
-       
 
-  
+
+
 
         private async void LoginButton_Clicked(object sender, EventArgs e)
         {
-            if (aliasEntry.Text == null || pwdEntry.Text == null)
+            if (aliasEntry_.Text == null || pwdEntry.Text == null)
             {
                 return;
             }
             else
             {
                 //TODO: Loding icon until the User has a token from the Server 
-                await NetworkController.SendLoginRequest(aliasEntry.Text, pwdEntry.Text);
-                aliasEntry.Text = null;
+                bool succses = await NetworkController.SendLoginRequestAsync(aliasEntry_.Text, pwdEntry.Text);
+                aliasEntry_.Text = null;
                 pwdEntry.Text = null;
+
+                if (UserController.LogedInUser != null && UserController.CurrentTocken != null && succses)
+                {
+                    ChatPage();
+                }
+                else
+                {
+                    //Login failed
+                    await DisplayAlert(" ", "Das eingegebene Passwort ist falsch.", "Ok").ConfigureAwait(false);
+                    return;
+                }
             }
         }
 
@@ -230,6 +249,11 @@ namespace nuntiusClientChat
                 pwdEntry.IsPassword = true;
 
             //pwdEntry.IsPassword ? pwdEntry.IsPassword = false : pwdEntry.IsPassword = true;
+        }
+
+        private void RegisterButton_Clicked_(object sender, EventArgs e)
+        {
+            RegisterPage1();
         }
 
         private static void UserCredentialsMask(out Grid grid, out Grid pwdGrid)
