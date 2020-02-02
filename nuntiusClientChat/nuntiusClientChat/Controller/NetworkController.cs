@@ -1,5 +1,6 @@
 ﻿using nuntiusModel;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -101,6 +102,11 @@ namespace nuntiusClientChat.Controller
             request.NaggRequst(UserController.CurrentTocken);
 
             Response r = await SendReqestToServerAsync(request);
+
+            //convets the response to a List of Messeges
+            string s = r.Parameters[0].ToString();
+            List<Message> messages = JsonSerializer.Deserialize<List<Message>>(s);
+
         }
         //TODP: await implementation
         public static async Task<Response> SendReqestToServerAsync(Request request)

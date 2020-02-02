@@ -43,8 +43,8 @@ namespace nuntiusClientChat.Controls
 
                 message.Text = msgEditor.Text;
                 message.Sent = DateTime.Now;
-                message.To = new User("tom", "rwqe234");
-                message.From = new User("fynn", "123132fg");
+                message.To = "tom";
+                message.From = "fynn";
 
                 MainPage.ChatStack.Children.Add(new MessageControll(true, message));
                 //Empty the Editor
