@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using nuntiusModel;
 
 namespace NuntiusServer
@@ -17,7 +18,12 @@ namespace NuntiusServer
 					break;
 
 				case "nagg":
-					response.UnknownErrorRespone();
+
+					List<Message> m = new List<Message>();
+					m.Add(new Message { From = "adelGames", To = "fynn002", Sent = DateTime.Now, Text = "Hallo, wie geht es Ihnen? Mit freindlichen Grüßen AdelGames!"});
+					m.Add(new Message { From = "fynn002", To = "adelGames", Sent = DateTime.Now, Text = "Sehr geehret Herr Fynn002 mit geht es gut. Ebenfalls feindliche Grüße!"});
+					response.ParentResponse(m);
+					//response.UnknownErrorRespone();
 					break;
 
 				case "register":
