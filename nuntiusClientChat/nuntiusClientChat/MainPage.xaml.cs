@@ -3,6 +3,8 @@ using nuntiusClientChat.Controls;
 using System;
 using System.ComponentModel;
 using Xamarin.Forms;
+using nuntiusModel;
+using System.Collections.Generic;
 
 namespace nuntiusClientChat
 {
@@ -16,14 +18,23 @@ namespace nuntiusClientChat
         Entry pwdEntry;
         Entry aliasEntry_;
 
+        XamarinFormsChatConttroller chatConttroller;
         public MainPage()
         {
-            InitializeComponent();          
+            InitializeComponent();
 
-            ChatStack = new StackLayout { Spacing = 2 };
+            chatConttroller = new XamarinFormsChatConttroller();
 
-            LoginPage();
+            chatConttroller.AddMesages(new List<Message>());
+            ChatStack = chatConttroller.chatStack;
+
+            
+
+            //  ChatStack = new StackLayout { Spacing = 2 };
+
+            ChatPage();
         }
+
 
 
         public void ChatPage()
@@ -68,6 +79,9 @@ namespace nuntiusClientChat
 
             // Build the page.
             this.Content = grid;
+
+            SendButton_ClickedAsync(object _, __);
+
 
         }
         public void LoginPage()
@@ -209,10 +223,6 @@ namespace nuntiusClientChat
             }
 
         }
-
-
-
-
 
         private async void LoginButton_Clicked(object sender, EventArgs e)
         {

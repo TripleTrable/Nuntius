@@ -28,9 +28,7 @@ namespace nuntiusClientChat.Controls
         }
 
         private async void SendButton_ClickedAsync(object sender, EventArgs e)
-        {
-
-
+        {        
             //Checks if the editor was used to type a msg 
             //TODO: CHECK if the box may otherwise be empty
             if (msgEditor.Text == " " || msgEditor.Text == null)
@@ -49,7 +47,7 @@ namespace nuntiusClientChat.Controls
                 MainPage.ChatStack.Children.Add(new MessageControll(true, message));
                 //Empty the Editor
                 msgEditor.Text = null;
-                await NetworkController.sendMsgRequest("wqqweqwe", "testUser", message.Sent, message.Text);
+              //  await NetworkController.sendMsgRequest("wqqweqwe", "testUser", message.Sent, message.Text);
 
             }
         }

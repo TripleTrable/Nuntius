@@ -38,7 +38,9 @@ namespace nuntiusClientChat
         }
 
         private async void continueButton_ClickedAsync(object sender, EventArgs e)
-        {    
+        {
+            await Navigation.PushAsync(new MainPage());
+
             if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
             {
                return;                   
@@ -56,7 +58,7 @@ namespace nuntiusClientChat
                     await Task.WhenAll(NetworkController.SendRegisterRequestAsync(AliasEntry.Text, PasswordEntry.Text));
                 }
                 //Open the Chat selection
-                await Navigation.PushAsync(new MainPage());
+               // await Navigation.PushAsync(new MainPage());
             }
         }
 
