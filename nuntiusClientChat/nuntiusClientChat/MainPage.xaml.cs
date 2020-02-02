@@ -18,7 +18,8 @@ namespace nuntiusClientChat
 
         public MainPage()
         {
-            InitializeComponent();
+            InitializeComponent();          
+
             ChatStack = new StackLayout { Spacing = 2 };
 
             LoginPage();
