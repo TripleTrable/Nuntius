@@ -13,8 +13,9 @@ namespace nuntiusClientChat
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
-        public static StackLayout ChatStack;
+        public static StackLayout ChatStack = new StackLayout();
         static EditorBoxWithButton msgEditor = new EditorBoxWithButton();
+        public ConversationController conversationController;
         Entry pwdEntry;
         Entry aliasEntry_;
 
@@ -22,15 +23,16 @@ namespace nuntiusClientChat
         public MainPage()
         {
             InitializeComponent();
+            conversationController = new ConversationController();
 
-            chatConttroller = new XamarinFormsChatConttroller();
+            conversationController.MessageAdded += Message_Added;
 
-            chatConttroller.AddMesages(new List<Message>());
-            ChatStack = chatConttroller.chatStack;
+            // chatConttroller = new XamarinFormsChatConttroller();
 
-            
+            //chatConttroller.AddMesages(new List<Message>());
+            // ChatStack = chatConttroller.chatStack;            
 
-            //  ChatStack = new StackLayout { Spacing = 2 };
+            conversationController.AddMessage(new Message { From = "Penis", To = "Vagina", Sent = DateTime.Now, Text = "ghsjztredfghjzt5r dfffsgd ewr wer er erza zreuRtj" });
 
             ChatPage();
         }
@@ -80,7 +82,7 @@ namespace nuntiusClientChat
             // Build the page.
             this.Content = grid;
 
-            SendButton_ClickedAsync(object _, __);
+            
 
 
         }
@@ -187,6 +189,11 @@ namespace nuntiusClientChat
             grid.Children.Add(registerButton, 1, 2, 7, 8);
 
             this.Content = grid;
+        }
+
+        private void Message_Added(object sender, MessageEventArgs e)
+        {
+            ChatStack.Children.Add(new MessageControll(true, e.Message));
         }
 
         private void BackButton_Clicked(object sender, EventArgs e)
