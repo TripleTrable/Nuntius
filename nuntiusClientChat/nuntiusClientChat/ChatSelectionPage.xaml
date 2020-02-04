@@ -8,16 +8,7 @@
 
 	<ScrollView x:Name="ChatSelctScroll">
 		<StackLayout Spacing="5">
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-			<BoxView HeightRequest="75" BackgroundColor="Accent"/>
-
+			<!--The Diffrent Chats will be Placed in this StachLayout-->
 		</StackLayout>
 	</ScrollView>
      

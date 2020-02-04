@@ -8,8 +8,16 @@ namespace nuntiusClientChat
         {
             InitializeComponent();
 
-            //MainPage = new NavigationPage(new LoginRegisterPage());
-            MainPage = new NavigationPage(new Chat());
+            if (Controller.UserController.LogedInUser != null)
+            {
+                MainPage = new NavigationPage(new ChatSelectionPage());
+            }
+            else
+            {
+                MainPage = new LoginRegisterPage();
+            }
+
+
         }
 
         protected override void OnStart()
@@ -23,5 +31,7 @@ namespace nuntiusClientChat
         protected override void OnResume()
         {
         }
+
+
     }
 }
