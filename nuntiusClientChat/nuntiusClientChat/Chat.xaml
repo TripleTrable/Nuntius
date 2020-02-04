@@ -13,7 +13,7 @@
 		</Grid.RowDefinitions>
 		<Grid Grid.Row="0">
 			<ScrollView Padding="10,30,10,0" Orientation="Vertical">
-				<StackLayout x:Name="ViewChatStack"></StackLayout>
+				<StackLayout x:Name="MsgChatStack"></StackLayout>
 			</ScrollView>
 		</Grid>
 		<Grid Grid.Row="1">

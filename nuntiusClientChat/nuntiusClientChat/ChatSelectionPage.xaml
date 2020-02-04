@@ -7,9 +7,8 @@
              x:Class="nuntiusClientChat.ChatSelectionPage">
 
 	<ScrollView x:Name="ChatSelctScroll">
-		<StackLayout Spacing="5">
+		<StackLayout x:Name="ChatSelectionStack" Spacing="5" >
 			<!--The Diffrent Chats will be Placed in this StachLayout-->
 		</StackLayout>
 	</ScrollView>
-     
 </ContentPage>

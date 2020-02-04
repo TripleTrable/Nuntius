@@ -23,21 +23,19 @@ namespace nuntiusClientChat
 			conversationController.MessageAdded += ConversationController_MessageAdded;
 		}
 
-		private void ConversationController_MessageAdded(object source, MessageEventArgs args)
-		{
-			ViewChatStack.Children.Add(new MessageControll (false,args.Message));
-		}
-
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
 			//Send Msg via Networkkontroller
 			await Task.Run(() => NetworkController.sendMsgRequest("TestUser", DateTime.Now, MsgEditor.Text));
-					
-			ViewChatStack.Children.Add(new MessageControll(true,new Message { /*From = UserController.LogedInUser.Alias,*/Sent = DateTime.Now,Text = MsgEditor.Text}));
-			//ViewChatStack.Children.Add(new Label { Text = MsgEditor.Text });
+			
+			conversationController.AddMessage(new Message { From = "Test", To = "Test" , Sent = DateTime.Now, Text = MsgEditor.Text});
 
 			MsgEditor.Text = null;
 		}
 
+		private void ConversationController_MessageAdded(object source, MessageEventArgs args)
+		{
+			MsgChatStack.Children.Add(new MessageControll(false, args.Message));
+		}
 	}
 }
