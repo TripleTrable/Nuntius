@@ -39,9 +39,5 @@ namespace nuntiusClientChat
 			MsgEditor.Text = null;
 		}
 
-		private void SmilyButton_Clicked(object sender, EventArgs e)
-		{
-			//open SilyKebord
-		}
 	}
 }

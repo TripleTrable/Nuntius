@@ -18,7 +18,7 @@
 		</Grid>
 		<Grid Grid.Row="1">
 			<RelativeLayout>
-				<BoxView BackgroundColor="#B1A6A6" Opacity="1" CornerRadius="12"		
+				<BoxView x:Name="EditorBackround" BackgroundColor="#B1A6A6" Opacity="1" CornerRadius="12"		
 				RelativeLayout.HeightConstraint=
 				"{ConstraintExpression
 					Type=RelativeToParent,
@@ -29,59 +29,46 @@
 				"{ConstraintExpression
 					Type=RelativeToParent,
 					Property=Width,
-					Factor=0.98
+					Factor=0.97
 				}"/>
-				<Button x:Name="SmilyButton" Text="1" Clicked="SmilyButton_Clicked" Margin="0,5,0,5"
-				RelativeLayout.HeightConstraint=
-                "{ConstraintExpression 
-					Type=RelativeToParent,
-					Property=Height,
-					Factor=1
-				}"
-                RelativeLayout.WidthConstraint=
-                "{ConstraintExpression
-					Type=RelativeToParent,
-					Property=Width,
-					Factor=0.1
-                }"/>
 
 				<Editor x:Name="MsgEditor" AutoSize="TextChanges" IsTabStop="True" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" Keyboard="Text" MinimumWidthRequest="100"
 						HorizontalOptions="FillAndExpand"
-				RelativeLayout.XConstraint=
-				"{ConstraintExpression
-					Type=RelativeToView,
-					ElementName=SmilyButton,
-					Property=Width,Factor=1,
-					Constant=-5
-				}"
-				RelativeLayout.WidthConstraint=
-				"{ConstraintExpression
-					Type=RelativeToParent,
-					Property=Width,
-					Factor=0.80
-				}"/>
-				
-				<Button x:Name="MsgSend" Text="2" Clicked="MsgSend_Clicked" Margin="0,5,0,5"
-					RelativeLayout.HeightConstraint=
-					"{ConstraintExpression 
-						Type=RelativeToParent,
-						Property=Height,
-						Factor=1
-					}"
-					RelativeLayout.WidthConstraint=
-                    "{ConstraintExpression
-						Type=RelativeToParent,
-						Property=Width,
-						Factor=0.1
-                    }"
-					RelativeLayout.XConstraint=
-					"{ConstraintExpression
+						RelativeLayout.WidthConstraint=
+						"{ConstraintExpression
+							Type=RelativeToParent,
+							Property=Width,
+							Factor=0.87,
+							Constant=-10
+						}"
+						RelativeLayout.HeightConstraint=
+						"{ConstraintExpression
 						Type=RelativeToView,
-						ElementName=MsgEditor,
-						Property=Width,
+						ElementName=EditorBackround,
+						Property=Height,
 						Factor=1,
-						Constant=30
-					}"/>
+						Constant=-5
+						}"/>
+
+				<Button x:Name="MsgSend" Text="->"  Clicked="MsgSend_Clicked" Margin="0,20,0,20"
+						RelativeLayout.HeightConstraint=
+						"{ConstraintExpression 
+							Type=RelativeToParent,
+							Property=Height,
+							Factor=1
+						}"
+						RelativeLayout.WidthConstraint=
+						"{ConstraintExpression
+							Type=RelativeToParent,
+							Property=Width,
+							Factor=0.1
+						}"
+						RelativeLayout.XConstraint=
+						"{ConstraintExpression
+						Type=RelativeToView,
+						ElementName=EditorBackround,
+						Factor=0.87,Property=Width
+						}" CornerRadius="15"/>
 			</RelativeLayout>
 		</Grid>
 	</Grid>

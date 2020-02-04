@@ -122,7 +122,7 @@ namespace nuntiusClientChat.Controller
                 // IPAddress ipAddress = host.AddressList[0];
                 // IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
 
-                IPAddress ipAddress = IPAddress.Parse("172.16.9.165");
+                IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
                 // IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
