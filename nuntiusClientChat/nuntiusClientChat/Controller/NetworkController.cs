@@ -31,7 +31,7 @@ namespace nuntiusClientChat.Controller
 
         private async static void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
         {
-            await Task.Run(() => sendNaggRequstAsync());
+            await sendNaggRequstAsync();
         }
         #endregion
 
@@ -88,8 +88,10 @@ namespace nuntiusClientChat.Controller
                 return false;
             }
         }
-        public async static Task sendMsgRequest(string s, string toAlias, DateTime sendTime, string msgText)
+        public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
         {
+            UserController.CurrentTocken = "123uztrerftr543ert453";
+
             Request request = new Request();
             request.SendRequest(UserController.CurrentTocken, toAlias, sendTime, msgText);
 
@@ -115,16 +117,12 @@ namespace nuntiusClientChat.Controller
             byte[] bytes = new byte[4096];
             string message = JsonSerializer.Serialize(request);
             try
-            {
-                // Connect to a Remote server  
-                // Get Host IP Address that is used to establish a connection  
-                // In this case, we get one IP address of localhost that is IP : 127.0.0.1  
-                // If a host has multiple addresses, you will get a list of addresses  
+            {               
                 // IPHostEntry host = Dns.GetHostEntry("localhost");
                 // IPAddress ipAddress = host.AddressList[0];
                 // IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
 
-                IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
+                IPAddress ipAddress = IPAddress.Parse("172.16.9.165");
                 // IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
@@ -137,7 +135,7 @@ namespace nuntiusClientChat.Controller
                 try
                 {
                     // Connect to Remote EndPoint  
-                    sender.Connect(remoteEP);
+                   await sender.ConnectAsync(remoteEP);
 
                     // Encode the data string into a byte array.    
                     byte[] msg = Encoding.ASCII.GetBytes(message);

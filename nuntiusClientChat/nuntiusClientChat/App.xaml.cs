@@ -8,7 +8,8 @@ namespace nuntiusClientChat
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            //MainPage = new NavigationPage(new LoginRegisterPage());
+            MainPage = new NavigationPage(new Chat());
         }
 
         protected override void OnStart()

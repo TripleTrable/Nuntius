@@ -17,23 +17,14 @@ namespace nuntiusClientChat
         static EditorBoxWithButton msgEditor = new EditorBoxWithButton();
         public ConversationController conversationController;
         Entry pwdEntry;
-        Entry aliasEntry_;
-
-        XamarinFormsChatConttroller chatConttroller;
+        Entry aliasEntry;
+                
         public MainPage()
         {
             InitializeComponent();
             conversationController = new ConversationController();
 
             conversationController.MessageAdded += Message_Added;
-
-            // chatConttroller = new XamarinFormsChatConttroller();
-
-            //chatConttroller.AddMesages(new List<Message>());
-            // ChatStack = chatConttroller.chatStack;            
-
-            conversationController.AddMessage(new Message { From = "Penis", To = "Vagina", Sent = DateTime.Now, Text = "ghsjztredfghjzt5r dfffsgd ewr wer er erza zreuRtj" });
-
             ChatPage();
         }
 
@@ -82,7 +73,7 @@ namespace nuntiusClientChat
             // Build the page.
             this.Content = grid;
 
-            
+
 
 
         }
@@ -91,9 +82,9 @@ namespace nuntiusClientChat
             Grid grid, pwdGrid;
             UserCredentialsMask(out grid, out pwdGrid);
 
-            aliasEntry_ = new Entry();
+            aliasEntry = new Entry();
 
-            aliasEntry_.MaxLength = 32;
+            aliasEntry.MaxLength = 32;
 
             pwdEntry = new Entry();
 
@@ -122,7 +113,7 @@ namespace nuntiusClientChat
             registerLabel.FontSize = 15;
             registerLabel.TextColor = Color.Black;
 
-            grid.Children.Add(aliasEntry_, 1, 2, 1, 2);
+            grid.Children.Add(aliasEntry, 1, 2, 1, 2);
             grid.Children.Add(pwdEntry, 1, 2, 3, 4);
             grid.Children.Add(pwdGrid, 1, 2, 3, 4);
             pwdGrid.Children.Add(pwdEntry, 0, 1, 0, 1);
@@ -152,10 +143,10 @@ namespace nuntiusClientChat
 
             };
 
-            aliasEntry_ = new Entry();
+            aliasEntry = new Entry();
 
-            aliasEntry_.MaxLength = 32;
-            aliasEntry_.Placeholder = "Benutzer Name";
+            aliasEntry.MaxLength = 32;
+            aliasEntry.Placeholder = "Benutzer Name";
 
             pwdEntry = new Entry();
 
@@ -175,7 +166,7 @@ namespace nuntiusClientChat
             ImageButton showPwd = new ImageButton { Source = @"C:\!nuntiusChat\iah71-messenger-nuntius\nuntiusClientChat\nuntiusClientChat\Show.png", VerticalOptions = LayoutOptions.FillAndExpand };
             showPwd.Clicked += ShowPwd_Clicked;
 
-            grid.Children.Add(aliasEntry_, 1, 2, 1, 2);
+            grid.Children.Add(aliasEntry, 1, 2, 1, 2);
             grid.Children.Add(pwdEntry, 1, 2, 3, 4);
             grid.Children.Add(pwdGrid, 1, 2, 3, 4);
             pwdGrid.Children.Add(pwdEntry, 0, 1, 0, 1);
@@ -203,7 +194,7 @@ namespace nuntiusClientChat
 
         private async void RegisterButton_Clicked(object sender, EventArgs e)
         {
-            if (pwdEntry.Text == null || aliasEntry_.Text == null)
+            if (pwdEntry.Text == null || aliasEntry.Text == null)
             {
                 return;
 
@@ -211,8 +202,8 @@ namespace nuntiusClientChat
             else
             {
                 //TODO: Loding icon until the User has a token from the Server 
-                bool succses = await NetworkController.SendRegisterRequestAsync(aliasEntry_.Text, pwdEntry.Text);
-                aliasEntry_.Text = null;
+                bool succses = await NetworkController.SendRegisterRequestAsync(aliasEntry.Text, pwdEntry.Text);
+                aliasEntry.Text = null;
                 pwdEntry.Text = null;
 
                 succses = false;
@@ -233,15 +224,15 @@ namespace nuntiusClientChat
 
         private async void LoginButton_Clicked(object sender, EventArgs e)
         {
-            if (aliasEntry_.Text == null || pwdEntry.Text == null)
+            if (aliasEntry.Text == null || pwdEntry.Text == null)
             {
                 return;
             }
             else
             {
                 //TODO: Loding icon until the User has a token from the Server 
-                bool succses = await NetworkController.SendLoginRequestAsync(aliasEntry_.Text, pwdEntry.Text);
-                aliasEntry_.Text = null;
+                bool succses = await NetworkController.SendLoginRequestAsync(aliasEntry.Text, pwdEntry.Text);
+                aliasEntry.Text = null;
                 pwdEntry.Text = null;
 
                 if (UserController.LogedInUser != null && UserController.CurrentTocken != null && succses)
