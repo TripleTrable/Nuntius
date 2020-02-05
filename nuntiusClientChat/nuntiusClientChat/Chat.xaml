@@ -50,7 +50,7 @@
 						Constant=-5
 						}"/>
 
-				<Button x:Name="MsgSend" Text="->"  Clicked="MsgSend_Clicked" Margin="0,20,0,20"
+				<Button x:Name="MsgSend" Text="->"  Clicked="MsgSend_Clicked"
 						RelativeLayout.HeightConstraint=
 						"{ConstraintExpression 
 							Type=RelativeToParent,

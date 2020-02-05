@@ -15,7 +15,7 @@ namespace nuntiusClientChat
 			else
 			{
 				MainPage = new LoginRegisterPage();
-				MainPage = new NavigationPage(new Chat());
+				MainPage = new NavigationPage(new ChatSelectionPage());
 			}
 
 
