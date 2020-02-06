@@ -1,5 +1,6 @@
 using System;
 using nuntiusModel;
+using System.Data;
 using System.Data.Odbc;
 
 namespace NuntiusServer
@@ -35,10 +36,33 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
-		/// temporörer platzhalter
+		/// Check if a alias already exists
+		/// </summary>
+		public static bool CheckUsersAliasAvalible(string alias)
+		{
+			OdbcCommand command = new OdbcCommand($"SELECT 1 FROM users WHERE alias = '{alias}'");
+			DataTable dataTable = SelectDataTable(command);
+
+			//ToDo: Send Unknown error
+			if(dataTable == null)
+				return false;
+			else if(dataTable.Rows.Count == 0)
+				return true;
+			
+			return false;
+		}
+
+		/// <summary>
+		/// Register a new unique user
 		/// </summary>
 		public static bool RegisterUser(string alias, string password)
 		{
+			if(!CheckUsersAliasAvalible(alias))
+				return false;
+
+			string sql = $"INSERT INTO users(alias, pwd_md5) VALUES('{alias}','{password}');";
+
+			ExecuteNonQuerry(new OdbcCommand(sql));
 			return true;
 		}
 
@@ -51,9 +75,44 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
+		/// Select a Query and return a DataTable
+		/// </summary>
+		private static DataTable SelectDataTable(OdbcCommand cmd)
+		{
+			DataTable dt;
+
+			//Connect
+			using (OdbcConnection con = new OdbcConnection(connectionString))
+			{
+				cmd.Connection = con;
+				try
+				{
+					con.Open();
+
+					//Execute SQL Statement
+					using (OdbcDataAdapter a = new OdbcDataAdapter(cmd))
+					{
+						dt = new DataTable();
+						a.Fill(dt);
+					}
+				}
+				catch (Exception e)
+				{
+					throw e;
+				}
+				finally
+				{
+					con.Close();
+				}
+			}
+
+			return dt;
+		}
+
+		/// <summary>
 		///  Connect to the database and execute a non querry
 		/// </summary>
-		private static void ExecuteNonQuerry(OdbcCommand command)
+		private static int ExecuteNonQuerry(OdbcCommand command)
 		{
 			int result;
 
@@ -80,6 +139,7 @@ namespace NuntiusServer
 				}
 			}
 
+			return result;
 		}
 	}
 }

@@ -6,8 +6,6 @@ namespace NuntiusServer
 {
 	public static class UserController
 	{
-		private static LinkedList<User> loggedinUser = new LinkedList<User>();
-
 		/// <summary>
 		/// try to log a user in
 		/// </summary>
@@ -17,21 +15,16 @@ namespace NuntiusServer
 			if (user == null)
 				return null;
 
-			//Check the data
-			loggedinUser.AddLast(user);
-
 			return GenerateToken(alias);
 		}
 
 		/// <summary>
-		/// Register a new user if the alis is free
+		/// Register a new user if the alis is free and assing a token
 		/// </summary>
 		public static string RegisterNewUser(string alias, string password)
 		{
 			if (!DbController.RegisterUser(alias, password))
 				return null;
-
-			loggedinUser.AddLast(new User(alias, password));
 
 			return GenerateToken(alias);
 		}
