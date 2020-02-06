@@ -19,12 +19,12 @@ namespace NuntiusServer
 			//ToDo: Use sql parameter
 			OdbcCommand command = new OdbcCommand($"SELECT 1 FROM users WHERE alias = '{alias}' AND pwd_md5 = '{password}'");
 
-			DataTable data = SelectDataTable(command);
+			DataSet data = SelectDataSet(command);
 
 			//ToDo: Send Unknown error
 			if (data == null)
 				return false;
-			else if (data.Rows.Count == 1)
+			else if (data.Tables[0].Rows.Count == 1)
 				return true;
 
 			return false;
@@ -44,12 +44,12 @@ namespace NuntiusServer
 		public static bool CheckUsersAliasAvalible(string alias)
 		{
 			OdbcCommand command = new OdbcCommand($"SELECT 1 FROM users WHERE alias = '{alias}'");
-			DataTable dataTable = SelectDataTable(command);
+			DataSet dataSet = SelectDataSet(command);
 
 			//ToDo: Send Unknown error
-			if (dataTable == null)
+			if (dataSet == null)
 				return false;
-			else if (dataTable.Rows.Count == 0)
+			else if (dataSet.Tables[0].Rows.Count == 0)
 				return true;
 
 			return false;
@@ -70,17 +70,45 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
-		/// temporörer platzhalter
+		/// Check if a user already has a token
 		/// </summary>
-		public static bool CheckToken(string token)
+		public static string IsTokenAvalible(string alias)
+		{
+			//ToDo: sql Prameter
+			string sql = "SELECT token::text FROM token " +
+						$"WHERE userID = (SELECT id FROM users WHERE alias = '{alias}');";
+
+			System.Console.WriteLine(sql);
+			OdbcCommand command = new OdbcCommand(sql);
+			DataSet data = SelectDataSet(command);
+
+			//ToDo: unknown exeption
+			if (data == null)
+				return "";
+
+			if (data.Tables[0].Rows.Count == 0)
+				return "";
+
+			//Extract the token
+			string token = data.Tables[0].Rows[0].ItemArray[0].ToString();
+
+			return token;
+		}
+
+		/// <summary>
+		/// Check if a token is alrady used
+		/// </summary>
+		public static bool IsTokenFree(string token)
 		{
 			return true;
 		}
+
 		/// <summary>
-		/// temporörer platzhalter
+		/// Assing a new token to a user
 		/// </summary>
 		public static void AssignToken(string alias, string token)
 		{
+			//ToDo: sql parameter
 			string sql = $"INSERT INTO token(token, expire, userID)" +
 						$"VALUES('{token}', '{DateTime.Now.AddHours(24).ToString()}'," +
 						$"(SELECT id FROM users WHERE alias = '{alias}'));";
@@ -94,11 +122,11 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
-		/// Select a Query and return a DataTable
+		/// Select a Query and return a DataSet
 		/// </summary>
-		private static DataTable SelectDataTable(OdbcCommand cmd)
+		private static DataSet SelectDataSet(OdbcCommand cmd)
 		{
-			DataTable dt;
+			DataSet dt;
 
 			//Connect
 			using (OdbcConnection con = new OdbcConnection(connectionString))
@@ -111,7 +139,7 @@ namespace NuntiusServer
 					//Execute SQL Statement
 					using (OdbcDataAdapter a = new OdbcDataAdapter(cmd))
 					{
-						dt = new DataTable();
+						dt = new DataSet();
 						a.Fill(dt);
 					}
 				}
