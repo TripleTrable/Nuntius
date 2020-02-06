@@ -24,8 +24,7 @@ namespace nuntiusClientChat.Controls
 		{
 			InitializeComponent();
 			UnReadMsgs = 30;
-			PartnerAlias = chat.Partner.Alias;
-
+			PartnerAlias = chat.Partner.Alias;   
 			this.chat = chat;
 			configGrid();
 
@@ -39,6 +38,8 @@ namespace nuntiusClientChat.Controls
 			Grid.Children.Add(new Label { Text = PartnerAlias, FontAttributes = FontAttributes.Bold, VerticalTextAlignment = TextAlignment.Center }, 2, 1);
 			//Displaing the Unred Messeges
 			Grid.Children.Add(new Label { Text = UnReadMsgs.ToString() }, 3, 1);
+
+			Grid.Children.Remove(OpenChatButten); Grid.Children.Add(OpenChatButten);
 		}
 		
 		private async void OpenChatButten_Clicked(object sender, EventArgs e)
@@ -52,7 +53,7 @@ namespace nuntiusClientChat.Controls
 				//await Navigation.PushAsync(chat, true);
 				await Navigation.PushAsync(new Chat(), true);
 			}
-			await Navigation.PushAsync(new Chat(), true);
+			
 		}
 
 		public Image UserImg { get; set; }

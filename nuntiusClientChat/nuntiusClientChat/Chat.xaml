@@ -55,7 +55,7 @@
 						"{ConstraintExpression 
 							Type=RelativeToParent,
 							Property=Height,
-							Factor=1
+							Factor=0.66
 						}"
 						RelativeLayout.WidthConstraint=
 						"{ConstraintExpression
@@ -68,7 +68,14 @@
 						Type=RelativeToView,
 						ElementName=EditorBackround,
 						Factor=0.87,Property=Width
-						}" CornerRadius="15"/>
+						}" 
+							RelativeLayout.YConstraint=
+						"{ConstraintExpression
+						Type=RelativeToView,
+						ElementName=EditorBackround,
+						Factor=0.02,Property=Width
+						}"
+						CornerRadius="15"/>
 			</RelativeLayout>
 		</Grid>
 	</Grid>

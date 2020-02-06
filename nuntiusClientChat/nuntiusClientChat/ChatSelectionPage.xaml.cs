@@ -7,6 +7,7 @@ using System.Linq;
 using nuntiusModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using nuntiusClientChat.Controls;
 
 namespace nuntiusClientChat
 {
@@ -37,18 +38,24 @@ namespace nuntiusClientChat
 				}
 			}
 		}
-		
+
 		public List<Message> AllRecevedMsgs
 		{
 			get { return allRecevedMsgs; }
 			set { allRecevedMsgs = value; }
 		}
-		
+
 		public List<Chat> Chats
 		{
 			get { return chats; }
 			set { chats = value; }
 		}
 
+		private void addNewChat_Clicked(object sender, EventArgs e)
+		{
+			Chat chat = new Chat();
+			chat.Partner = new User { Alias = "Fynn"};
+			ChatSelectionStack.Children.Add(new ChatSelectionTile(chat));
+		}
 	}
 }

@@ -16,12 +16,12 @@
 				</Grid.RowDefinitions>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="5*"/>
-					<ColumnDefinition Width="20*"/>
+					<ColumnDefinition Width="18*"/>
 					<ColumnDefinition Width="53*"/>
 					<ColumnDefinition Width="12*"/>
 				</Grid.ColumnDefinitions>
 			<Button x:Name="OpenChatButten" Clicked="OpenChatButten_Clicked" Grid.ColumnSpan="4" Grid.RowSpan="3"
-					Opacity="0.2" BackgroundColor="Gray"
+					Opacity="0.5" BackgroundColor="Gray"
 			/>
 				<Grid Grid.Column="0" Grid.Row="1">
 					<!--<BoxView BackgroundColor="Accent"/>-->
