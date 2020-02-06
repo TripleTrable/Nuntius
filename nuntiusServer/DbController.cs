@@ -12,15 +12,7 @@ namespace NuntiusServer
 		//private static string connectionString = "Driver={MySQL ODBC 5.2 UNICODE Driver};Server=localhost;Database=nuntius;User=nuntiusserver;Password=;Option=3;";
 
 		/// <summary>
-		/// temporörer platzhalter
-		/// </summary>
-		public static bool CheckToken(string token)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// temporörer platzhalter
+		/// Check the login data
 		/// </summary>
 		public static bool LogInUser(string alias, string password)
 		{
@@ -30,7 +22,7 @@ namespace NuntiusServer
 			DataTable data = SelectDataTable(command);
 
 			//ToDo: Send Unknown error
-			if(data == null)
+			if (data == null)
 				return false;
 			else if (data.Rows.Count == 1)
 				return true;
@@ -55,11 +47,11 @@ namespace NuntiusServer
 			DataTable dataTable = SelectDataTable(command);
 
 			//ToDo: Send Unknown error
-			if(dataTable == null)
+			if (dataTable == null)
 				return false;
-			else if(dataTable.Rows.Count == 0)
+			else if (dataTable.Rows.Count == 0)
 				return true;
-			
+
 			return false;
 		}
 
@@ -68,7 +60,7 @@ namespace NuntiusServer
 		/// </summary>
 		public static bool RegisterUser(string alias, string password)
 		{
-			if(!CheckUsersAliasAvalible(alias))
+			if (!CheckUsersAliasAvalible(alias))
 				return false;
 
 			string sql = $"INSERT INTO users(alias, pwd_md5) VALUES('{alias}','{password}');";
@@ -80,9 +72,25 @@ namespace NuntiusServer
 		/// <summary>
 		/// temporörer platzhalter
 		/// </summary>
+		public static bool CheckToken(string token)
+		{
+			return true;
+		}
+		/// <summary>
+		/// temporörer platzhalter
+		/// </summary>
 		public static void AssignToken(string alias, string token)
 		{
+			string sql = $"INSERT INTO token(token, expire, userID)" +
+						$"VALUES('{token}', '{DateTime.Now.AddHours(24).ToString()}'," +
+						$"(SELECT id FROM users WHERE alias = '{alias}'));";
 
+			System.Console.WriteLine(sql);
+
+			OdbcCommand command = new OdbcCommand(sql);
+
+			//ToDo: unknown exeption
+			ExecuteNonQuerry(command);
 		}
 
 		/// <summary>

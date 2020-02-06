@@ -14,7 +14,10 @@ namespace NuntiusServer
 			if (!DbController.LogInUser(alias, password))
 				return null;
 
-			return GenerateToken(alias);
+			string token = GenerateToken(alias);
+			DbController.AssignToken(alias, token);
+
+			return token;
 		}
 
 		/// <summary>
@@ -46,9 +49,6 @@ namespace NuntiusServer
 				}
 
 			} while (!DbController.CheckToken(new String(token)));
-
-			//Assign the token
-			DbController.AssignToken(alias, new String(token));
 
 			return new String(token);
 		}
