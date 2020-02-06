@@ -97,7 +97,6 @@ namespace nuntiusClientChat.Controller
 
             Response r = await SendReqestToServerAsync(request);
 
-
         }
         public async static Task sendNaggRequstAsync()
         {
@@ -109,12 +108,7 @@ namespace nuntiusClientChat.Controller
             //convets the response to a List of Messeges
             string s = r.Parameters[0].ToString();
             List<Message> messages = JsonSerializer.Deserialize<List<Message>>(s);
-
-            foreach (Message message in messages)
-            {
-                UserController.LogedInUser.Messages.AddLast(message);
-
-            }
+                
         }
         //TODP: await implementation
         public static async Task<Response> SendReqestToServerAsync(Request request)

@@ -17,45 +17,26 @@ namespace nuntiusClientChat
 		public ChatSelectionPage()
 		{
 			InitializeComponent();
-			//ChatSelectionStack.Children.Add(new Controls.ChatSelectionTile());
 		}
 
-		private List<Chat> chats;
-		private List<Message> allRecevedMsgs;
-
-		public void SortMeseges(List<Message> recievedMsg)
-		{
-			foreach (Chat chat in chats)
-			{
-				List<Message> messageQerry =
-					(from message in allRecevedMsgs
-					 where (message.From) == chat.Partner.Alias
-					 select message).ToList();
-
-				foreach (Message messages in messageQerry)
-				{
-					chat.ConversationController.AddMessage(messages);
-				}
-			}
-		}
-
-		public List<Message> AllRecevedMsgs
-		{
-			get { return allRecevedMsgs; }
-			set { allRecevedMsgs = value; }
-		}
-
-		public List<Chat> Chats
-		{
-			get { return chats; }
-			set { chats = value; }
-		}
+		private List<ChatPage> chats;
 
 		private void addNewChat_Clicked(object sender, EventArgs e)
 		{
-			Chat chat = new Chat();
-			chat.Partner = new User { Alias = "Fynn"};
+			//ChatPage chat = new ChatPage(new Chat { Owner = "HansRudi", Partner = "Ödön",ChatMessages = new List<Message> { new Message { Text = "Hallo Welt!", To = "HansRudi", From = "Ödön", Sent = DateTime.Now } } });
+			ChatPage chat = new ChatPage(new Chat { Owner = "Ödön", Partner = "HansRudi", ChatMessages = new List<Message> { new Message { Text = "Hallo Welt!", From = "HansRudi", To = "Ödön", Sent = DateTime.Now } } });
 			ChatSelectionStack.Children.Add(new ChatSelectionTile(chat));
+		}
+
+		private void SlectChat()
+		{
+
+		}
+
+		public List<ChatPage> Chats
+		{
+			get { return chats; }
+			set { chats = value; }
 		}
 	}
 }

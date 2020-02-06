@@ -13,19 +13,34 @@ using Xamarin.Forms.Xaml;
 namespace nuntiusClientChat
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class Chat : ContentPage
+	public partial class ChatPage : ContentPage
 	{
-		private User partner;
-		private User owner;
-		private int id;
 		private ConversationController conversationController;
 
-		public Chat()
+		public ChatPage()
 		{
 			InitializeComponent();
 			conversationController = new ConversationController();
 			conversationController.MessageAdded += ConversationController_MessageAdded;
 		}
+
+		public ChatPage(Chat chat)
+		{
+			InitializeComponent();
+			
+			if (chat == null)
+			{
+				return;
+			}
+
+			this.Chat = chat;
+
+			foreach (var messages in chat.ChatMessages)
+			{
+				MsgChatStack.Children.Add(new Label { Text = messages.Text });
+			}
+		}
+	
 		public void AddPrerentResponse(List<Message> messages)
 		{
 			foreach (var item in messages)
@@ -46,30 +61,13 @@ namespace nuntiusClientChat
 		private void ConversationController_MessageAdded(object source, MessageEventArgs args)
 		{
 			MsgChatStack.Children.Add(new MessageControll(false, args.Message));
-			NetworkController.NagServer();
 		}
 		
-		public int ID
-		{
-			get { return id; }
-			set { id = value; }
-		}
-						
-		public User Owner
-		{
-			get { return owner; }
-			set { owner = UserController.LogedInUser; }
-		}
-		
-		public User Partner
-		{
-			get { return partner; }
-			set { partner = value; }
-		}
 		public ConversationController ConversationController
 		{
 			get { return conversationController; }
 			set { conversationController = value; }
 		}
+		public Chat Chat { get; set; }
 	}
 }

@@ -12,7 +12,7 @@ namespace nuntiusClientChat.Controls
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChatSelectionTile : ContentView
 	{
-		private Chat chat;
+		private ChatPage chatPage;
 		public ChatSelectionTile()
 		{
 			InitializeComponent();
@@ -20,14 +20,14 @@ namespace nuntiusClientChat.Controls
 			PartnerAlias = "   TestUser";
 			configGrid();
 		}
-		public ChatSelectionTile(Chat chat)
+		public ChatSelectionTile(ChatPage chat)
 		{
 			InitializeComponent();
-			UnReadMsgs = 30;
-			PartnerAlias = chat.Partner.Alias;   
-			this.chat = chat;
+			UnReadMsgs = 0;
+			this.chatPage = chat;
+			PartnerAlias = chatPage.Chat.Partner;
+			PartnerAlias = "   " + PartnerAlias;
 			configGrid();
-
 		}
 
 		public void configGrid()
@@ -41,19 +41,19 @@ namespace nuntiusClientChat.Controls
 
 			Grid.Children.Remove(OpenChatButten); Grid.Children.Add(OpenChatButten);
 		}
-		
+
 		private async void OpenChatButten_Clicked(object sender, EventArgs e)
 		{
-			if (chat == null)
+			if (chatPage == null)
 			{
 				return;
 			}
 			else
 			{
-				//await Navigation.PushAsync(chat, true);
-				await Navigation.PushAsync(new Chat(), true);
+				await Navigation.PushAsync(chatPage, true);
+				//await Navigation.PushAsync(new ChatPage(), true);
 			}
-			
+
 		}
 
 		public Image UserImg { get; set; }
