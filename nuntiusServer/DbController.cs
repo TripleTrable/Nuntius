@@ -22,9 +22,20 @@ namespace NuntiusServer
 		/// <summary>
 		/// temporörer platzhalter
 		/// </summary>
-		public static User LogInUser(string alias, string password)
+		public static bool LogInUser(string alias, string password)
 		{
-			return new User("test", "1234");
+			//ToDo: Use sql parameter
+			OdbcCommand command = new OdbcCommand($"SELECT 1 FROM users WHERE alias = '{alias}' AND pwd_md5 = '{password}'");
+
+			DataTable data = SelectDataTable(command);
+
+			//ToDo: Send Unknown error
+			if(data == null)
+				return false;
+			else if (data.Rows.Count == 1)
+				return true;
+
+			return false;
 		}
 
 		/// <summary>

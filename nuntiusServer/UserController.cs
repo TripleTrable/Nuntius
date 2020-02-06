@@ -7,19 +7,18 @@ namespace NuntiusServer
 	public static class UserController
 	{
 		/// <summary>
-		/// try to log a user in
+		/// try to log a user in and assingn a token
 		/// </summary>
 		public static string Login(string alias, string password)
 		{
-			User user = DbController.LogInUser(alias, password);
-			if (user == null)
+			if (!DbController.LogInUser(alias, password))
 				return null;
 
 			return GenerateToken(alias);
 		}
 
 		/// <summary>
-		/// Register a new user if the alis is free and assing a token
+		/// Register a new user if the alias is free and assing a token
 		/// </summary>
 		public static string RegisterNewUser(string alias, string password)
 		{
