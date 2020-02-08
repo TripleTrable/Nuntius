@@ -1,36 +1,29 @@
 using System;
 using nuntiusModel;
 using System.Data;
-using System.Data.Odbc;
+using Npgsql;
 
 namespace NuntiusServer
 {
 	//ToDo: implement
 	public static class DbController
 	{
-		private static string connectionString = "Driver={PostgreSQL Unicode};Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
+		private static string connectionString = "Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
+		//private static string connectionString = "Driver={PostgreSQL Unicode};Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
 		//private static string connectionString = "Driver={MySQL ODBC 5.2 UNICODE Driver};Server=localhost;Database=nuntius;User=nuntiusserver;Password=;Option=3;";
 
 		/// <summary>
-		/// temporörer platzhalter
-		/// </summary>
-		public static bool CheckToken(string token)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// temporörer platzhalter
+		/// Check the login data
 		/// </summary>
 		public static bool LogInUser(string alias, string password)
 		{
 			//ToDo: Use sql parameter
-			OdbcCommand command = new OdbcCommand($"SELECT 1 FROM users WHERE alias = '{alias}' AND pwd_md5 = '{password}'");
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM users WHERE alias = '{alias}' AND pwd_md5 = '{password}'");
 
 			DataTable data = SelectDataTable(command);
 
 			//ToDo: Send Unknown error
-			if(data == null)
+			if (data == null)
 				return false;
 			else if (data.Rows.Count == 1)
 				return true;
@@ -39,27 +32,19 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
-		/// temporörer platzhalter
-		/// </summary>
-		public static User SelectUser(string alias)
-		{
-			return new User(alias, "1234");
-		}
-
-		/// <summary>
 		/// Check if a alias already exists
 		/// </summary>
 		public static bool CheckUsersAliasAvalible(string alias)
 		{
-			OdbcCommand command = new OdbcCommand($"SELECT 1 FROM users WHERE alias = '{alias}'");
-			DataTable dataTable = SelectDataTable(command);
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM users WHERE alias = '{alias}'");
+			DataTable data = SelectDataTable(command);
 
 			//ToDo: Send Unknown error
-			if(dataTable == null)
+			if (data == null)
 				return false;
-			else if(dataTable.Rows.Count == 0)
+			else if (data.Rows.Count == 0)
 				return true;
-			
+
 			return false;
 		}
 
@@ -68,32 +53,83 @@ namespace NuntiusServer
 		/// </summary>
 		public static bool RegisterUser(string alias, string password)
 		{
-			if(!CheckUsersAliasAvalible(alias))
+			if (!CheckUsersAliasAvalible(alias))
 				return false;
 
 			string sql = $"INSERT INTO users(alias, pwd_md5) VALUES('{alias}','{password}');";
 
-			ExecuteNonQuerry(new OdbcCommand(sql));
+			//ToDo: Send Unknown error
+			ExecuteNonQuerry(new NpgsqlCommand(sql));
 			return true;
 		}
 
 		/// <summary>
-		/// temporörer platzhalter
+		/// Check if a user already has a token
+		/// </summary>
+		public static string HasUserAToken(string alias)
+		{
+			//ToDo: sql Prameter
+			string sql = "SELECT token FROM token " +
+						$"WHERE userID = (SELECT id FROM users WHERE alias = '{alias}');";
+
+			NpgsqlCommand command = new NpgsqlCommand(sql);
+			DataTable data = SelectDataTable(command);
+
+			//ToDo: unknown exeption
+			if (data == null)
+				return "";
+
+			if (data.Rows.Count == 0)
+				return "";
+
+			//Extract the token
+			string token = data.Rows[0].ItemArray[0].ToString();
+
+			return token;
+		}
+
+		/// <summary>
+		/// Check if a token is alrady used
+		/// </summary>
+		public static bool IsTokenFree(string token)
+		{
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM token WHERE token = '{token}'");
+			DataTable data = SelectDataTable(command);
+
+			//ToDo: Send unknown error
+			if(data == null)
+				return false;
+			else if (data.Rows.Count == 1)
+				return false;
+
+			return true;
+		}
+
+		/// <summary>
+		/// Assing a new token to a user
 		/// </summary>
 		public static void AssignToken(string alias, string token)
 		{
+			//ToDo: sql parameter
+			string sql = $"INSERT INTO token(token, expire, userID)" +
+						$"VALUES('{token}', '{DateTime.Now.AddHours(24).ToString()}'," +
+						$"(SELECT id FROM users WHERE alias = '{alias}'));";
 
+			NpgsqlCommand command = new NpgsqlCommand(sql);
+
+			//ToDo: unknown exeption
+			ExecuteNonQuerry(command);
 		}
 
 		/// <summary>
 		/// Select a Query and return a DataTable
 		/// </summary>
-		private static DataTable SelectDataTable(OdbcCommand cmd)
+		private static DataTable SelectDataTable(NpgsqlCommand cmd)
 		{
 			DataTable dt;
 
 			//Connect
-			using (OdbcConnection con = new OdbcConnection(connectionString))
+			using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
 			{
 				cmd.Connection = con;
 				try
@@ -101,7 +137,7 @@ namespace NuntiusServer
 					con.Open();
 
 					//Execute SQL Statement
-					using (OdbcDataAdapter a = new OdbcDataAdapter(cmd))
+					using (NpgsqlDataAdapter a = new NpgsqlDataAdapter(cmd))
 					{
 						dt = new DataTable();
 						a.Fill(dt);
@@ -123,12 +159,12 @@ namespace NuntiusServer
 		/// <summary>
 		///  Connect to the database and execute a non querry
 		/// </summary>
-		private static int ExecuteNonQuerry(OdbcCommand command)
+		private static int ExecuteNonQuerry(NpgsqlCommand command)
 		{
 			int result;
 
 			// create SqlConnection object
-			using (OdbcConnection con = new OdbcConnection(connectionString))
+			using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
 			{
 				try
 				{
