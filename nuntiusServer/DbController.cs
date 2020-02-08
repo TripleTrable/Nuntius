@@ -93,6 +93,15 @@ namespace NuntiusServer
 		/// </summary>
 		public static bool IsTokenFree(string token)
 		{
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM token WHERE token = '{token}'");
+			DataTable data = SelectDataTable(command);
+
+			//ToDo: Send unknown error
+			if(data == null)
+				return false;
+			else if (data.Rows.Count == 1)
+				return false;
+
 			return true;
 		}
 
