@@ -14,7 +14,7 @@ namespace NuntiusServer
 			if (!DbController.LogInUser(alias, password))
 				return null;
 
-			string token = DbController.IsTokenAvalible(alias);
+			string token = DbController.HasUserAToken(alias);
 
 			//Check if the user has a token
 			if (token == "")
