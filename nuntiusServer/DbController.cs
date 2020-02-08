@@ -64,6 +64,23 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public static string GetAliasFromToken(string token)
+		{
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT alias FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
+			DataTable data =  SelectDataTable(command);
+
+			//ToDo: unknown error
+			if(data == null)
+				return "";
+			else if(data.Rows.Count == 0)
+				return "";
+			
+			return data.Rows[0].ItemArray[0].ToString();
+		}
+
+		/// <summary>
 		/// Check if a user already has a token
 		/// </summary>
 		public static string HasUserAToken(string alias)

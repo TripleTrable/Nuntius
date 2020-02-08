@@ -46,6 +46,18 @@ namespace nuntiusModel
 			parameters = null;
 		}
 
+		public void SendErrorResponse()
+		{
+			type = "sendError";
+			parameters = null;
+		}
+
+		public void InvalidToken()
+		{
+			type = "invalidToken";
+			parameters = null;
+		}
+
         //ToDo: Überlegen die das sinnvoll gelöst werden kann
 		public void ParentResponse(List<Message> messages)
 		{
