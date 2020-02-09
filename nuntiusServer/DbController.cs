@@ -70,13 +70,13 @@ namespace NuntiusServer
 		public static int? GetIdFromToken(string token)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.id FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
-			DataTable data =  SelectDataTable(command);
+			DataTable data = SelectDataTable(command);
 
-			if(data == null)
+			if (data == null)
 				return null;
-			else if(data.Rows.Count == 0)
+			else if (data.Rows.Count == 0)
 				return 0;
-			
+
 			return Convert.ToInt32(data.Rows[0].ItemArray[0].ToString());
 		}
 
@@ -114,7 +114,7 @@ namespace NuntiusServer
 			DataTable data = SelectDataTable(command);
 
 			//ToDo: Send unknown error
-			if(data == null)
+			if (data == null)
 				return false;
 			else if (data.Rows.Count == 1)
 				return false;
@@ -132,12 +132,12 @@ namespace NuntiusServer
 			string sql = $"INSERT INTO messages(from_user, to_user, send, content) VALUES({fromID}, (SELECT id FROM users WHERE alias = '{toAlias}'), '{send.ToString()}', '{message}')";
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 
-			return ExecuteNonQuerry(command);			
+			return ExecuteNonQuerry(command);
 		}
 
 		public static List<Message> SelectUnreadMessages(int userID)
 		{
-			string sql = $@"SELECT uf.alias, ut.alias, m.send, m.content
+			string sql = $@"SELECT uf.alias, ut.alias, m.send, m.content, m.id
 						     FROM messages m
 							 JOIN users uf
 							   ON m.from_user = uf.id
@@ -153,7 +153,7 @@ namespace NuntiusServer
 
 			//Convet data table to messages
 			List<Message> newMessages = new List<Message>();
-			foreach(DataRow row in data.Rows)
+			foreach (DataRow row in data.Rows)
 			{
 				Message message = new Message()
 				{
@@ -163,6 +163,10 @@ namespace NuntiusServer
 					Text = row.ItemArray[3].ToString()
 				};
 				newMessages.Add(message);
+
+				//Set the message to read
+				NpgsqlCommand updateCommand = new NpgsqlCommand($"UPDATE messages SET unread = false WHERE id = {row.ItemArray[4]};");
+				ExecuteNonQuerry(updateCommand);
 			}
 
 			return newMessages;
