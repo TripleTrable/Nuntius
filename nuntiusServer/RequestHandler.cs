@@ -31,7 +31,7 @@ namespace NuntiusServer
 					break;
 
 				case "send":
-					response.SendSuccessResponse();
+					response = SendResponse(request);
 					break;
 
 				default:
@@ -77,6 +77,48 @@ namespace NuntiusServer
 				response.RegistrationSuccessResponse(token);
 			else
 				response.RegistrationErrorResponse();
+
+			return response;
+		}
+
+		/// <summary>
+		/// Handel the send request
+		/// </summary>
+		private static Response SendResponse(Request request)
+		{
+			Response response = new Response();
+			string token = request.Parameters[0].ToString();
+			string toAlias = request.Parameters[1].ToString();
+			DateTime send = Convert.ToDateTime(request.Parameters[2].ToString());
+			string message = request.Parameters[3].ToString();
+
+			//Check token
+			int? fromUserID = DbController.GetAliasFromToken(token);
+
+			if (fromUserID == null)
+			{
+				response.UnknownErrorRespone();
+				return response;
+			}
+			else if(fromUserID == 0)
+			{
+				response.InvalidToken();
+				return response;
+			}
+
+			//ToDo: Check to alias (if user was deleted)
+			
+			//Save messages
+			int result = DbController.InsertNewMessage(fromUserID.Value, toAlias, send, message);
+
+			if(result == 0)
+			{
+				response.SendErrorResponse();
+				return response;
+			}
+
+			//succsess
+			response.SendSuccessResponse();
 
 			return response;
 		}

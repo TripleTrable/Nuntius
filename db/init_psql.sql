@@ -25,6 +25,7 @@ CREATE TABLE messages (
 	to_user INT NOT NULL,
 	send TIMESTAMP NOT NULL,
 	content TEXT NOT NULL,
+	unread BOOLEAN DEFAULT true NOT NULL,
 
 	FOREIGN KEY (from_user) REFERENCES users(id),
 	FOREIGN KEY (to_user)   REFERENCES users(id)
@@ -44,4 +45,5 @@ GRANT DELETE ON token TO nuntiusServer;
 
 GRANT SELECT ON messages TO nuntiusServer;
 GRANT INSERT ON messages TO nuntiusServer;
+GRANT UPDATE ON messages TO nuntiusServer;
 GRANT UPDATE ON messages_id_seq TO nuntiusServer;

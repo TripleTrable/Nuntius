@@ -64,6 +64,22 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public static int? GetAliasFromToken(string token)
+		{
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.id FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
+			DataTable data =  SelectDataTable(command);
+
+			if(data == null)
+				return null;
+			else if(data.Rows.Count == 0)
+				return 0;
+			
+			return Convert.ToInt32(data.Rows[0].ItemArray[0].ToString());
+		}
+
+		/// <summary>
 		/// Check if a user already has a token
 		/// </summary>
 		public static string HasUserAToken(string alias)
@@ -104,6 +120,17 @@ namespace NuntiusServer
 
 			return true;
 		}
+
+
+		public static int InsertNewMessage(int fromID, string toAlias, DateTime send, string message)
+		{
+			//ToDo: add parameter
+			string sql = $"INSERT INTO messages(from_user, to_user, send, content) VALUES({fromID}, (SELECT id FROM users WHERE alias = '{toAlias}'), '{send.ToString()}', '{message}')";
+			NpgsqlCommand command = new NpgsqlCommand(sql);
+
+			return ExecuteNonQuerry(command);			
+		}
+
 
 		/// <summary>
 		/// Assing a new token to a user
