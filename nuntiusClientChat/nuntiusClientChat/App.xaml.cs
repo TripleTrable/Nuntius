@@ -15,7 +15,7 @@ namespace nuntiusClientChat
 			else
 			{
 				MainPage = new LoginRegisterPage();
-				MainPage = new NavigationPage(new ChatSelectionPage());
+				//MainPage = new NavigationPage(new ChatSelectionPage());
 			}
 
 
@@ -23,6 +23,7 @@ namespace nuntiusClientChat
 
 		protected override void OnStart()
 		{
+
 		}
 
 		protected override void OnSleep()

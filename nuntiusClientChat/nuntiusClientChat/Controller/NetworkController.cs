@@ -12,174 +12,191 @@ using System.Timers;
 
 namespace nuntiusClientChat.Controller
 {
-    static class NetworkController
-    {
-        private static Timer nagTimer = new Timer();
+	static class NetworkController
+	{
+		private static Timer nagTimer = new Timer(); public static bool NagTimerRun { get; set; }
+		public static ChatSelectionController selectionController = new ChatSelectionController();
 
-        #region NagTimer
-        /// <summary>
-        /// When user is successfully Logged in the metode shoud be called to start Nag Requests
-        /// </summary>
-        public static void NagServer()
-        {
-            nagTimer.Interval = 1000;
-            nagTimer.Elapsed += NagTimer_ElapsedAsync;
-            nagTimer.Enabled = true;
-            nagTimer.AutoReset = true;
-            nagTimer.Start();
-        }
+		#region NagTimer
+		/// <summary>
+		/// When user is successfully Logged in the metode shoud be called to start Nag Requests
+		/// </summary>
+		public static void ConfigurNagServer()
+		{
+			nagTimer.Interval = 1000;
+			nagTimer.Elapsed += NagTimer_ElapsedAsync;
+			nagTimer.Enabled = true;
+			nagTimer.AutoReset = true;
+			NagTimerRun = true;
+			//nagTimer.Start();
+		}
+		private async static void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
+		{
+			if (!NagTimerRun)
+			{
+				return;
+			}
+			else
+			{
+				await sendNaggRequstAsync();
+			}
 
-        private async static void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
-        {
-            await sendNaggRequstAsync();
-        }
-        #endregion
+		}
 
-        public async static Task<bool> SendRegisterRequestAsync(string alias, string pwd)
-        {
-            string hashPwd;
+		#endregion
+		public async static Task<bool> SendRegisterRequestAsync(string alias, string pwd)
+		{
+			string hashPwd;
 
-            using (MD5 md5hash = MD5.Create())
-            {
-                hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
-            }
+			using (MD5 md5hash = MD5.Create())
+			{
+				hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+			}
 
-            Request request = new Request();
-            request.RegisterRequest(alias, hashPwd);
+			Request request = new Request();
+			request.RegisterRequest(alias, hashPwd);
 
-            Response r = await SendReqestToServerAsync(request);
+			Response r = await SendReqestToServerAsync(request);
 
-            if (r.Type == "registationSuccess")
-            {
+			if (r.Type == "registationSuccess")
+			{
 
-                UserController.CurrentTocken = r.Parameters[0].ToString();
-                UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
-                NagServer();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public async static Task<bool> SendLoginRequestAsync(string alias, string pwd)
-        {
-            string hashPwd;
-            using (MD5 md5hash = MD5.Create())
-            {
-                hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
-            }
+				UserController.CurrentTocken = r.Parameters[0].ToString();
+				UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
+				ConfigurNagServer();
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
-            Request request = new Request();
-            request.LoginRequest(alias, hashPwd);
+		public async static Task<bool> SendLoginRequestAsync(string alias, string pwd)
+		{
+			string hashPwd;
+			using (MD5 md5hash = MD5.Create())
+			{
+				hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+			}
 
-            Response r = await SendReqestToServerAsync(request);
+			Request request = new Request();
+			request.LoginRequest(alias, hashPwd);
 
-            if (r.Type == "loginSuccess")
-            {
+			Response r = await SendReqestToServerAsync(request);
 
-                UserController.CurrentTocken = r.Parameters[0].ToString();
-                UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
-                NagServer();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
-        {
-            UserController.CurrentTocken = "123uztrerftr543ert453";
+			if (r.Type == "loginSuccess")
+			{
 
-            Request request = new Request();
-            request.SendRequest(UserController.CurrentTocken, toAlias, sendTime, msgText);
+				UserController.CurrentTocken = r.Parameters[0].ToString();
+				UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
+				ConfigurNagServer();
+				
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
 
-            Response r = await SendReqestToServerAsync(request);
+		public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
+		{
+			UserController.CurrentTocken = "123uztrerftr543ert453";
 
-        }
-        public async static Task sendNaggRequstAsync()
-        {
-            Request request = new Request();
-            request.NaggRequst(UserController.CurrentTocken);
+			Request request = new Request();
+			request.SendRequest(UserController.CurrentTocken, toAlias, sendTime, msgText);
 
-            Response r = await SendReqestToServerAsync(request);
+			Response r = await SendReqestToServerAsync(request);
 
-            //convets the response to a List of Messeges
-            string s = r.Parameters[0].ToString();
-            List<Message> messages = JsonSerializer.Deserialize<List<Message>>(s);
-                
-        }
-        //TODP: await implementation
-        public static async Task<Response> SendReqestToServerAsync(Request request)
-        {
-            byte[] bytes = new byte[4096];
-            string message = JsonSerializer.Serialize(request);
-            try
-            {               
-                // IPHostEntry host = Dns.GetHostEntry("localhost");
-                // IPAddress ipAddress = host.AddressList[0];
-                // IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
+		}
 
-                IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
-                // IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+		public async static Task sendNaggRequstAsync()
+		{
+			Request request = new Request();
+			request.NaggRequst(UserController.CurrentTocken);
 
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+			Response r = await SendReqestToServerAsync(request);
 
-                // Create a TCP/IP  socket.    
-                Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                //sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+			//convets the response to a List of Messeges
+			string s = r.Parameters[0].ToString();
+			List<Message> messages = JsonSerializer.Deserialize<List<Message>>(s);
 
-                // Connect the socket to the remote endpoint. Catch any errors.    
-                try
-                {
-                    // Connect to Remote EndPoint  
-                   await sender.ConnectAsync(remoteEP);
+			if (messages != null)
+			{
+				NagTimerRun = false;
+				await Task.Run(() => selectionController.SortMeseges(messages));
+			}
 
-                    // Encode the data string into a byte array.    
-                    byte[] msg = Encoding.ASCII.GetBytes(message);
+		}
+		public static async Task<Response> SendReqestToServerAsync(Request request)
+		{
+			byte[] bytes = new byte[4096];
+			string message = JsonSerializer.Serialize(request);
+			try
+			{
+				
 
-                    // Send the data through the socket.    
-                    int bytesSent = sender.Send(msg);
+				IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
+				//IPAddress ipAddress = IPAddress.Loopback;
+				// IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
-                    // Receive the response from the remote device.    
-                    int bytesRec = sender.Receive(bytes);
+				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
-                    string text = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+				// Create a TCP/IP  socket.    
+				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+				//sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
-                    //Server Response
-                    Response response = JsonSerializer.Deserialize<Response>(text);
+				// Connect the socket to the remote endpoint. Catch any errors.    
+				try
+				{
+					// Connect to Remote EndPoint  
+					await sender.ConnectAsync(remoteEP);
 
-                    // Release the socket.    
-                    sender.Shutdown(SocketShutdown.Both);
-                    sender.Close();
+					// Encode the data string into a byte array.    
+					byte[] msg = Encoding.ASCII.GetBytes(message);
 
-                    return response;
-                }
-                catch (ArgumentNullException ane)
-                {
-                    Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                    return null;
-                }
-                catch (SocketException se)
-                {
-                    Console.WriteLine("SocketException : {0}", se.ToString());
-                    return null;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                    return null;
-                }
+					// Send the data through the socket.    
+					int bytesSent = sender.Send(msg);
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                return null;
-            }
-        }
-    }
+					// Receive the response from the remote device.    
+					int bytesRec = sender.Receive(bytes);
+
+					string text = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+
+					//Server Response
+					Response response = JsonSerializer.Deserialize<Response>(text);
+
+					// Release the socket.    
+					sender.Shutdown(SocketShutdown.Both);
+					sender.Close();
+
+					return response;
+				}
+				catch (ArgumentNullException ane)
+				{
+					Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+					return null;
+				}
+				catch (SocketException se)
+				{
+					Console.WriteLine("SocketException : {0}", se.ToString());
+					return null;
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine("Unexpected exception : {0}", e.ToString());
+					return null;
+				}
+
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.ToString());
+				return null;
+			}
+		}
+	}
 
 
 }

@@ -8,18 +8,27 @@ using nuntiusModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using nuntiusClientChat.Controls;
+using nuntiusClientChat.Controller;
 
 namespace nuntiusClientChat
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChatSelectionPage : ContentPage
 	{
+		ChatSelectionController chatSelection;
+
+		private List<ChatPage> chats;
+
 		public ChatSelectionPage()
 		{
 			InitializeComponent();
-		}
+			
+			chatSelection = NetworkController.selectionController;
 
-		private List<ChatPage> chats;
+			chatSelection.ChatAdded += Chat_Added;
+
+			//chatSelection.AddChatSelectionTile(new ChatSelectionTile());
+		}
 
 		private void addNewChat_Clicked(object sender, EventArgs e)
 		{
@@ -30,6 +39,20 @@ namespace nuntiusClientChat
 
 		private void SlectChat()
 		{
+			
+		}
+
+		private void Chat_Added(object source, ChatEventArgs args)
+		{
+			ChatPage chatPage = new ChatPage(args.Chat);
+			ChatSelectionTile chatSelectionTile = new ChatSelectionTile(chatPage);
+
+		
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				ChatSelectionStack.Children.Add(chatSelectionTile);
+			});
+			
 
 		}
 

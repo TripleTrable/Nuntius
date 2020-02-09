@@ -38,8 +38,8 @@ namespace nuntiusClientChat
 
 		private async void continueButton_ClickedAsync(object sender, EventArgs e)
 		{
-			App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-
+			//App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+			//NetworkController.sendNaggRequstAsync();
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
@@ -57,8 +57,10 @@ namespace nuntiusClientChat
 					await Task.WhenAll(NetworkController.SendRegisterRequestAsync(AliasEntry.Text, PasswordEntry.Text));
 				}
 				//Open the Chat selection
-				// await Navigation.PushAsync(new MainPage());
+				App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+		
 			}
+
 		}
 
 
