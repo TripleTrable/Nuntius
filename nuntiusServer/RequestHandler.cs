@@ -93,18 +93,29 @@ namespace NuntiusServer
 			string message = request.Parameters[3].ToString();
 
 			//Check token
-			string alias = DbController.GetAliasFromToken(token);
+			int? fromUserID = DbController.GetAliasFromToken(token);
 
-			if(alias == "")
+			if (fromUserID == null)
+			{
+				response.UnknownErrorRespone();
+				return response;
+			}
+			else if(fromUserID == 0)
 			{
 				response.InvalidToken();
 				return response;
 			}
 
-			//Check to alias
-
-
+			//ToDo: Check to alias (if user was deleted)
+			
 			//Save messages
+			int result = DbController.InsertNewMessage(fromUserID.Value, toAlias, send, message);
+
+			if(result == 0)
+			{
+				response.SendErrorResponse();
+				return response;
+			}
 
 			//succsess
 			response.SendSuccessResponse();
