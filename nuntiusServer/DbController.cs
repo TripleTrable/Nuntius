@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using nuntiusModel;
 using System.Data;
 using Npgsql;
@@ -66,7 +67,7 @@ namespace NuntiusServer
 		/// <summary>
 		/// 
 		/// </summary>
-		public static int? GetAliasFromToken(string token)
+		public static int? GetIdFromToken(string token)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.id FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
 			DataTable data =  SelectDataTable(command);
@@ -122,6 +123,9 @@ namespace NuntiusServer
 		}
 
 
+		/// <summary>
+		/// Inset a new message in the table
+		/// </summary>
 		public static int InsertNewMessage(int fromID, string toAlias, DateTime send, string message)
 		{
 			//ToDo: add parameter
@@ -131,6 +135,38 @@ namespace NuntiusServer
 			return ExecuteNonQuerry(command);			
 		}
 
+		public static List<Message> SelectUnreadMessages(int userID)
+		{
+			string sql = $@"SELECT uf.alias, ut.alias, m.send, m.content
+						     FROM messages m
+							 JOIN users uf
+							   ON m.from_user = uf.id
+							 JOIN users ut
+							   ON m.to_user = ut.id
+						    WHERE (m.to_user = {userID} 
+							   OR m.from_user = {userID})
+							  AND m.unread = true";
+
+			NpgsqlCommand command = new NpgsqlCommand(sql);
+
+			DataTable data = SelectDataTable(command);
+
+			//Convet data table to messages
+			List<Message> newMessages = new List<Message>();
+			foreach(DataRow row in data.Rows)
+			{
+				Message message = new Message()
+				{
+					From = row.ItemArray[0].ToString(),
+					To = row.ItemArray[1].ToString(),
+					Sent = Convert.ToDateTime(row.ItemArray[2].ToString()),
+					Text = row.ItemArray[3].ToString()
+				};
+				newMessages.Add(message);
+			}
+
+			return newMessages;
+		}
 
 		/// <summary>
 		/// Assing a new token to a user

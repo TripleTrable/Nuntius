@@ -18,12 +18,7 @@ namespace NuntiusServer
 					break;
 
 				case "nagg":
-
-					List<Message> m = new List<Message>();
-					m.Add(new Message { From = "adelGames", To = "fynn002", Sent = DateTime.Now, Text = "Hallo, wie geht es Ihnen? Mit freindlichen Grüßen AdelGames!"});
-					m.Add(new Message { From = "fynn002", To = "adelGames", Sent = DateTime.Now, Text = "Sehr geehret Herr Fynn002 mit geht es gut. Ebenfalls feindliche Grüße!"});
-					response.ParentResponse(m);
-					//response.UnknownErrorRespone();
+					response = NagResponse(request);
 					break;
 
 				case "register":
@@ -93,25 +88,25 @@ namespace NuntiusServer
 			string message = request.Parameters[3].ToString();
 
 			//Check token
-			int? fromUserID = DbController.GetAliasFromToken(token);
+			int? fromUserID = DbController.GetIdFromToken(token);
 
 			if (fromUserID == null)
 			{
 				response.UnknownErrorRespone();
 				return response;
 			}
-			else if(fromUserID == 0)
+			else if (fromUserID == 0)
 			{
 				response.InvalidToken();
 				return response;
 			}
 
 			//ToDo: Check to alias (if user was deleted)
-			
+
 			//Save messages
 			int result = DbController.InsertNewMessage(fromUserID.Value, toAlias, send, message);
 
-			if(result == 0)
+			if (result == 0)
 			{
 				response.SendErrorResponse();
 				return response;
@@ -119,6 +114,36 @@ namespace NuntiusServer
 
 			//succsess
 			response.SendSuccessResponse();
+
+			return response;
+		}
+
+		/// <summary>
+		/// Send unread messages
+		/// </summary>
+		private static Response NagResponse(Request request)
+		{
+			Response response = new Response();
+
+			string userAlias = request.Parameters[0].ToString();
+			int? userID = DbController.GetIdFromToken(userAlias);
+
+			if(userID == null)
+			{
+				response.UnknownErrorRespone();
+				return response;
+			}
+			else if (userID == 0)
+			{
+				response.InvalidToken();
+				return response;
+			}
+
+			//Get the unread messages
+			List<Message> newMessages = DbController.SelectUnreadMessages(userID.Value);
+
+			//Send the messages
+			response.ParentResponse(newMessages);
 
 			return response;
 		}
