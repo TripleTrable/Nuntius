@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using nuntiusModel;
 using System.Data;
 using Npgsql;
@@ -66,16 +67,16 @@ namespace NuntiusServer
 		/// <summary>
 		/// 
 		/// </summary>
-		public static int? GetAliasFromToken(string token)
+		public static int? GetIdFromToken(string token)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.id FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
-			DataTable data =  SelectDataTable(command);
+			DataTable data = SelectDataTable(command);
 
-			if(data == null)
+			if (data == null)
 				return null;
-			else if(data.Rows.Count == 0)
+			else if (data.Rows.Count == 0)
 				return 0;
-			
+
 			return Convert.ToInt32(data.Rows[0].ItemArray[0].ToString());
 		}
 
@@ -113,7 +114,7 @@ namespace NuntiusServer
 			DataTable data = SelectDataTable(command);
 
 			//ToDo: Send unknown error
-			if(data == null)
+			if (data == null)
 				return false;
 			else if (data.Rows.Count == 1)
 				return false;
@@ -122,15 +123,54 @@ namespace NuntiusServer
 		}
 
 
+		/// <summary>
+		/// Inset a new message in the table
+		/// </summary>
 		public static int InsertNewMessage(int fromID, string toAlias, DateTime send, string message)
 		{
 			//ToDo: add parameter
 			string sql = $"INSERT INTO messages(from_user, to_user, send, content) VALUES({fromID}, (SELECT id FROM users WHERE alias = '{toAlias}'), '{send.ToString()}', '{message}')";
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 
-			return ExecuteNonQuerry(command);			
+			return ExecuteNonQuerry(command);
 		}
 
+		public static List<Message> SelectUnreadMessages(int userID)
+		{
+			string sql = $@"SELECT uf.alias, ut.alias, m.send, m.content, m.id
+						     FROM messages m
+							 JOIN users uf
+							   ON m.from_user = uf.id
+							 JOIN users ut
+							   ON m.to_user = ut.id
+						    WHERE (m.to_user = {userID} 
+							   OR m.from_user = {userID})
+							  AND m.unread = true";
+
+			NpgsqlCommand command = new NpgsqlCommand(sql);
+
+			DataTable data = SelectDataTable(command);
+
+			//Convet data table to messages
+			List<Message> newMessages = new List<Message>();
+			foreach (DataRow row in data.Rows)
+			{
+				Message message = new Message()
+				{
+					From = row.ItemArray[0].ToString(),
+					To = row.ItemArray[1].ToString(),
+					Sent = Convert.ToDateTime(row.ItemArray[2].ToString()),
+					Text = row.ItemArray[3].ToString()
+				};
+				newMessages.Add(message);
+
+				//Set the message to read
+				NpgsqlCommand updateCommand = new NpgsqlCommand($"UPDATE messages SET unread = false WHERE id = {row.ItemArray[4]};");
+				ExecuteNonQuerry(updateCommand);
+			}
+
+			return newMessages;
+		}
 
 		/// <summary>
 		/// Assing a new token to a user
