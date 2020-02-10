@@ -143,9 +143,8 @@ namespace NuntiusServer
 							   ON m.from_user = uf.id
 							 JOIN users ut
 							   ON m.to_user = ut.id
-						    WHERE (m.to_user = {userID} 
-							   OR m.from_user = {userID})
-							  AND m.unread = true";
+						    WHERE m.to_user = {userID} 
+							  AND m.unread = true;";
 
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 
