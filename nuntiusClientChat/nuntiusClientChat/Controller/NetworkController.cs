@@ -28,7 +28,7 @@ namespace nuntiusClientChat.Controller
 			nagTimer.Enabled = true;
 			nagTimer.AutoReset = true;
 			NagTimerRun = true;
-			//nagTimer.Start();
+			nagTimer.Start();
 		}
 		private async static void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
 		{
@@ -91,7 +91,6 @@ namespace nuntiusClientChat.Controller
 				UserController.CurrentTocken = r.Parameters[0].ToString();
 				UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
 				ConfigurNagServer();
-				
 				return true;
 			}
 			else
@@ -102,7 +101,7 @@ namespace nuntiusClientChat.Controller
 
 		public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
 		{
-			UserController.CurrentTocken = "123uztrerftr543ert453";
+			UserController.CurrentTocken = UserController.CurrentTocken;
 
 			Request request = new Request();
 			request.SendRequest(UserController.CurrentTocken, toAlias, sendTime, msgText);
@@ -136,9 +135,8 @@ namespace nuntiusClientChat.Controller
 			try
 			{
 				
-
-				IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
-				//IPAddress ipAddress = IPAddress.Loopback;
+				//IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
+				IPAddress ipAddress = IPAddress.Loopback;
 				// IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);

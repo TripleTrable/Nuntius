@@ -8,6 +8,7 @@ namespace nuntiusClientChat
     {
         public MessageControll(bool send, Message message)
         {
+            Device.BeginInvokeOnMainThread(() => { 
             LineBreakMode = LineBreakMode.WordWrap;
 
             Text += message.Text;
@@ -22,13 +23,11 @@ namespace nuntiusClientChat
                 BackgroundColor = Color.LightSkyBlue;
                 //TranslationX = 100;
                 HorizontalTextAlignment = TextAlignment.End;
-
             }
             else
             {
                 BackgroundColor = Color.Lavender;
-            }
-
+            };});
         }
     }
 }

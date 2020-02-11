@@ -9,5 +9,10 @@ namespace nuntiusModel
 		public List<Message> ChatMessages { get; set; }
 		public string Owner { get; set; }
 		public string Partner { get; set; }
+
+		public Chat()
+		{
+			ChatMessages = new List<Message>();
+		}
 	}
 }

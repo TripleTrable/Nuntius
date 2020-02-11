@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using nuntiusClientChat.Controller;
+using System;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using nuntiusModel;
-using nuntiusClientChat.Controller;
-using nuntiusClientChat.Controls;
 
 namespace nuntiusClientChat
 {
@@ -18,14 +13,13 @@ namespace nuntiusClientChat
 		{
 			InitializeComponent();
 			AliasEntry.Text = null; PasswordEntry.Text = null;
-
 		}
-
 
 		private void Entry_Completed(object sender, EventArgs e)
 		{
 			PasswordEntry.Focus();
 		}
+
 		private void PasswordEntry_Completed(object sender, EventArgs e)
 		{
 
@@ -38,8 +32,7 @@ namespace nuntiusClientChat
 
 		private async void continueButton_ClickedAsync(object sender, EventArgs e)
 		{
-			//App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-			//NetworkController.sendNaggRequstAsync();
+
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
@@ -58,7 +51,7 @@ namespace nuntiusClientChat
 				}
 				//Open the Chat selection
 				App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-		
+
 			}
 
 		}

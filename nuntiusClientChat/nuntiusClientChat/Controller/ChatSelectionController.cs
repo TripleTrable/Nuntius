@@ -12,64 +12,63 @@ namespace nuntiusClientChat.Controller
 {
 	class ChatSelectionController
 	{
-		static ChatSelectionController chatSelectionController;
 		public event EventHandler<ChatEventArgs> ChatAdded;
-		private List<List<Message>> sotedChatMessages;
+		public event EventHandler<ChatEventArgs> MessagesAdded;
 		private List<Chat> currentChats;
 
 		public ChatSelectionController()
 		{
-			sotedChatMessages = new List<List<Message>>();
 			currentChats = new List<Chat>();
-
-		}
-
-		public static ChatSelectionController GetSelectionController()
-		{
-			return chatSelectionController == null ? new ChatSelectionController() : chatSelectionController;
 		}
 
 		protected virtual void OnChatAdded(Chat chat)
 		{
 			ChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
 		}
+		
 		public void AddChat(Chat chat)
 		{
 			currentChats.Add(chat);
 			OnChatAdded(chat);
+			
 		}
+		protected virtual void OnMessagesAdded(List<Chat> chats)
+		{
+			MessagesAdded?.Invoke(this, new ChatEventArgs { ChatList = chats });
+		}
+
 
 		public void SortMeseges(List<Message> recievedMsg)
 		{
-
-			List<Message> test = new List<Message>();
-			test.Add(new Message { From = "Hans", To = "Peter", Sent = DateTime.Now, Text = "Test Nachricht" });
-			sotedChatMessages.Add(test);
-
-			if (sotedChatMessages == null)
+			
+			if (recievedMsg == null)
 			{
-				Task.Run(() => SortLeftoverMsg(recievedMsg));
+				return;
 			}
+			List<Chat> newMesseges = new List<Chat>();
 
-			foreach (List<Message> ListMessages in sotedChatMessages)
+			foreach (Chat chat in currentChats)
 			{
 				List<Message> messageQerry = (from Message in recievedMsg
-											  where (Message.From) == ListMessages[0].From
+											  where (Message.From) == chat.Partner
 											  select Message).ToList();
-
+				Chat n = new Chat();
+				n.Owner = chat.Owner;
+				n.Partner = chat.Partner;
+				n.ChatMessages.AddRange(messageQerry);
+				chat.ChatMessages.AddRange(messageQerry);
+				
 				foreach (Message message in messageQerry)
 				{
-					ListMessages.Add(message);
-					//Clears the recieved Messages
 					recievedMsg.Remove(message);
-
 				}
-
+				newMesseges.Add(n);
 			}
+
+			OnMessagesAdded(newMesseges);
 			//if ther are messeges left Create new chats and Run agin
 			Task.Run(() => SortLeftoverMsg(recievedMsg));
 		}
-
 		//TODO: Change so that if more then one Msg from one new P is recived that only one chat is createtd.
 		private void SortLeftoverMsg(List<Message> recievedMsg)
 		{
@@ -83,7 +82,8 @@ namespace nuntiusClientChat.Controller
 				//Create new Chats 
 				foreach (Message message in recievedMsg)
 				{
-					Chat chat = new Chat { /*Owner = UserController.LogedInUser.Alias*/Owner = message.To, Partner = message.From, ChatMessages = new List<Message> { message } };
+					Chat chat = new Chat { Owner = message.To, Partner = message.From, ChatMessages = new List<Message> { message } };
+					currentChats.Add(chat);
 					OnChatAdded(chat);
 				}
 				NetworkController.NagTimerRun = true;
@@ -93,7 +93,9 @@ namespace nuntiusClientChat.Controller
 	public class ChatEventArgs : EventArgs
 	{
 		public Chat Chat { get; set; }
+		public List<Chat> ChatList {get ; set; }
 	}
+
 }
 
 

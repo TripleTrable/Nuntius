@@ -27,6 +27,7 @@ namespace nuntiusClientChat.Controls
 			this.chatPage = chat;
 			PartnerAlias = chatPage.Chat.Partner;
 			PartnerAlias = "   " + PartnerAlias;
+
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				ConfigGrid();
@@ -55,7 +56,6 @@ namespace nuntiusClientChat.Controls
 			else
 			{
 				await Navigation.PushAsync(chatPage, true);
-				//await Navigation.PushAsync(new ChatPage(), true);
 			}
 
 		}
@@ -63,6 +63,6 @@ namespace nuntiusClientChat.Controls
 		public Image UserImg { get; set; }
 		public string PartnerAlias { get; set; }
 		public int UnReadMsgs { get; set; }
-
+		public ChatPage ChatPage { get => chatPage; set => chatPage = value; }
 	}
 }

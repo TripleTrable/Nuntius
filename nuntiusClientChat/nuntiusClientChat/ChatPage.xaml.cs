@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using nuntiusClientChat.Controller;
 using nuntiusModel;
-using nuntiusClientChat.Controller;
-using nuntiusClientChat.Controls;
-
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,19 +11,16 @@ namespace nuntiusClientChat
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChatPage : ContentPage
 	{
-		private ConversationController conversationController;
 
 		public ChatPage()
 		{
 			InitializeComponent();
-			conversationController = new ConversationController();
-			conversationController.MessageAdded += ConversationController_MessageAdded;
 		}
 
 		public ChatPage(Chat chat)
 		{
 			InitializeComponent();
-			
+
 			if (chat == null)
 			{
 				return;
@@ -37,37 +30,27 @@ namespace nuntiusClientChat
 
 			foreach (var messages in chat.ChatMessages)
 			{
-				MsgChatStack.Children.Add(new Label { Text = messages.Text });
+				MsgChatStack.Children.Add(new MessageControll(false, messages));
 			}
 		}
-	
+
 		public void AddPrerentResponse(List<Message> messages)
 		{
 			foreach (var item in messages)
 			{
-				conversationController.AddMessage(item);
+				MsgChatStack.Children.Add(new MessageControll(false, item));
 			}
 		}
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
 			//Send Msg via Networkkontroller
-			await Task.Run(() => NetworkController.sendMsgRequest("TestUser", DateTime.Now, MsgEditor.Text));
+			await Task.Run(() => NetworkController.sendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text));
 
-			conversationController.AddMessage(new Message { From = "Test", To = "Test", Sent = DateTime.Now, Text = MsgEditor.Text });
-
+			//Add Msg to View
+			MsgChatStack.Children.Add(new MessageControll(true, new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text }));
 			MsgEditor.Text = null;
 		}
 
-		private void ConversationController_MessageAdded(object source, MessageEventArgs args)
-		{
-			MsgChatStack.Children.Add(new MessageControll(false, args.Message));
-		}
-		
-		public ConversationController ConversationController
-		{
-			get { return conversationController; }
-			set { conversationController = value; }
-		}
 		public Chat Chat { get; set; }
 	}
 }

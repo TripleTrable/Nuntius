@@ -7,8 +7,8 @@
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.ChatSelectionPage">
 
-	<ScrollView x:Name="ChatSelctScroll">
-		<StackLayout x:Name="ChatSelectionStack" Spacing="2" >
+	<ScrollView x:Name="chatSelctScroll">
+		<StackLayout x:Name="chatSelectionStack" Spacing="2" >
 			<!--The Diffrent Chats will be Placed in this StachLayout-->
 			<Button x:Name="addNewChat" Text="Neuer Chat." Clicked="addNewChat_Clicked"/>
 					
