@@ -7,6 +7,8 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+//TODO: Make MsgChatStack public
+
 namespace nuntiusClientChat
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
