@@ -47,8 +47,10 @@ namespace nuntiusClientChat
 					chats[0].Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
 
 					//Add Messeges to the ChatView 
-					Message message = new Message { From = UserController.LogedInUser.Alias, To = chats[0].Chat.Partner, Sent = DateTime.Now, Text = updatedChat.ChatMessages[0].Text };
-					chats[0].MsgChatStack.Children.Add(new MessageControll(false, message));
+					foreach (Message message in updatedChat.ChatMessages)
+					{
+						chats[0].MsgChatStack.Children.Add(new MessageControll(false, message));
+					}
 
 				}
 

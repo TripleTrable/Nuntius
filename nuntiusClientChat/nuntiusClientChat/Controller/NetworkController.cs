@@ -14,7 +14,8 @@ namespace nuntiusClientChat.Controller
 {
 	static class NetworkController
 	{
-		private static Timer nagTimer = new Timer(); public static bool NagTimerRun { get; set; }
+		private static Timer nagTimer = new Timer(); 
+		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
 
 		#region NagTimer
@@ -28,7 +29,7 @@ namespace nuntiusClientChat.Controller
 			nagTimer.Enabled = true;
 			nagTimer.AutoReset = true;
 			NagTimerRun = true;
-			nagTimer.Start();
+			//nagTimer.Start();
 		}
 		private async static void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
 		{
@@ -134,16 +135,17 @@ namespace nuntiusClientChat.Controller
 			string message = JsonSerializer.Serialize(request);
 			try
 			{
-				
+
 				//IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
-				IPAddress ipAddress = IPAddress.Loopback;
+				//IPAddress ipAddress = IPAddress.Loopback;
 				// IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
+				IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				// Create a TCP/IP  socket.    
 				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-				//sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+				sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
 				// Connect the socket to the remote endpoint. Catch any errors.    
 				try

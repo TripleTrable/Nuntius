@@ -64,8 +64,11 @@ namespace nuntiusClientChat.Controller
 				}
 				newMesseges.Add(n);
 			}
-
-			OnMessagesAdded(newMesseges);
+			if (newMesseges.Count != 0)
+			{
+				OnMessagesAdded(newMesseges);
+			}
+			
 			//if ther are messeges left Create new chats and Run agin
 			Task.Run(() => SortLeftoverMsg(recievedMsg));
 		}
