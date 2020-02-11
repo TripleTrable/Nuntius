@@ -2,25 +2,38 @@
 
 namespace nuntiusClientChat
 {
-    public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
+	public partial class App : Application
+	{
+		public App()
+		{
+			InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginRegisterPage());
-        }
+			if (Controller.UserController.LogedInUser != null)
+			{
+				MainPage = new NavigationPage(new ChatSelectionPage());
+		
+			}
+			else
+			{
+				MainPage = new LoginRegisterPage();
+			}
 
-        protected override void OnStart()
-        {
-        }
 
-        protected override void OnSleep()
-        {
-        }
+		}
 
-        protected override void OnResume()
-        {
-        }
-    }
+		protected override void OnStart()
+		{
+
+		}
+
+		protected override void OnSleep()
+		{
+		}
+
+		protected override void OnResume()
+		{
+		}
+
+
+	}
 }

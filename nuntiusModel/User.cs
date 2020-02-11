@@ -9,6 +9,10 @@ namespace nuntiusModel
         private string password;
         private LinkedList<User> contacts;
         private LinkedList<Message> messages;
+        public User()
+        {
+            
+        }
 
         public User(string alias, string password)
         {
