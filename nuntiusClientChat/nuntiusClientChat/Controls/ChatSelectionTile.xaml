@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="nuntiusClientChat.Controls.ChatSelectionTile">
+
+	<ContentView.Content>
+			
+			<Grid x:Name="Grid" HeightRequest="110">
+				<Grid.RowDefinitions>
+					<RowDefinition  Height="5*"/>
+					<RowDefinition  Height="44*"/>
+					<RowDefinition  Height="5*"/>
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="5*"/>
+					<ColumnDefinition Width="18*"/>
+					<ColumnDefinition Width="53*"/>
+					<ColumnDefinition Width="12*"/>
+				</Grid.ColumnDefinitions>
+			<Button x:Name="OpenChatButten" Clicked="OpenChatButten_Clicked" Grid.ColumnSpan="4" Grid.RowSpan="3"
+					Opacity="0.5" BackgroundColor="Gray"
+			/>
+				<Grid Grid.Column="0" Grid.Row="1">
+					<!--<BoxView BackgroundColor="Accent"/>-->
+				</Grid>
+				<Grid Grid.Column="1" Grid.Row="1">
+					<!--<BoxView BackgroundColor="BlueViolet"/>-->
+					<BoxView BackgroundColor="Green" CornerRadius="200"/>
+				</Grid>
+				<Grid Grid.Column="2" Grid.Row="1">
+					<!--<BoxView BackgroundColor="Black"/>-->
+				</Grid>
+				<Grid Grid.Column="3" Grid.Row="1">
+					<!--<BoxView BackgroundColor="Blue"/>-->
+				</Grid>
+				<Grid Grid.ColumnSpan="4" Grid.Row="0">
+					<!--<BoxView BackgroundColor="DarkRed"/>-->
+				</Grid>
+				<Grid Grid.ColumnSpan="4" Grid.Row="2">
+					<!--<BoxView BackgroundColor="DarkRed"/>-->
+				</Grid>
+			</Grid>
+	
+	</ContentView.Content>
+
+</ContentView>
