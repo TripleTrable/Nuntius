@@ -60,7 +60,7 @@ namespace NuntiusServer
 			string sql = $"INSERT INTO users(alias, pwd_md5) VALUES('{alias}','{password}');";
 
 			//ToDo: Send Unknown error
-			ExecuteNonQuerry(new NpgsqlCommand(sql));
+			ExecuteNonQuery(new NpgsqlCommand(sql));
 			return true;
 		}
 
@@ -132,7 +132,7 @@ namespace NuntiusServer
 			string sql = $"INSERT INTO messages(from_user, to_user, send, content) VALUES({fromID}, (SELECT id FROM users WHERE alias = '{toAlias}'), '{send.ToString()}', '{message}')";
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 
-			return ExecuteNonQuerry(command);
+			return ExecuteNonQuery(command);
 		}
 
 		public static List<Message> SelectUnreadMessages(int userID)
@@ -165,7 +165,7 @@ namespace NuntiusServer
 
 				//Set the message to read
 				NpgsqlCommand updateCommand = new NpgsqlCommand($"UPDATE messages SET unread = false WHERE id = {row.ItemArray[4]};");
-				ExecuteNonQuerry(updateCommand);
+				ExecuteNonQuery(updateCommand);
 			}
 
 			return newMessages;
@@ -184,7 +184,7 @@ namespace NuntiusServer
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 
 			//ToDo: unknown exeption
-			ExecuteNonQuerry(command);
+			ExecuteNonQuery(command);
 		}
 
 		/// <summary>
@@ -225,7 +225,7 @@ namespace NuntiusServer
 		/// <summary>
 		///  Connect to the database and execute a non querry
 		/// </summary>
-		private static int ExecuteNonQuerry(NpgsqlCommand command)
+		private static int ExecuteNonQuery(NpgsqlCommand command)
 		{
 			int result;
 
