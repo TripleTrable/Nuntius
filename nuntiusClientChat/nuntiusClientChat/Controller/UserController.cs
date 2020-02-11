@@ -2,6 +2,8 @@
 {
     public static class UserController
     {
+
+        //TODO: Prop LogedInUser
         public static nuntiusModel.User LogedInUser = null;
 
         private static string currentToken = null;

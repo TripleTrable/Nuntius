@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="nuntiusClientChat.OpenConversationPage">
+
+	<Grid x:Name="Grid">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="5*"/>
+			<RowDefinition Height="50*"/>
+			<RowDefinition Height="5*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="80*"/>
+			<ColumnDefinition Width="2*"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid Grid.Row="0" Grid.Column="1">
+			<Entry x:Name="SerchEntry"/>
+		</Grid>
+		<Grid Grid.Row="1" Grid.Column="1">
+			<Button x:Name="SerchButton" Text="Neuer Chat" Clicked="SerchButton_Clicked" ></Button>
+		</Grid>
+	</Grid>
+</ContentPage>

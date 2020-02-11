@@ -52,5 +52,10 @@ namespace nuntiusClientChat
 		}
 
 		public Chat Chat { get; set; }
+		public StackLayout ChatStackLayout
+		{
+			get { return MsgChatStack; }
+			set { MsgChatStack = value; }
+		}
 	}
 }

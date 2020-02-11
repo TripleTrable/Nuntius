@@ -25,9 +25,9 @@ namespace nuntiusClientChat
 			chatSelection.MessagesAdded += ChatSelection_MessagesAdded;
 		}
 
-		private void addNewChat_Clicked(object sender, EventArgs e)
+		private async void addNewChat_Clicked(object sender, EventArgs e)
 		{
-			//forword to ContactSelectionPage
+			await Navigation.PushAsync(new OpenConversationPage(), true);
 		}
 
 		private void ChatSelection_MessagesAdded(object sender, ChatEventArgs e)
@@ -51,7 +51,8 @@ namespace nuntiusClientChat
 					//Add Messeges to the ChatView 
 					foreach (Message message in updatedChat.ChatMessages)
 					{
-						chats[0].MsgChatStack.Children.Add(new MessageControll(false, message));
+						//chats[0].MsgChatStack.Children.Add(new MessageControll(false, message));
+						chats[0].ChatStackLayout.Children.Add(new MessageControll(false, message));
 					}
 
 				}
@@ -71,5 +72,7 @@ namespace nuntiusClientChat
 			});
 
 		}
+
+	
 	}
 }

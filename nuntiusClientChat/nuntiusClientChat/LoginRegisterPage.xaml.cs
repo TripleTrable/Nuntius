@@ -27,25 +27,26 @@ namespace nuntiusClientChat
 
 		private void Switch_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			LoginTyp.Text = LoginTyp.Text == "Existierender benutzer." ? "Neuer benutzer." : "Existierender benutzer.";
+			LoginTyp.Text = typSwitch.IsToggled == false ? "Login" : "Registrieren";
 		}
 
 		private async void continueButton_ClickedAsync(object sender, EventArgs e)
 		{
-
+			
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
 			}
 			else
 			{
+				//TODO: Fix Crash when no server conection
 				//Login
-				if (LoginTyp.Text == "Existierender benutzer.")
+				if (!typSwitch.IsToggled)
 				{
 					await Task.WhenAll(NetworkController.SendLoginRequestAsync(AliasEntry.Text, PasswordEntry.Text));
 				}
 				//Regiter
-				else if (LoginTyp.Text == "Neuer benutzer.")
+				else
 				{
 					await Task.WhenAll(NetworkController.SendRegisterRequestAsync(AliasEntry.Text, PasswordEntry.Text));
 				}
