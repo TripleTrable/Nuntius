@@ -39,19 +39,54 @@ namespace nuntiusClientChat
 			}
 			else
 			{
-				//TODO: Fix Crash when no server conection
 				//Login
 				if (!typSwitch.IsToggled)
 				{
-					await Task.WhenAll(NetworkController.SendLoginRequestAsync(AliasEntry.Text, PasswordEntry.Text));
+
+					await Task.WhenAny(NetworkController.SendLoginRequestAsync(AliasEntry.Text, PasswordEntry.Text));
+
+					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
+					{  
+						//Open the Chat selection
+						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+					}
+					else
+					{
+						if (!await NetworkController.SendPing())
+						{
+							await DisplayAlert("Error", "Sie Haben keine verbindung zum Internet", "Ok");
+						}
+						else
+						{
+							await DisplayAlert("Error", "Überprüfen Sie Ihre eingabe", "Ok");
+						}
+						return;
+					}
 				}
 				//Regiter
 				else
 				{
 					await Task.WhenAll(NetworkController.SendRegisterRequestAsync(AliasEntry.Text, PasswordEntry.Text));
+
+					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
+					{   //Open the Chat selection
+						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+					}
+					else
+					{
+						if (!await NetworkController.SendPing())
+						{
+							await DisplayAlert("Error", "Sie Haben keine verbindung zum Internet", "Ok");
+						}
+						else
+						{
+							await DisplayAlert("Error", "Überprüfen Sie Ihre eingabe", "Ok");
+						}
+					
+						return;
+					}
 				}
-				//Open the Chat selection
-				App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+			
 
 			}
 
