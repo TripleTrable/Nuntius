@@ -43,6 +43,11 @@ namespace nuntiusClientChat
 		}
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
+			if (Chat.Partner == null || MsgEditor.Text == null || MsgEditor.Text == "")
+			{
+				return;
+			}
+
 			//Send Msg via Networkkontroller
 			await Task.Run(() => NetworkController.sendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text));
 

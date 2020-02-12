@@ -33,14 +33,12 @@ namespace nuntiusClientChat
 		private async void continueButton_ClickedAsync(object sender, EventArgs e)
 		{
 			
-			
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
 			}
 			else
 			{
-				//TODO: Fix Crash when no server conection
 				//Login
 				if (!typSwitch.IsToggled)
 				{
