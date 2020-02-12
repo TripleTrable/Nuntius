@@ -1,7 +1,9 @@
 ﻿using nuntiusModel;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
@@ -14,7 +16,7 @@ namespace nuntiusClientChat.Controller
 {
 	static class NetworkController
 	{
-		private static Timer nagTimer = new Timer(); 
+		private static Timer nagTimer = new Timer();
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
 
@@ -73,7 +75,7 @@ namespace nuntiusClientChat.Controller
 			}
 		}
 
-		public async static Task<bool> SendLoginRequestAsync(string alias, string pwd)
+		public async static Task SendLoginRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
 			using (MD5 md5hash = MD5.Create())
@@ -92,11 +94,12 @@ namespace nuntiusClientChat.Controller
 				UserController.CurrentTocken = r.Parameters[0].ToString();
 				UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
 				ConfigurNagServer();
-				return true;
+
 			}
 			else
 			{
-				return false;
+				UserController.CurrentTocken = "";
+				UserController.LogedInUser = null;
 			}
 		}
 
@@ -137,15 +140,14 @@ namespace nuntiusClientChat.Controller
 			{
 
 				//IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
-				//IPAddress ipAddress = IPAddress.Loopback;
-				// IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+				IPAddress ipAddress = IPAddress.Loopback;
 
-				IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
+				//IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				// Create a TCP/IP  socket.    
 				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-				sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+				//sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
 				// Connect the socket to the remote endpoint. Catch any errors.    
 				try
@@ -196,7 +198,23 @@ namespace nuntiusClientChat.Controller
 				return null;
 			}
 		}
+
+		public static async Task<bool> SendPing()
+		{
+			var connectivity = CrossConnectivity.Current; bool reachable = false;
+
+			if (!connectivity.IsConnected)
+				return false;
+			if (await connectivity.IsRemoteReachable("google.de", 80,3000))
+			{
+				//TODO: Remove set for debug if Nuntius Server is not Online
+				reachable = true;
+				//If the Nuntius Server is Reachebel
+				//reachable = await connectivity.IsRemoteReachable("2a02:908:5b0:a480:7286:7d52:53e5:6ce", 11000,4000);
+			}
+			
+			return reachable;
+		}
+
 	}
-
-
 }
