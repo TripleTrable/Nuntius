@@ -1,9 +1,7 @@
 ﻿using nuntiusModel;
-using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
@@ -61,19 +59,21 @@ namespace nuntiusClientChat.Controller
 
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
+
 			if (r.Type == "registationSuccess")
 			{
 
 				UserController.CurrentTocken = r.Parameters[0].ToString();
 				UserController.LogedInUser = new User(alias, hashPwd);
 				ConfigurNagServer();
-				
+
 			}
 			else
 			{
 				UserController.CurrentTocken = "";
 				UserController.LogedInUser = null;
-				
 			}
 		}
 
@@ -89,6 +89,9 @@ namespace nuntiusClientChat.Controller
 			request.LoginRequest(alias, hashPwd);
 
 			Response r = await SendReqestToServerAsync(request);
+
+			if (r == null)
+				return;
 
 			if (r.Type == "loginSuccess")
 			{
@@ -107,7 +110,7 @@ namespace nuntiusClientChat.Controller
 
 		public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
 		{
-			
+
 			if (UserController.CurrentTocken == null)
 			{
 				return;
@@ -120,6 +123,8 @@ namespace nuntiusClientChat.Controller
 
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
 		}
 
 		public async static Task sendNaggRequstAsync()
@@ -134,6 +139,8 @@ namespace nuntiusClientChat.Controller
 
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
 			//convets the response to a List of Messeges
 			string s = r.Parameters[0].ToString();
 			List<Message> messages = JsonSerializer.Deserialize<List<Message>>(s);
@@ -211,23 +218,5 @@ namespace nuntiusClientChat.Controller
 				return null;
 			}
 		}
-
-		public static async Task<bool> SendPing()
-		{
-			var connectivity = CrossConnectivity.Current; bool reachable = false;
-
-			if (!connectivity.IsConnected)
-				return false;
-			if (await connectivity.IsRemoteReachable("google.de", 80,3000))
-			{
-				//TODO: Remove set for debug if Nuntius Server is not Online
-				reachable = true;
-				//If the Nuntius Server is Reachebel
-				reachable = await connectivity.IsRemoteReachable("2a02:908:5b0:a480:7286:7d52:53e5:6ce",11000,4000);
-			}
-			
-			return reachable;
-		}
-
 	}
 }
