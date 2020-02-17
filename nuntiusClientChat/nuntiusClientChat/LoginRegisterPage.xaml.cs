@@ -29,9 +29,10 @@ namespace nuntiusClientChat
 		private void Switch_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			LoginTyp.Text = typSwitch.IsToggled == false ? "Login" : "Registrieren";
+			
 		}
 
-		private async void continueButton_ClickedAsync(object sender, EventArgs e)
+		private async void ContinueButton_ClickedAsync(object sender, EventArgs e)
 		{
 			
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
@@ -52,6 +53,7 @@ namespace nuntiusClientChat
 					{  
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+						StorageController.LoadeData();
 					}
 					else
 					{
@@ -78,6 +80,7 @@ namespace nuntiusClientChat
 					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
 					{   //Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
+						StorageController.LoadeData();
 					}
 					else
 					{
@@ -97,7 +100,7 @@ namespace nuntiusClientChat
 
 		public static async Task<bool> SendPingAsync()
 		{
-			var connectivity = CrossConnectivity.Current; bool reachable = false;
+			var connectivity = CrossConnectivity.Current; bool reachable;
 
 			if (!connectivity.IsConnected)
 				return false;

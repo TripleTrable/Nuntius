@@ -14,7 +14,7 @@ namespace nuntiusClientChat.Controller
 {
 	static class NetworkController
 	{
-		private static Timer nagTimer = new Timer();
+		private static readonly Timer nagTimer = new Timer();
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
 
@@ -39,7 +39,7 @@ namespace nuntiusClientChat.Controller
 			}
 			else
 			{
-				await sendNaggRequstAsync();
+				await SendNaggRequstAsync();
 			}
 
 		}
@@ -108,7 +108,7 @@ namespace nuntiusClientChat.Controller
 			}
 		}
 
-		public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
+		public async static Task SendMsgRequest(string toAlias, DateTime sendTime, string msgText)
 		{
 
 			if (UserController.CurrentTocken == null)
@@ -127,7 +127,7 @@ namespace nuntiusClientChat.Controller
 				return;
 		}
 
-		public async static Task sendNaggRequstAsync()
+		public async static Task SendNaggRequstAsync()
 		{
 			Request request = new Request();
 			request.NaggRequst(UserController.CurrentTocken);
@@ -155,6 +155,7 @@ namespace nuntiusClientChat.Controller
 		public static async Task<Response> SendReqestToServerAsync(Request request)
 		{
 			byte[] bytes = new byte[4096];
+		
 			string message = JsonSerializer.Serialize(request);
 			try
 			{
@@ -188,7 +189,7 @@ namespace nuntiusClientChat.Controller
 
 					//Server Response
 					Response response = JsonSerializer.Deserialize<Response>(text);
-
+					
 					// Release the socket.    
 					sender.Shutdown(SocketShutdown.Both);
 					sender.Close();

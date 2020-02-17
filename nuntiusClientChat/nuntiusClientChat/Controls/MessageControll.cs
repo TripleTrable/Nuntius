@@ -4,8 +4,14 @@ using Xamarin.Forms;
 
 namespace nuntiusClientChat
 {
+  
     class MessageControll : Label
     {
+        /// <summary>
+        /// Custem Controll, Dispays a Message
+        /// </summary>
+        /// <param name="send">ture: User has send the Message false: User has receved the Message</param>
+        /// <param name="message"></param>
         public MessageControll(bool send, Message message)
         {
             Device.BeginInvokeOnMainThread(() => { 
@@ -27,7 +33,8 @@ namespace nuntiusClientChat
             else
             {
                 BackgroundColor = Color.Lavender;
-            };});
+            };
+            });
         }
     }
 }

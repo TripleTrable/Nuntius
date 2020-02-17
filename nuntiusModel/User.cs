@@ -3,9 +3,10 @@ using System.Collections.Generic;
 
 namespace nuntiusModel
 {
+    [Serializable]
     public class User
     {
-        private string alias;       //Wunsch von arthur
+        private string alias;       
         private string password;
         private LinkedList<User> contacts;
         private LinkedList<Message> messages;

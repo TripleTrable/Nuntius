@@ -1,4 +1,6 @@
 ﻿using Xamarin.Forms;
+using nuntiusClientChat.Controller;
+using nuntiusModel;
 
 namespace nuntiusClientChat
 {
@@ -28,6 +30,7 @@ namespace nuntiusClientChat
 
 		protected override void OnSleep()
 		{
+			StorageController.SaveData();
 		}
 
 		protected override void OnResume()

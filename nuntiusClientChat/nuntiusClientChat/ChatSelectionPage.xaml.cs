@@ -14,7 +14,7 @@ namespace nuntiusClientChat
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChatSelectionPage : ContentPage
 	{
-		private ChatSelectionController chatSelection;
+		private readonly ChatSelectionController chatSelection;
 
 		public ChatSelectionPage()
 		{
@@ -23,9 +23,22 @@ namespace nuntiusClientChat
 
 			chatSelection.ChatAdded += Chat_Added;
 			chatSelection.MessagesAdded += ChatSelection_MessagesAdded;
+			chatSelection.SavedChatAdded += ChatSelection_SavedChatAdded;
 		}
 
-		private async void addNewChat_Clicked(object sender, EventArgs e)
+		private void ChatSelection_SavedChatAdded(object sender, ChatEventArgs e)
+		{
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				ChatPage chatPage = new ChatPage(e.Chat);
+								
+				ChatSelectionTile chatSelectionTile = new ChatSelectionTile(chatPage);
+				chatSelectionStack.Children.Add(chatSelectionTile);
+								
+			});
+		}
+
+		private async void AddNewChat_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushAsync(new OpenConversationPage(), true);
 		}
@@ -38,6 +51,7 @@ namespace nuntiusClientChat
 				List<ChatPage> chatPages = (from tile in chatSelectionStack.Children.OfType<ChatSelectionTile>()
 											select tile.ChatPage).ToList();
 
+
 				foreach (var updatedChat in e.ChatList)
 				{
 
@@ -45,13 +59,15 @@ namespace nuntiusClientChat
 								 where page.Chat.Partner == updatedChat.Partner
 								 select page).ToList();
 
+					
+					//TODO: Crash adding new msg to non existing chat when reciving a msg from a new Chat partner
 					//Add Messeges to the List of the Model
 					chats[0].Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
 
 					//Add Messeges to the ChatView 
 					foreach (Message message in updatedChat.ChatMessages)
 					{
-						//chats[0].MsgChatStack.Children.Add(new MessageControll(false, message));
+						
 						chats[0].ChatStackLayout.Children.Add(new MessageControll(false, message));
 					}
 
@@ -73,6 +89,8 @@ namespace nuntiusClientChat
 
 		}
 
-	
+
+
+
 	}
 }

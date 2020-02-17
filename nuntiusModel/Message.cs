@@ -2,6 +2,7 @@ using System;
 
 namespace nuntiusModel
 {
+	[Serializable]
 	public class Message
 	{
 		private string from;

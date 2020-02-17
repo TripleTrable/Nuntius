@@ -14,29 +14,29 @@ namespace nuntiusClientChat.Controller
 	{
 		public event EventHandler<ChatEventArgs> ChatAdded;
 		public event EventHandler<ChatEventArgs> MessagesAdded;
+		public event EventHandler<ChatEventArgs> SavedChatAdded;
 		private List<Chat> currentChats;
+
 
 		public ChatSelectionController()
 		{
 			currentChats = new List<Chat>();
 		}
+		
 
 		protected virtual void OnChatAdded(Chat chat)
 		{
 			ChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
 		}
-		
-		public void AddChat(Chat chat)
+		protected virtual void OnSavedChatAdded(Chat chat)
 		{
-			currentChats.Add(chat);
-			OnChatAdded(chat);
-			
+			SavedChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
 		}
+
 		protected virtual void OnMessagesAdded(List<Chat> chats)
 		{
 			MessagesAdded?.Invoke(this, new ChatEventArgs { ChatList = chats });
 		}
-
 
 		public void SortMeseges(List<Message> recievedMsg)
 		{
@@ -52,17 +52,18 @@ namespace nuntiusClientChat.Controller
 				List<Message> messageQerry = (from Message in recievedMsg
 											  where (Message.From) == chat.Partner
 											  select Message).ToList();
-				Chat n = new Chat();
-				n.Owner = chat.Owner;
-				n.Partner = chat.Partner;
-				n.ChatMessages.AddRange(messageQerry);
-				chat.ChatMessages.AddRange(messageQerry);
-				
+				Chat c = new Chat
+				{
+					Owner = chat.Owner,
+					Partner = chat.Partner
+				};
+				c.ChatMessages.AddRange(messageQerry);
+								
 				foreach (Message message in messageQerry)
 				{
 					recievedMsg.Remove(message);
 				}
-				newMesseges.Add(n);
+				newMesseges.Add(c);
 			}
 			if (newMesseges.Count != 0)
 			{
@@ -86,13 +87,30 @@ namespace nuntiusClientChat.Controller
 				foreach (Message message in recievedMsg)
 				{
 					Chat chat = new Chat { Owner = message.To, Partner = message.From, ChatMessages = new List<Message> { message } };
-					currentChats.Add(chat);
-					OnChatAdded(chat);
+					AddChat(chat);
 				}
 				NetworkController.NagTimerRun = true;
 			}
 		}
+
+		public void AddSavedChat(Chat chat)
+		{
+				currentChats.Add(chat);
+				OnSavedChatAdded(chat);
+		}
+		public void AddChat(Chat chat)
+		{
+			currentChats.Add(chat);
+			OnChatAdded(chat);
+		}
+
+		public List<Chat> CurrentChats
+		{
+			get { return currentChats; }
+			set { currentChats = value; }
+		}
 	}
+
 	public class ChatEventArgs : EventArgs
 	{
 		public Chat Chat { get; set; }

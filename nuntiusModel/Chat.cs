@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace nuntiusModel
-{
+{	
+	[Serializable]
 	public class Chat
 	{
 		public List<Message> ChatMessages { get; set; }

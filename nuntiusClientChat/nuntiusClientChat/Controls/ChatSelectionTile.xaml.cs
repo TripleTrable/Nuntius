@@ -10,6 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace nuntiusClientChat.Controls
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
+	[Serializable]
 	public partial class ChatSelectionTile : ContentView
 	{
 		private ChatPage chatPage;
