@@ -15,22 +15,16 @@ namespace nuntiusClientChat
 		public ChatPage()
 		{
 			InitializeComponent();
-			ChatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
-			ChatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
-			
-
+			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
 		}
 
 		public ChatPage(Chat chat)
 		{
 			InitializeComponent();
-			ChatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
-			ChatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
-
+			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
 			
-
-			ChatStackLayout.ChildAdded += ChatStackLayout_ChildAdded;
-
 			if (chat == null)
 			{
 				return;
@@ -55,11 +49,7 @@ namespace nuntiusClientChat
 		}
 
 
-		//TODO: enabel User Scrolling 
-		private void ChatStackLayout_ChildAdded(object sender, ElementEventArgs e)
-		{
-			ChatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, true);
-		}
+	
 
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
@@ -76,8 +66,10 @@ namespace nuntiusClientChat
 			MsgChatStack.Children.Add(new MessageControll(true, message));
 			Chat.ChatMessages.Add(message);
 			MsgEditor.Text = null;
-			
-	
+
+			chatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, false);
+
+
 		}
 
 		public Chat Chat { get; set; }
@@ -86,5 +78,12 @@ namespace nuntiusClientChat
 			get { return MsgChatStack; }
 			set { MsgChatStack = value; }
 		}
+		
+		public ScrollView ChatScrollView
+		{
+			get { return chatScroll; }
+			set { chatScroll = value; }
+		}
+
 	}
 }

@@ -59,16 +59,14 @@ namespace nuntiusClientChat
 								 where page.Chat.Partner == updatedChat.Partner
 								 select page).ToList();
 
-					
-					//TODO: Crash adding new msg to non existing chat when reciving a msg from a new Chat partner
 					//Add Messeges to the List of the Model
 					chats[0].Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
 
 					//Add Messeges to the ChatView 
 					foreach (Message message in updatedChat.ChatMessages)
 					{
-						
 						chats[0].ChatStackLayout.Children.Add(new MessageControll(false, message));
+						chats[0].ChatScrollView.ScrollToAsync(chats[0].ChatStackLayout, ScrollToPosition.End, false);
 					}
 
 				}
@@ -88,9 +86,6 @@ namespace nuntiusClientChat
 			});
 
 		}
-
-
-
 
 	}
 }
