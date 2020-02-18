@@ -20,8 +20,10 @@ namespace NuntiusServer
 			//listenSocket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp);
 			//listenSocket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 			//listenEndPoint = new IPEndPoint(IPAddress.IPv6Any, 11000);
+
 			listenSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			listenEndPoint = new IPEndPoint(IPAddress.Any, 11000);
+
 			clientSockets = new List<Socket>();
 			buffer = new byte[1024];
 		}
@@ -51,16 +53,17 @@ namespace NuntiusServer
 		private void ReceiveCallback(IAsyncResult ar)
 		{
 			Socket socket = (Socket)ar.AsyncState;
-			int received = socket.EndReceive(ar);
-			byte[] dataBuf = new byte[received];
-			Array.Copy(buffer, dataBuf, received);
-
-			string text = Encoding.ASCII.GetString(dataBuf);
-			Console.WriteLine(text);
 
 			//Parse the request
 			try
 			{
+				int received = socket.EndReceive(ar);
+				byte[] dataBuf = new byte[received];
+				Array.Copy(buffer, dataBuf, received);
+
+				string text = Encoding.ASCII.GetString(dataBuf);
+				Console.WriteLine(text);
+
 				//React to the request
 				Request request = JsonSerializer.Deserialize<Request>(text);
 				Response response = RequstHandler.NewRequest(request);
@@ -72,10 +75,9 @@ namespace NuntiusServer
 			}
 			catch (Exception e)
 			{
-				throw e;
+				//ToDo: write in logfile
+				System.Console.WriteLine(e);
 			}
-
-
 		}
 
 		private void SendCallback(IAsyncResult ar)
