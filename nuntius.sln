@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nuntiusClientChat.Android",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nuntiusClientChat.UWP", "nuntiusClientChat\nuntiusClientChat.UWP\nuntiusClientChat.UWP.csproj", "{6D0D4C9E-1FD7-440E-8867-95FC924E04C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nuntiusClientChat.iOS", "nuntiusClientChat\nuntiusClientChat.iOS\nuntiusClientChat.iOS.csproj", "{3B84226A-D91A-4682-B589-C1F7A732DFD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,22 @@ Global
 		{6D0D4C9E-1FD7-440E-8867-95FC924E04C1}.Release|x86.ActiveCfg = Release|x86
 		{6D0D4C9E-1FD7-440E-8867-95FC924E04C1}.Release|x86.Build.0 = Release|x86
 		{6D0D4C9E-1FD7-440E-8867-95FC924E04C1}.Release|x86.Deploy.0 = Release|x86
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|Any CPU.ActiveCfg = Debug|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|ARM.ActiveCfg = Debug|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|iPhone.Build.0 = Debug|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|x64.ActiveCfg = Debug|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Debug|x86.ActiveCfg = Debug|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|Any CPU.ActiveCfg = Release|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|ARM.ActiveCfg = Release|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|iPhone.ActiveCfg = Release|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|iPhone.Build.0 = Release|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|x64.ActiveCfg = Release|iPhone
+		{3B84226A-D91A-4682-B589-C1F7A732DFD2}.Release|x86.ActiveCfg = Release|iPhone
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
