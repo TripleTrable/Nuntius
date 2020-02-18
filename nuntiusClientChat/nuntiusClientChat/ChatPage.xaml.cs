@@ -15,11 +15,21 @@ namespace nuntiusClientChat
 		public ChatPage()
 		{
 			InitializeComponent();
+			ChatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			ChatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+			
+
 		}
 
 		public ChatPage(Chat chat)
 		{
 			InitializeComponent();
+			ChatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			ChatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+
+			
+
+			ChatStackLayout.ChildAdded += ChatStackLayout_ChildAdded;
 
 			if (chat == null)
 			{
@@ -44,6 +54,12 @@ namespace nuntiusClientChat
 
 		}
 
+
+		//TODO: enabel User Scrolling 
+		private void ChatStackLayout_ChildAdded(object sender, ElementEventArgs e)
+		{
+			ChatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, true);
+		}
 
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{

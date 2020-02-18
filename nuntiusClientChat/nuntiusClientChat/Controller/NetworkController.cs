@@ -160,15 +160,15 @@ namespace nuntiusClientChat.Controller
 			try
 			{
 
-				//IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
+				IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
 				//IPAddress ipAddress = IPAddress.Loopback;
 
-				IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
+				//IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				// Create a TCP/IP  socket.    
 				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-				sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+				//sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
 				// Connect the socket to the remote endpoint. Catch any errors.    
 				try
