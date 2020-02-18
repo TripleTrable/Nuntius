@@ -27,8 +27,10 @@ namespace nuntiusClientChat.Controller
 		}
 
 		public static void SaveData()
-		{
-
+		 {
+			//Reset saved chats List
+			//selectionController.CurrentChats = new List<Chat>();
+			
 			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
 			{
 				BinaryFormatter formatter = new BinaryFormatter();

@@ -148,7 +148,7 @@ namespace nuntiusClientChat.Controller
 			if (messages != null)
 			{
 				NagTimerRun = false;
-				await Task.Run(() => selectionController.SortMeseges(messages));
+				await Task.Run(() => selectionController.SortMessages(messages));
 			}
 
 		}
