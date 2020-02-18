@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="alpha_1.0.1" package="Nuntius.Nuntius" android:installLocation="auto" android:versionCode="1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="alpha_1.0.2" package="Nuntius.Nuntius" android:installLocation="auto" android:versionCode="1">
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
 	<application android:label="Nuntius"></application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
