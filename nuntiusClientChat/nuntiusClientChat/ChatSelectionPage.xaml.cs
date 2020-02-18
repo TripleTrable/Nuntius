@@ -83,6 +83,7 @@ namespace nuntiusClientChat
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				chatSelectionStack.Children.Add(chatSelectionTile);
+				chatSelctScroll.ScrollToAsync(chatSelectionStack, ScrollToPosition.Start, false);
 			});
 
 		}
