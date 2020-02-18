@@ -57,6 +57,7 @@ namespace nuntiusClientChat.Controls
 			else
 			{
 				await Navigation.PushAsync(chatPage, true);
+				await chatPage.ChatScrollView.ScrollToAsync(chatPage.ChatStackLayout, ScrollToPosition.End, false);
 			}
 
 		}

@@ -15,12 +15,16 @@ namespace nuntiusClientChat
 		public ChatPage()
 		{
 			InitializeComponent();
+			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
 		}
 
 		public ChatPage(Chat chat)
 		{
 			InitializeComponent();
-
+			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+			
 			if (chat == null)
 			{
 				return;
@@ -45,6 +49,8 @@ namespace nuntiusClientChat
 		}
 
 
+	
+
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
 			if (Chat.Partner == null || MsgEditor.Text == null || MsgEditor.Text == "")
@@ -60,8 +66,10 @@ namespace nuntiusClientChat
 			MsgChatStack.Children.Add(new MessageControll(true, message));
 			Chat.ChatMessages.Add(message);
 			MsgEditor.Text = null;
-			
-	
+
+			chatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, false);
+
+
 		}
 
 		public Chat Chat { get; set; }
@@ -70,5 +78,12 @@ namespace nuntiusClientChat
 			get { return MsgChatStack; }
 			set { MsgChatStack = value; }
 		}
+		
+		public ScrollView ChatScrollView
+		{
+			get { return chatScroll; }
+			set { chatScroll = value; }
+		}
+
 	}
 }
