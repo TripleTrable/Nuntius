@@ -101,7 +101,12 @@ namespace NuntiusServer
 				return response;
 			}
 
-			//ToDo: Check to alias (if user was deleted)
+			//User must exist
+			if(DbController.CheckUsersAliasAvalible(toAlias))
+			{
+				response.SendErrorResponse();
+				return response;
+			}
 
 			//Save messages
 			int result = DbController.InsertNewMessage(fromUserID.Value, toAlias, send, message);
