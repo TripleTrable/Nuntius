@@ -11,7 +11,6 @@
 		<StackLayout x:Name="chatSelectionStack" Spacing="2" >
 			<!--The Diffrent Chats will be Placed in this StachLayout-->
 			<Button x:Name="addNewChat" Text="Neuer Chat." Clicked="AddNewChat_Clicked"/>
-					
 		</StackLayout>
 	</ScrollView>
 </ContentPage>

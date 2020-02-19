@@ -87,8 +87,6 @@ namespace nuntiusClientChat.Controller
 					AddChat(c);
 
 				}
-
-
 				SortMessages(recievedMsg);
 			}
 			else
@@ -98,18 +96,19 @@ namespace nuntiusClientChat.Controller
 
 		}
 
-
-
+		
 		public void AddSavedChat(Chat chat)
 		{
 				currentChats.Add(chat);
 				OnSavedChatAdded(chat);
 		}
+
 		public void AddChat(Chat chat)
 		{
 			currentChats.Add(chat);
 			OnChatAdded(chat);
 		}
+		
 
 		public List<Chat> CurrentChats
 		{
