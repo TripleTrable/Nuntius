@@ -1,4 +1,5 @@
-﻿using nuntiusClientChat.Controller;
+﻿using LocalNotifications;
+using nuntiusClientChat.Controller;
 using nuntiusClientChat.Controls;
 using nuntiusModel;
 using System;
@@ -8,14 +9,14 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-//TODO: Make MsgChatStack public
-
 namespace nuntiusClientChat
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChatSelectionPage : ContentPage
 	{
 		private readonly ChatSelectionController chatSelection;
+	
+		INotificationManager notificationManager;
 
 		public ChatSelectionPage()
 		{
@@ -25,6 +26,26 @@ namespace nuntiusClientChat
 			chatSelection.ChatAdded += Chat_Added;
 			chatSelection.MessagesAdded += ChatSelection_MessagesAdded;
 			chatSelection.SavedChatAdded += ChatSelection_SavedChatAdded;
+
+			notificationManager = DependencyService.Get<INotificationManager>();
+			notificationManager.NotificationReceived += (sender, eventArgs) =>
+			{
+				var evtData = (NotificationEventArgs)eventArgs;
+				
+			};
+
+			notificationManager.ScheduleNotification("TEST", "TESTTTT");
+		}
+		void ShowNotification(string title, string message)
+		{
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				var msg = new Label()
+				{
+					Text = $"Notification Received:\nTitle: {title}\nMessage: {message}"
+				};
+				//stackLayout.Children.Add(msg);
+			});
 		}
 
 		private void ChatSelection_SavedChatAdded(object sender, ChatEventArgs e)
@@ -50,39 +71,31 @@ namespace nuntiusClientChat
 
 			Device.BeginInvokeOnMainThread(() =>
 			{
-				//List<ChatPage> chatPages = (from tile in chatSelectionStack.Children.OfType<ChatSelectionTile>()
-				//							select tile.ChatPage).ToList();
-
+			
 				List<ChatSelectionTile> chatSeletion = CurrentChatSelectionTiles();
 
 				foreach (var updatedChat in e.ChatList)
 				{
 
-					//var chats = (from page in chatPages
-					//			 where page.Chat.Partner == updatedChat.Partner
-					//			 select page).ToList();
 
 					var tile = (from t in chatSeletion
 								where t.ChatPage.Chat.Partner == updatedChat.Partner
 								select t).ToList();
 
-					//Add Messeges to the List of the Model
-					//chats[0].Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
+			
 
 					tile[0].ChatPage.Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
 
 					//Add Messeges to the ChatView 
 					foreach (Message message in updatedChat.ChatMessages)
 					{
-						//chats[0].ChatStackLayout.Children.Add(new MessageControll(false, message));
-						//chats[0].ChatScrollView.ScrollToAsync(chats[0].ChatStackLayout, ScrollToPosition.End, false);
-
 						tile[0].ChatPage.ChatStackLayout.Children.Add(new MessageControll(false, message));
 						tile[0].ChatPage.ChatScrollView.ScrollToAsync(tile[0].ChatPage.ChatStackLayout, ScrollToPosition.End, false);
 					}
 					if (updatedChat.ChatMessages.Count != 0)
 					{
 						OrderMostRecentChat(tile[0]);
+						//NotificationReqest.SendNotification("Name: "+tile[0].PartnerAlias,"Nachricht: "+tile[0].ChatPage.Chat.ChatMessages[0].Text,1);
 					}
 
 				}

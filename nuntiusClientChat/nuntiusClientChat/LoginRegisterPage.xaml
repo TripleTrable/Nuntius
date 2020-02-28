@@ -77,7 +77,7 @@
                 <Grid Grid.Row="2">
 				<StackLayout>
                     <Button x:Name="continueButton" Text="Weiter" BackgroundColor="#2CA38E" Clicked="ContinueButton_ClickedAsync"  CornerRadius="15"/>
-					<Label Text="alpha_1.0.2" HorizontalOptions="EndAndExpand" FontSize="Micro" TextColor="LightGray"/>
+					<Label x:Name="VersionLabel" HorizontalOptions="EndAndExpand" FontSize="Micro" TextColor="LightGray"/>
 				</StackLayout>
 
 			</Grid>

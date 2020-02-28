@@ -13,7 +13,7 @@ namespace nuntiusClientChat
 		public LoginRegisterPage()
 		{
 			InitializeComponent();
-			AliasEntry.Text = null; PasswordEntry.Text = null;
+			AliasEntry.Text = null; PasswordEntry.Text = null; VersionLabel.Text = "alpha_1.0.3pre  " + NetworkController.ServerAddres;	
 		}
 
 		private void Entry_Completed(object sender, EventArgs e)
@@ -29,7 +29,6 @@ namespace nuntiusClientChat
 		private void Switch_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			LoginTyp.Text = typSwitch.IsToggled == false ? "Login" : "Registrieren";
-			
 		}
 
 		private async void ContinueButton_ClickedAsync(object sender, EventArgs e)

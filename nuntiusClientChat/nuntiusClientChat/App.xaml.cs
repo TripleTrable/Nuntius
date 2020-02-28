@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 using nuntiusClientChat.Controller;
-using nuntiusModel;
+using LocalNotifications;
 
 namespace nuntiusClientChat
 {
@@ -9,6 +9,9 @@ namespace nuntiusClientChat
 		public App()
 		{
 			InitializeComponent();
+
+			DependencyService.Get<INotificationManager>().Initialize();
+
 
 			if (Controller.UserController.LogedInUser != null)
 			{
@@ -19,12 +22,15 @@ namespace nuntiusClientChat
 			{
 				MainPage = new LoginRegisterPage();
 			}
-
-
+			
 		}
 
 		protected override void OnStart()
-		{
+	{
+			if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
+			{
+				StorageController.LoadeData();
+			}
 
 		}
 
@@ -35,6 +41,10 @@ namespace nuntiusClientChat
 
 		protected override void OnResume()
 		{
+			if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
+			{
+				StorageController.LoadeData();
+			}
 		}
 
 
