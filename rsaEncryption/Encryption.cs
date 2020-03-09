@@ -7,59 +7,11 @@ namespace RSAEncryption
 	public class Encryption
 	{
 		RSA rsa { get; set; }
-		RSAParameters publicKey { get; }
-		RSAParameters privateKey { get; }
 
 		public Encryption()
 		{
-			rsa = RSA.Create(4096);
-			publicKey = rsa.ExportParameters(false);
-			privateKey = rsa.ExportParameters(true);
-		}
-
-		/// <summary>
-		/// Export the public key
-		/// </summary>
-		/// <returns>Public key as a string</returns>
-		public string ExportPublicKey()
-		{
-			return "";
-		}
-
-		/// <summary>
-		/// Export the private key
-		/// </summary>
-		/// <returns>Private key as a string</returns>
-		public string ExportPrivateKey()
-		{
-			return "";
-		}
-
-		/// <summary>
-		/// Import a pair of keys
-		/// </summary>
-		/// <param name="parameters">The keys</param>
-		public void LoadKeys(RSAParameters parameters)
-		{
-			rsa.ImportParameters(parameters);
-		}
-
-		/// <summary>
-		/// Load a pair of Keys 
-		/// </summary>
-		/// <param name="n">modulus (p * q)</param>
-		/// <param name="e">public exponent</param>
-		/// <param name="d">private exponent</param>
-		public void LoadKeys(byte[] n, byte[] e, byte[] d)
-		{
-			RSAParameters p = new RSAParameters()
-			{
-				Modulus = n,
-				Exponent = e,
-				D = d
-			};
-
-			LoadKeys(p);
+			rsa = RSA.Create();
+			rsa.KeySize = 4096;
 		}
 
 		/// <summary>
@@ -85,6 +37,24 @@ namespace RSAEncryption
 			byte[] decryptedData = rsa.Decrypt(dataToDecrypt, RSAEncryptionPadding.OaepSHA512);
 
 			return Encoding.Unicode.GetString(decryptedData);
+		}
+
+		/// <summary>
+		/// Exports / imports the private key
+		/// </summary>
+		public string PublicKey
+		{
+			get { return rsa.ToXmlString(false); }
+			set { rsa.FromXmlString(value); }
+		}
+
+		/// <summary>
+		/// Exports / imports the private key
+		/// </summary>
+		public string PrivateKey
+		{
+			get { return rsa.ToXmlString(true); }
+			set { rsa.FromXmlString(value); }
 		}
 	}
 }
