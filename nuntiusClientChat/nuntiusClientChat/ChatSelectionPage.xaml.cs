@@ -3,9 +3,9 @@ using nuntiusClientChat.Controller;
 using nuntiusClientChat.Controls;
 using nuntiusModel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,8 +15,10 @@ namespace nuntiusClientChat
 	public partial class ChatSelectionPage : ContentPage
 	{
 		private readonly ChatSelectionController chatSelection;
-	
-		INotificationManager notificationManager;
+
+
+		private INotificationManager notificationManager;
+
 
 		public ChatSelectionPage()
 		{
@@ -28,24 +30,56 @@ namespace nuntiusClientChat
 			chatSelection.SavedChatAdded += ChatSelection_SavedChatAdded;
 
 			notificationManager = DependencyService.Get<INotificationManager>();
-			notificationManager.NotificationReceived += (sender, eventArgs) =>
-			{
-				var evtData = (NotificationEventArgs)eventArgs;
-				
-			};
+			notificationManager.NotificationReceived += NotificationManager_NotificationReceived;
 
-			notificationManager.ScheduleNotification("TEST", "TESTTTT");
 		}
-		void ShowNotification(string title, string message)
+
+		private async void NotificationManager_NotificationReceived(object sender, EventArgs e)
 		{
-			Device.BeginInvokeOnMainThread(() =>
+			NetworkController.NagTimerRun = false;
+			if (!StorageController.Loaded)
 			{
-				var msg = new Label()
+				try
 				{
-					Text = $"Notification Received:\nTitle: {title}\nMessage: {message}"
-				};
-				//stackLayout.Children.Add(msg);
-			});
+					var evtData = (NotificationEventArgs)e;
+
+					await Task.Run(() => NotificationsOpenedAsync(evtData.Title, evtData.Message));
+
+				}
+				catch (Exception)
+				{
+
+				}
+			}
+
+			else
+			{
+				try
+				{
+					var evtData = (NotificationEventArgs)e;
+
+					await Task.Run(() => NotificationsOpenedAsync(evtData.Title, evtData.Message));
+
+				}
+				catch (Exception)
+				{
+
+				}
+			}
+			NetworkController.NagTimerRun = true;
+
+		}
+
+		private async Task NotificationsOpenedAsync(string titel, string message)
+		{
+			//Tital is Partner Chat Name
+			List<ChatSelectionTile> selectionTiles = CurrentChatSelectionTiles();
+
+			var ChatPage = (from c in selectionTiles
+							where c.ChatPage.Chat.Partner == titel
+							select c.ChatPage).ToList();
+
+			await Task.Run(() => Device.BeginInvokeOnMainThread(async () => await Navigation.PushAsync(ChatPage[0])));
 		}
 
 		private void ChatSelection_SavedChatAdded(object sender, ChatEventArgs e)
@@ -53,10 +87,10 @@ namespace nuntiusClientChat
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				ChatPage chatPage = new ChatPage(e.Chat);
-								
+
 				ChatSelectionTile chatSelectionTile = new ChatSelectionTile(chatPage);
 				chatSelectionStack.Children.Add(chatSelectionTile);
-								
+
 			});
 		}
 
@@ -68,35 +102,46 @@ namespace nuntiusClientChat
 		private void ChatSelection_MessagesAdded(object sender, ChatEventArgs e)
 		{
 
-
 			Device.BeginInvokeOnMainThread(() =>
 			{
-			
+
 				List<ChatSelectionTile> chatSeletion = CurrentChatSelectionTiles();
 
 				foreach (var updatedChat in e.ChatList)
 				{
 
-
 					var tile = (from t in chatSeletion
 								where t.ChatPage.Chat.Partner == updatedChat.Partner
 								select t).ToList();
 
-			
-
-					tile[0].ChatPage.Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
-
-					//Add Messeges to the ChatView 
-					foreach (Message message in updatedChat.ChatMessages)
+					if (tile.Count == 0)
+						continue;
+					try
 					{
-						tile[0].ChatPage.ChatStackLayout.Children.Add(new MessageControll(false, message));
-						tile[0].ChatPage.ChatScrollView.ScrollToAsync(tile[0].ChatPage.ChatStackLayout, ScrollToPosition.End, false);
+						tile[0].ChatPage.Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
+
+						//Add Messeges to the ChatView 
+						foreach (Message message in updatedChat.ChatMessages)
+						{
+							tile[0].ChatPage.ChatStackLayout.Children.Add(new MessageControll(false, message));
+							tile[0].ChatPage.ChatScrollView.ScrollToAsync(tile[0].ChatPage.ChatStackLayout, ScrollToPosition.End, false);
+						}
+						if (updatedChat.ChatMessages.Count != 0)
+						{
+
+							OrderMostRecentChat(tile[0]);
+							foreach (var msg in updatedChat.ChatMessages)
+							{
+								notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text);
+							}
+
+						}
 					}
-					if (updatedChat.ChatMessages.Count != 0)
+					catch (Exception ex)
 					{
-						OrderMostRecentChat(tile[0]);
-						//NotificationReqest.SendNotification("Name: "+tile[0].PartnerAlias,"Nachricht: "+tile[0].ChatPage.Chat.ChatMessages[0].Text,1);
+						DisplayAlert("", ex.ToString(), "Ok");
 					}
+
 
 				}
 
@@ -107,6 +152,11 @@ namespace nuntiusClientChat
 		{
 			return (from tile in chatSelectionStack.Children.OfType<ChatSelectionTile>()
 					select tile).ToList();
+		}
+		private List<Button> GetButtons()
+		{
+			return (from button in chatSelectionStack.Children.OfType<Button>()
+					select button).ToList();
 		}
 
 		private void Chat_Added(object source, ChatEventArgs args)
@@ -125,29 +175,132 @@ namespace nuntiusClientChat
 
 		}
 
+		#region Sorting ChatSelection Tiles
+
 		public void OrderMostRecentChat(ChatSelectionTile tile)
 		{
+
+
+			//selectionTiles.Remove(tile);
+
+			//selectionTiles.Reverse();
+
+			//selectionTiles.Add(tile);
+
+			//selectionTiles.Reverse();
+
+
 			Device.BeginInvokeOnMainThread(() =>
 			{
-				List<ChatSelectionTile> selectionTiles = CurrentChatSelectionTiles();
+				List<ChatSelectionTile> selectionTiles = RemoveDuplicats(CurrentChatSelectionTiles());
 
-				selectionTiles.Remove(tile);
-
-				selectionTiles.Reverse();
-
-				selectionTiles.Add(tile);
-
-				selectionTiles.Reverse();
-
-				//Added the new Order of Chat Seletion Tiles
+				Button tempButton = GetButtons()[0];
+				chatSelectionStack.Children.Clear();
+				chatSelectionStack.Children.Add(tempButton);
+				//add´s the new Order of Chat Seletion Tiles and Removes Duplicats
 				foreach (var item in selectionTiles)
+				{
+					chatSelectionStack.Children.Add(item);
+				}
+			});
+
+		}
+
+		public List<ChatSelectionTile> RemoveDuplicats()
+		{
+			List<ChatSelectionTile> current = CurrentChatSelectionTiles();
+
+			if (current.Count == 0)
+			{
+				return current;
+			}
+
+			int com(ChatSelectionTile a, ChatSelectionTile b)
+			{
+				if (a.PartnerAlias == b.PartnerAlias)
+				{
+					if (a.ChatPage.Chat.ChatMessages.Count > b.ChatPage.Chat.ChatMessages.Count)
+					{
+						return 1;
+					}
+					else if (a.ChatPage.Chat.ChatMessages.Count == b.ChatPage.Chat.ChatMessages.Count)
+					{
+						return 0;
+					}
+					else
+					{
+						return 0;
+					}
+				}
+				return 0;
+			}
+			current.Sort(com);
+
+			List<ChatSelectionTile> distinctItems = current.GroupBy(c => c.PartnerAlias).Select(y => y.First()).ToList();
+
+
+			return distinctItems;
+
+
+		}
+		public List<ChatSelectionTile> RemoveDuplicats(List<ChatSelectionTile> current)
+		{
+
+			if (current.Count == 0)
+			{
+				return current;
+			}
+
+			int com(ChatSelectionTile a, ChatSelectionTile b)
+			{
+				if (a.PartnerAlias == b.PartnerAlias)
+				{
+					if (a.ChatPage.Chat.ChatMessages.Count > b.ChatPage.Chat.ChatMessages.Count)
+					{
+						return 1;
+					}
+					else if (a.ChatPage.Chat.ChatMessages.Count == b.ChatPage.Chat.ChatMessages.Count)
+					{
+						return 0;
+					}
+					else
+					{
+						return 0;
+					}
+				}
+				return 0;
+			}
+			current.Sort(com);
+
+			List<ChatSelectionTile> distinctItems = current.GroupBy(c => c.PartnerAlias).Select(y => y.First()).ToList();
+
+			return distinctItems;
+		}
+
+		/*public void RemoveDuplicates()
+		{
+			List<ChatSelectionTile> chatSelectionTiles = CurrentChatSelectionTiles();
+				
+			List<ChatSelectionTile> distinctItems = chatSelectionTiles.GroupBy( c => c.PartnerAlias).Select(y => y.FirstOrDefault()).ToList();
+
+			//TODO: Check if this may Delete new messages
+			if (distinctItems.Count != 0)
+			{
+				/*Button temp = (Button)(chatSelectionStack.Children[0]);
+
+				chatSelectionStack.Children.Clear();
+
+				chatSelectionStack.Children.Add(temp);
+
+				foreach (var item in distinctItems)
 				{
 					chatSelectionStack.Children.Remove(item);
 					chatSelectionStack.Children.Add(item);
 				}
-			
-			});
+			}
 
-		}
+		}*/
+
+		#endregion
 	}
 }

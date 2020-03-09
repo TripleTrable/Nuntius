@@ -52,7 +52,10 @@ namespace nuntiusClientChat
 					{  
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-						StorageController.LoadeData();
+						if (Navigation.NavigationStack.Count == 0)
+						{
+							StorageController.LoadeData();
+						}
 					}
 					else
 					{
@@ -77,9 +80,9 @@ namespace nuntiusClientChat
 					}
 					
 					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-					{   //Open the Chat selection
+					{   
+						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-						StorageController.LoadeData();
 					}
 					else
 					{

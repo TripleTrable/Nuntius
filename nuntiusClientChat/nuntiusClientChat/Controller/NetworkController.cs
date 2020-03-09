@@ -16,6 +16,7 @@ namespace nuntiusClientChat.Controller
 	{
 		private static readonly Timer nagTimer = new Timer();
 
+		//public static readonly string ServerAddres = "172.16.9.198";
 		public static readonly string ServerAddres = "10.100.100.15";
 		//public static readonly string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
 
@@ -166,7 +167,7 @@ namespace nuntiusClientChat.Controller
 
 				IPAddress ipAddress = IPAddress.Parse(ServerAddres);
 				//IPAddress ipAddress = IPAddress.Loopback;
-
+				 
 				//IPAddress ipAddress = IPAddress.Parse(ServerAddres);
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
@@ -221,7 +222,7 @@ namespace nuntiusClientChat.Controller
 			{
 				Console.WriteLine(e.ToString());
 				return null;
-			}
+			} 
 		}
 	}
 }

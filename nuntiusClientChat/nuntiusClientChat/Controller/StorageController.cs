@@ -15,22 +15,23 @@ namespace nuntiusClientChat.Controller
 	{
 		private static List<Chat> chats;
 		private static readonly ChatSelectionController selectionController = NetworkController.selectionController;
-
+		public static bool Loade = true;
+		public static bool Loaded = false;
 		//static string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp2.txt");
-		private static readonly string fileName = Path.Combine(FileSystem.AppDataDirectory,dataFile);
+		private static readonly string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
 		const string dataFile = "NuntiusData.txt";
 
-		public static List<Chat> Chats 
+		public static List<Chat> Chats
 		{
 			get { return chats; }
 			set { chats = selectionController.CurrentChats; }
 		}
 
 		public static void SaveData()
-		 {
+		{
 			//Reset saved chats List
 			//selectionController.CurrentChats = new List<Chat>();
-			
+
 			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
@@ -39,39 +40,45 @@ namespace nuntiusClientChat.Controller
 			}
 
 		}
+
 		public static void LoadeData()
 		{
-			BinaryFormatter formatter = new BinaryFormatter();
-			FileStream fileStream;
-
-			if (File.Exists(fileName))
+			if (Loade)
 			{
-				fileStream = new FileStream(fileName, FileMode.Open);
-				chats = (List<Chat>)(formatter.Deserialize(fileStream)); 
-			}
-			else
-			{
-				return;
-			}
 
-			if (chats.Count < 0)
-				return;
+				BinaryFormatter formatter = new BinaryFormatter();
+				FileStream fileStream;
 
-			foreach (Chat chat in Chats)
-			{
-				if (chat.Owner == UserController.LogedInUser.Alias)
+				if (File.Exists(fileName))
 				{
-					NetworkController.NagTimerRun = false;
-					selectionController.AddSavedChat(chat);
+					fileStream = new FileStream(fileName, FileMode.Open);
+					chats = (List<Chat>)(formatter.Deserialize(fileStream));
 				}
 				else
 				{
 					return;
 				}
-			}
 
-			fileStream.Close();
-			NetworkController.NagTimerRun = true;
+				if (chats.Count < 0)
+					return;
+
+				foreach (Chat chat in Chats)
+				{
+					if (chat.Owner == UserController.LogedInUser.Alias)
+					{
+						NetworkController.NagTimerRun = false;
+						selectionController.AddSavedChat(chat);
+					}
+					else
+					{
+						return;
+					}
+				}
+
+				fileStream.Close();
+				NetworkController.NagTimerRun = true;
+				Loaded = true;
+			}
 		}
 
 	}

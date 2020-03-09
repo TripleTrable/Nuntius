@@ -13,7 +13,12 @@ using Xamarin.Forms;
 
 namespace nuntiusClientChat.Droid
 {
-    [Activity(Label = "Nuntius", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Nuntius",
+        Icon = "@mipmap/icon",
+        Theme = "@style/MainTheme",
+        MainLauncher = true,
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
+        LaunchMode = LaunchMode.SingleTop)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -49,7 +54,7 @@ namespace nuntiusClientChat.Droid
                 string title = intent.Extras.GetString(AndroidNotificationManager.TitleKey);
                 string message = intent.Extras.GetString(AndroidNotificationManager.MessageKey);
 
-                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);            
             }
         }
 

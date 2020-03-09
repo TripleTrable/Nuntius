@@ -6,9 +6,11 @@ namespace nuntiusClientChat
 {
 	public partial class App : Application
 	{
+		int appOpend = 0;
 		public App()
 		{
 			InitializeComponent();
+			NetworkController.NagTimerRun = false;
 
 			DependencyService.Get<INotificationManager>().Initialize();
 
@@ -16,22 +18,25 @@ namespace nuntiusClientChat
 			if (Controller.UserController.LogedInUser != null)
 			{
 				MainPage = new NavigationPage(new ChatSelectionPage());
-		
 			}
 			else
 			{
 				MainPage = new LoginRegisterPage();
 			}
-			
+
 		}
 
 		protected override void OnStart()
-	{
-			if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
+		{
+			appOpend++;
+			if (appOpend == 1)
 			{
-				StorageController.LoadeData();
+				StorageController.Loade = true;
 			}
-
+			else
+			{
+				StorageController.Loade = false;
+			}
 		}
 
 		protected override void OnSleep()
@@ -41,12 +46,12 @@ namespace nuntiusClientChat
 
 		protected override void OnResume()
 		{
-			if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-			{
-				StorageController.LoadeData();
-			}
+			//if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
+			//{
+			//	StorageController.LoadeData();
+			//}
 		}
-
+		
 
 	}
 }

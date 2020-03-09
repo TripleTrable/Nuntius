@@ -1,15 +1,16 @@
-﻿using System;
+﻿
+using System;
 
 namespace LocalNotifications
 {
-    public interface INotificationManager
-    {
-        event EventHandler NotificationReceived;
+	public interface INotificationManager
+	{
+		event EventHandler NotificationReceived;
 
-        void Initialize();
+		void Initialize();
 
-        int ScheduleNotification(string title, string message);
+		int ScheduleNotification(string title, string message);
 
-        void ReceiveNotification(string title, string message);
-    }
+		void ReceiveNotification(string title, string message);
+	}
 }
