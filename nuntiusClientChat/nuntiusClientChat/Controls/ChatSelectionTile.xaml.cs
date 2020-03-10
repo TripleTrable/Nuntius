@@ -10,6 +10,7 @@ using Xamarin.Forms.Xaml;
 namespace nuntiusClientChat.Controls
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
+	[Serializable]
 	public partial class ChatSelectionTile : ContentView
 	{
 		private ChatPage chatPage;
@@ -56,6 +57,7 @@ namespace nuntiusClientChat.Controls
 			else
 			{
 				await Navigation.PushAsync(chatPage, true);
+				await chatPage.ChatScrollView.ScrollToAsync(chatPage.ChatStackLayout, ScrollToPosition.End, false);
 			}
 
 		}

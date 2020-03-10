@@ -15,11 +15,15 @@ namespace nuntiusClientChat
 		public ChatPage()
 		{
 			InitializeComponent();
+			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
 		}
 
 		public ChatPage(Chat chat)
 		{
 			InitializeComponent();
+			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
+			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
 
 			if (chat == null)
 			{
@@ -28,27 +32,45 @@ namespace nuntiusClientChat
 
 			this.Chat = chat;
 
-			foreach (var messages in chat.ChatMessages)
+			foreach (Message m in chat.ChatMessages)
 			{
-				MsgChatStack.Children.Add(new MessageControll(false, messages));
+				//Sedn
+				if (m.From == UserController.LogedInUser.Alias)
+				{
+					ChatStackLayout.Children.Add(new MessageControll(true, m));
+				}
+				//Receved
+				else if (m.From != UserController.LogedInUser.Alias)
+				{
+					ChatStackLayout.Children.Add(new MessageControll(false, m));
+				}
 			}
+
 		}
 
-		public void AddPrerentResponse(List<Message> messages)
-		{
-			foreach (var item in messages)
-			{
-				MsgChatStack.Children.Add(new MessageControll(false, item));
-			}
-		}
+
+
+
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
+			if (Chat.Partner == null || MsgEditor.Text == null || MsgEditor.Text == "")
+			{
+				return;
+			}
+
 			//Send Msg via Networkkontroller
-			await Task.Run(() => NetworkController.sendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text));
+			//TODO: Settings Trim On/Off
+			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text.Trim()));
 
 			//Add Msg to View
-			MsgChatStack.Children.Add(new MessageControll(true, new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text }));
+			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text };
+			MsgChatStack.Children.Add(new MessageControll(true, message));
+			Chat.ChatMessages.Add(message);
 			MsgEditor.Text = null;
+
+			await chatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, false);
+
+
 		}
 
 		public Chat Chat { get; set; }
@@ -57,5 +79,12 @@ namespace nuntiusClientChat
 			get { return MsgChatStack; }
 			set { MsgChatStack = value; }
 		}
+
+		public ScrollView ChatScrollView
+		{
+			get { return chatScroll; }
+			set { chatScroll = value; }
+		}
+
 	}
 }

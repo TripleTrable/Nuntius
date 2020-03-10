@@ -6,7 +6,6 @@ using Npgsql;
 
 namespace NuntiusServer
 {
-	//ToDo: implement
 	public static class DbController
 	{
 		private static string connectionString = "Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";

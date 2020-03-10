@@ -11,41 +11,77 @@
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16.5*"/>
+                <RowDefinition Height="66*"/>
+                <RowDefinition Height="8*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <BoxView BackgroundColor="#E1E0E0" Margin="5,250,5,220" CornerRadius="30"></BoxView>
-                <StackLayout Padding="10,150,10,0" Spacing="10">
-                    <Label Text="Nuntius" FontSize="50"  TextColor="#FF333333" HorizontalOptions="Center"/>
-                    <Entry x:Name="AliasEntry" Placeholder="Nutzer Name: " Completed="Entry_Completed" Margin="0,50,0,0" PlaceholderColor="#9EA1A3"/>
-                    <Entry x:Name="PasswordEntry" IsPassword="True" Placeholder="Password: " Completed="PasswordEntry_Completed" Margin="0,10,0,0" PlaceholderColor="#9EA1A3"/>
+			<Grid Grid.Row="0">
+				<Label Text="Nuntius" FontSize="40" HorizontalOptions="Center" TextColor="Black" VerticalOptions="Center"/>
+   			</Grid>
 
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+			<Grid Grid.Row="1">
+				<RelativeLayout>
+					<BoxView BackgroundColor="#E1E0E0" 
+                             CornerRadius="30"
+                             RelativeLayout.WidthConstraint=
+                             "{ConstraintExpression
+                             Type=RelativeToView,
+                             ElementName=layoutStack,
+                             Property=Width,
+                             Factor=1
+                             }"
+                             RelativeLayout.HeightConstraint=
+                             "{ConstraintExpression
+                             Type=RelativeToView,
+                             Property=Height,
+                             ElementName=layoutStack,Factor=1
+                            }"
+                             RelativeLayout.YConstraint=
+                            "{ConstraintExpression
+                            Type=RelativeToParent,
+                            Property=Height,
+                            Factor=0.30
+                            }"
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                    />
+					<StackLayout x:Name="layoutStack" Spacing="8"
+                                RelativeLayout.WidthConstraint=
+                                "{ConstraintExpression
+                                Type=RelativeToParent,Property=Width,Factor=0.99,Constant=5
+                                }"                  
+                                RelativeLayout.HeightConstraint=
+                                "{ConstraintExpression
+                                Type=RelativeToParent,Property=Height,Factor=0.40
+                                }"
+                                RelativeLayout.YConstraint=
+                                "{ConstraintExpression
+                                Type=RelativeToParent,
+                                Property=Height,
+                                Factor=0.30,Constant=-10
+                                }"
+                    >
+						
+						<Entry x:Name="AliasEntry" Placeholder="Nutzer Name: " Completed="Entry_Completed" Margin="0,50,0,0" PlaceholderColor="#9EA1A3"/>
+                        <Entry x:Name="PasswordEntry" IsPassword="True" Placeholder="Password: " Completed="PasswordEntry_Completed" Margin="0,10,0,0" PlaceholderColor="#9EA1A3"/>
 
-                        <Grid Grid.Column="0" Grid.Row="0">
-                            <Switch x:Name="typSwitch" HorizontalOptions="Start" OnColor="#2CA38E" PropertyChanged="Switch_PropertyChanged" Margin="10,0,0,0"/>
-                        </Grid>
-                        <Grid Grid.Column="1" Grid.Row="0">
-                            <Label x:Name="LoginTyp" Text="Login"  FontSize="Large" VerticalOptions="Center"/>
-                        </Grid>
-                    </Grid>
-                </StackLayout>
-            </Grid>
+						<StackLayout Orientation="Horizontal" >
+                            <Switch x:Name="typSwitch" HorizontalOptions="Start" OnColor="#2CA38E" PropertyChanged="Switch_PropertyChanged" Margin="10,0,0,0" />
+                            <Label x:Name="LoginTyp" Text="Login" FontSize="Subtitle" VerticalOptions="Center"/>
+						</StackLayout>
 
-                <Grid Grid.Row="2" Padding="10,10,10,10">
-                    <Button x:Name="continueButton" Text="Weiter" BackgroundColor="#2CA38E" Clicked="continueButton_ClickedAsync"  CornerRadius="15"/>
-                </Grid>
-        </Grid>
+					</StackLayout>
+				</RelativeLayout>
+			</Grid>
+
+                <Grid Grid.Row="2">
+				<StackLayout>
+                    <Button x:Name="continueButton" Text="Weiter" BackgroundColor="#2CA38E" Clicked="ContinueButton_ClickedAsync"  CornerRadius="15"/>
+					<Label x:Name="VersionLabel" HorizontalOptions="EndAndExpand" FontSize="Micro" TextColor="LightGray"/>
+				</StackLayout>
+
+			</Grid>
+
+		</Grid>
     </ContentPage.Content>
 </ContentPage>

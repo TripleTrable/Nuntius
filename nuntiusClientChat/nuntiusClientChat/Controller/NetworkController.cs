@@ -14,7 +14,12 @@ namespace nuntiusClientChat.Controller
 {
 	static class NetworkController
 	{
-		private static Timer nagTimer = new Timer(); 
+		private static readonly Timer nagTimer = new Timer();
+
+		//public static readonly string ServerAddres = "172.16.9.198";
+		public static readonly string ServerAddres = "10.100.100.15";
+		//public static readonly string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
+
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
 
@@ -39,13 +44,13 @@ namespace nuntiusClientChat.Controller
 			}
 			else
 			{
-				await sendNaggRequstAsync();
+				await SendNaggRequstAsync();
 			}
 
 		}
 
 		#endregion
-		public async static Task<bool> SendRegisterRequestAsync(string alias, string pwd)
+		public async static Task SendRegisterRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
 
@@ -59,21 +64,25 @@ namespace nuntiusClientChat.Controller
 
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
+
 			if (r.Type == "registationSuccess")
 			{
 
 				UserController.CurrentTocken = r.Parameters[0].ToString();
 				UserController.LogedInUser = new User(alias, hashPwd);
 				ConfigurNagServer();
-				return true;
+
 			}
 			else
 			{
-				return false;
+				UserController.CurrentTocken = "";
+				UserController.LogedInUser = null;
 			}
 		}
 
-		public async static Task<bool> SendLoginRequestAsync(string alias, string pwd)
+		public async static Task SendLoginRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
 			using (MD5 md5hash = MD5.Create())
@@ -86,22 +95,32 @@ namespace nuntiusClientChat.Controller
 
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
+
 			if (r.Type == "loginSuccess")
 			{
 
 				UserController.CurrentTocken = r.Parameters[0].ToString();
 				UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
 				ConfigurNagServer();
-				return true;
+
 			}
 			else
 			{
-				return false;
+				UserController.CurrentTocken = "";
+				UserController.LogedInUser = null;
 			}
 		}
 
-		public async static Task sendMsgRequest(string toAlias, DateTime sendTime, string msgText)
+		public async static Task SendMsgRequest(string toAlias, DateTime sendTime, string msgText)
 		{
+
+			if (UserController.CurrentTocken == null)
+			{
+				return;
+			}
+
 			UserController.CurrentTocken = UserController.CurrentTocken;
 
 			Request request = new Request();
@@ -109,15 +128,24 @@ namespace nuntiusClientChat.Controller
 
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
 		}
 
-		public async static Task sendNaggRequstAsync()
+		public async static Task SendNaggRequstAsync()
 		{
 			Request request = new Request();
 			request.NaggRequst(UserController.CurrentTocken);
 
+			if (UserController.CurrentTocken == null)
+			{
+				return;
+			}
+
 			Response r = await SendReqestToServerAsync(request);
 
+			if (r == null)
+				return;
 			//convets the response to a List of Messeges
 			string s = r.Parameters[0].ToString();
 			List<Message> messages = JsonSerializer.Deserialize<List<Message>>(s);
@@ -125,27 +153,27 @@ namespace nuntiusClientChat.Controller
 			if (messages != null)
 			{
 				NagTimerRun = false;
-				await Task.Run(() => selectionController.SortMeseges(messages));
+				await Task.Run(() => selectionController.SortMessages(messages));
 			}
 
 		}
 		public static async Task<Response> SendReqestToServerAsync(Request request)
 		{
 			byte[] bytes = new byte[4096];
+		
 			string message = JsonSerializer.Serialize(request);
 			try
 			{
 
-				//IPAddress ipAddress = IPAddress.Parse("10.100.100.15");
+				IPAddress ipAddress = IPAddress.Parse(ServerAddres);
 				//IPAddress ipAddress = IPAddress.Loopback;
-				// IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
-
-				IPAddress ipAddress = IPAddress.Parse("2a02:908:5b0:a480:7286:7d52:53e5:6ce");
+				 
+				//IPAddress ipAddress = IPAddress.Parse(ServerAddres);
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				// Create a TCP/IP  socket.    
 				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-				sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+				//sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
 				// Connect the socket to the remote endpoint. Catch any errors.    
 				try
@@ -166,7 +194,7 @@ namespace nuntiusClientChat.Controller
 
 					//Server Response
 					Response response = JsonSerializer.Deserialize<Response>(text);
-
+					
 					// Release the socket.    
 					sender.Shutdown(SocketShutdown.Both);
 					sender.Close();
@@ -194,9 +222,7 @@ namespace nuntiusClientChat.Controller
 			{
 				Console.WriteLine(e.ToString());
 				return null;
-			}
+			} 
 		}
 	}
-
-
 }

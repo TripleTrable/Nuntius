@@ -12,8 +12,8 @@
 			<RowDefinition Height="10*"/>
 		</Grid.RowDefinitions>
 		<Grid Grid.Row="0">
-			<ScrollView Padding="10,30,10,0" Orientation="Vertical">
-				<StackLayout x:Name="MsgChatStack"></StackLayout>
+			<ScrollView x:Name="chatScroll" Padding="10,30,10,0" Orientation="Vertical">
+				<StackLayout x:Name="MsgChatStack" ></StackLayout>
 			</ScrollView>
 		</Grid>
 		<Grid Grid.Row="1">

@@ -71,7 +71,15 @@ namespace nuntiusClientChat.UWP
                 rootFrame.Navigate(typeof(MainPage), e.Arguments);
             }
             // Ensure the current window is active
-            Window.Current.Activate();
+            //TODO: Fix Chrash 
+            try
+            {
+                Window.Current.Activate();
+            }
+            catch (Exception)
+            {
+           
+            }
         }
 
         /// <summary>
