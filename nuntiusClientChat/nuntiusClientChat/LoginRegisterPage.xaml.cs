@@ -13,7 +13,7 @@ namespace nuntiusClientChat
 		public LoginRegisterPage()
 		{
 			InitializeComponent();
-			AliasEntry.Text = null; PasswordEntry.Text = null; VersionLabel.Text = "alpha_1.0.3pre  " + NetworkController.ServerAddres;	
+			AliasEntry.Text = null; PasswordEntry.Text = null; VersionLabel.Text = "alpha_1.0.3pre  " + NetworkController.ServerAddres;
 		}
 
 		private void Entry_Completed(object sender, EventArgs e)

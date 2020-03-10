@@ -12,8 +12,15 @@ namespace nuntiusClientChat
 			InitializeComponent();
 			NetworkController.NagTimerRun = false;
 
-			DependencyService.Get<INotificationManager>().Initialize();
+			if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
+			{
+				DependencyService.Get<INotificationManager>().Initialize();
+			}
 
+			if (Device.RuntimePlatform == Device.UWP)
+			{
+				NetworkController.SendLoginRequestAsync("WIN","WIN");				
+			}
 
 			if (Controller.UserController.LogedInUser != null)
 			{
@@ -41,6 +48,7 @@ namespace nuntiusClientChat
 
 		protected override void OnSleep()
 		{
+			MainPage.Navigation.PopToRootAsync();
 			StorageController.SaveData();
 		}
 

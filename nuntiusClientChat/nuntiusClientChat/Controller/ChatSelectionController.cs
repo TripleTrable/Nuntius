@@ -5,7 +5,6 @@ using System.Linq;
 using nuntiusClientChat.Controls;
 using nuntiusModel;
 using System.Threading.Tasks;
-
 using System.ComponentModel;
 
 namespace nuntiusClientChat.Controller
@@ -23,11 +22,11 @@ namespace nuntiusClientChat.Controller
 			currentChats = new List<Chat>();
 		}
 		
-
 		protected virtual void OnChatAdded(Chat chat)
 		{
 			ChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
 		}
+		
 		protected virtual void OnSavedChatAdded(Chat chat)
 		{
 			SavedChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
@@ -96,7 +95,6 @@ namespace nuntiusClientChat.Controller
 
 		}
 
-		
 		public void AddSavedChat(Chat chat)
 		{
 				currentChats.Add(chat);
@@ -109,7 +107,6 @@ namespace nuntiusClientChat.Controller
 			OnChatAdded(chat);
 		}
 		
-
 		public List<Chat> CurrentChats
 		{
 			get { return currentChats; }

@@ -59,7 +59,8 @@ namespace nuntiusClientChat
 			}
 
 			//Send Msg via Networkkontroller
-			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text));
+			//TODO: Settings Trim On/Off
+			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text.Trim()));
 
 			//Add Msg to View
 			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text };
