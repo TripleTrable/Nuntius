@@ -193,18 +193,19 @@ namespace nuntiusClientChat
 		public void OrderMostRecentChat(ChatSelectionTile tile)
 		{
 
-			//selectionTiles.Remove(tile);
-
-			//selectionTiles.Reverse();
-
-			//selectionTiles.Add(tile);
-
-			//selectionTiles.Reverse();
-
+	
 
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				List<ChatSelectionTile> selectionTiles = RemoveDuplicats(CurrentChatSelectionTiles());
+
+				selectionTiles.Remove(tile);
+
+				selectionTiles.Reverse();
+
+				selectionTiles.Add(tile);
+
+				selectionTiles.Reverse();
 
 				Button tempButton = GetButtons()[0];
 				chatSelectionStack.Children.Clear();
@@ -293,7 +294,7 @@ namespace nuntiusClientChat
 
 		public void PopToRootPage()
 		{
-			Device.BeginInvokeOnMainThread(async () => { await  Navigation.PopToRootAsync(); });
+			Device.BeginInvokeOnMainThread(async () => { await Navigation.PopToRootAsync(); });
 		}
 	}
 }

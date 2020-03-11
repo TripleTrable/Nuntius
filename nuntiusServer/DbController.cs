@@ -1,8 +1,8 @@
+using Npgsql;
+using nuntiusModel;
 using System;
 using System.Collections.Generic;
-using nuntiusModel;
 using System.Data;
-using Npgsql;
 
 namespace NuntiusServer
 {

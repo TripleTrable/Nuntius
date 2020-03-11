@@ -33,7 +33,7 @@ namespace nuntiusClientChat
 
 		private async void ContinueButton_ClickedAsync(object sender, EventArgs e)
 		{
-			
+
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
@@ -46,10 +46,10 @@ namespace nuntiusClientChat
 					if (await SendPingAsync())
 					{
 						await Task.WhenAny(NetworkController.SendLoginRequestAsync(AliasEntry.Text, PasswordEntry.Text));
-					}			
+					}
 
 					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-					{  
+					{
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
 						if (Navigation.NavigationStack.Count == 0)
@@ -73,14 +73,14 @@ namespace nuntiusClientChat
 				//Regiter
 				else
 				{
-				
+
 					if (await SendPingAsync())
 					{
 						await Task.WhenAll(NetworkController.SendRegisterRequestAsync(AliasEntry.Text, PasswordEntry.Text));
 					}
-					
+
 					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-					{   
+					{
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
 					}

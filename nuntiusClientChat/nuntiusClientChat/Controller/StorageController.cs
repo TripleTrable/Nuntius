@@ -1,13 +1,8 @@
-﻿using System;
+﻿using nuntiusModel;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using nuntiusClientChat.Controller;
-using nuntiusClientChat.Controls;
-using nuntiusModel;
 using System.Runtime.Serialization.Formatters.Binary;
 using Xamarin.Essentials;
-using System.Threading.Tasks;
 
 namespace nuntiusClientChat.Controller
 {
@@ -19,7 +14,7 @@ namespace nuntiusClientChat.Controller
 		public static bool Loaded = false;
 		//static string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp2.txt");
 		private static readonly string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
-		const string dataFile = "NuntiusData.txt";
+		private const string dataFile = "NuntiusData.txt";
 
 		public static List<Chat> Chats
 		{

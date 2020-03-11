@@ -1,15 +1,11 @@
-﻿using System;
+﻿using nuntiusModel;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
-using nuntiusClientChat.Controls;
-using nuntiusModel;
-using System.Threading.Tasks;
-using System.ComponentModel;
 
 namespace nuntiusClientChat.Controller
 {
-	class ChatSelectionController
+	internal class ChatSelectionController
 	{
 		public event EventHandler<ChatEventArgs> ChatAdded;
 		public event EventHandler<ChatEventArgs> MessagesAdded;
@@ -21,12 +17,12 @@ namespace nuntiusClientChat.Controller
 		{
 			currentChats = new List<Chat>();
 		}
-		
+
 		protected virtual void OnChatAdded(Chat chat)
 		{
 			ChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
 		}
-		
+
 		protected virtual void OnSavedChatAdded(Chat chat)
 		{
 			SavedChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
@@ -97,8 +93,8 @@ namespace nuntiusClientChat.Controller
 
 		public void AddSavedChat(Chat chat)
 		{
-				currentChats.Add(chat);
-				OnSavedChatAdded(chat);
+			currentChats.Add(chat);
+			OnSavedChatAdded(chat);
 		}
 
 		public void AddChat(Chat chat)
@@ -106,18 +102,21 @@ namespace nuntiusClientChat.Controller
 			currentChats.Add(chat);
 			OnChatAdded(chat);
 		}
-		
+
 		public List<Chat> CurrentChats
 		{
 			get { return currentChats; }
 			set { currentChats = value; }
 		}
+
+
+	
 	}
 
 	public class ChatEventArgs : EventArgs
 	{
 		public Chat Chat { get; set; }
-		public List<Chat> ChatList {get ; set; }
+		public List<Chat> ChatList { get; set; }
 	}
 
 }

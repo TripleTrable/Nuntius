@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace nuntiusModel
@@ -58,7 +57,7 @@ namespace nuntiusModel
 			parameters = null;
 		}
 
-        //ToDo: Überlegen die das sinnvoll gelöst werden kann
+		//ToDo: Überlegen die das sinnvoll gelöst werden kann
 		public void ParentResponse(List<Message> messages)
 		{
 			type = "parent";
@@ -69,8 +68,8 @@ namespace nuntiusModel
 
 		public void UnknownErrorRespone()
 		{
-			 type="unknownError";
-			 parameters = null;
+			type = "unknownError";
+			parameters = null;
 		}
 
 		#endregion

@@ -2,9 +2,9 @@
 
 namespace LocalNotifications
 {
-    public class NotificationEventArgs : EventArgs
-    {
-        public string Title { get; set; }
-        public string Message { get; set; }
-    }
+	public class NotificationEventArgs : EventArgs
+	{
+		public string Title { get; set; }
+		public string Message { get; set; }
+	}
 }

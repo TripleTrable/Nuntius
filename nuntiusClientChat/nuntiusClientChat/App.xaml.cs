@@ -1,12 +1,12 @@
-﻿using Xamarin.Forms;
+﻿using LocalNotifications;
 using nuntiusClientChat.Controller;
-using LocalNotifications;
+using Xamarin.Forms;
 
 namespace nuntiusClientChat
 {
 	public partial class App : Application
 	{
-		int appOpend = 0;
+		private int appOpend = 0;
 		public App()
 		{
 			InitializeComponent();
@@ -15,11 +15,6 @@ namespace nuntiusClientChat
 			if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
 			{
 				DependencyService.Get<INotificationManager>().Initialize();
-			}
-
-			if (Device.RuntimePlatform == Device.UWP)
-			{
-				NetworkController.SendLoginRequestAsync("WIN","WIN");				
 			}
 
 			if (Controller.UserController.LogedInUser != null)
@@ -48,7 +43,18 @@ namespace nuntiusClientChat
 
 		protected override void OnSleep()
 		{
-			MainPage.Navigation.PopToRootAsync();
+			if (MainPage.Navigation.NavigationStack.Count >= 0)
+			{
+				try
+				{
+					MainPage.Navigation.PopToRootAsync();
+				}
+				catch (System.Exception)
+				{
+									
+				}
+				
+			}
 			StorageController.SaveData();
 		}
 
@@ -59,7 +65,7 @@ namespace nuntiusClientChat
 			//	StorageController.LoadeData();
 			//}
 		}
-		
+
 
 	}
 }

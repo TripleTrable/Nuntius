@@ -12,13 +12,13 @@ using System.Timers;
 
 namespace nuntiusClientChat.Controller
 {
-	static class NetworkController
+	internal static class NetworkController
 	{
 		private static readonly Timer nagTimer = new Timer();
 
-		//public static readonly string ServerAddres = "172.16.9.198";
-		public static readonly string ServerAddres = "10.100.100.15";
-		//public static readonly string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
+		//public static readonly string ServerAddres = "172.16.13.28";
+		//public static readonly string ServerAddres = "10.100.100.15";
+		public static readonly string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
 
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
@@ -36,7 +36,7 @@ namespace nuntiusClientChat.Controller
 			NagTimerRun = true;
 			//nagTimer.Start();
 		}
-		private async static void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
+		private static async void NagTimer_ElapsedAsync(object sender, ElapsedEventArgs e)
 		{
 			if (!NagTimerRun)
 			{
@@ -50,7 +50,7 @@ namespace nuntiusClientChat.Controller
 		}
 
 		#endregion
-		public async static Task SendRegisterRequestAsync(string alias, string pwd)
+		public static async Task SendRegisterRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
 
@@ -82,7 +82,7 @@ namespace nuntiusClientChat.Controller
 			}
 		}
 
-		public async static Task SendLoginRequestAsync(string alias, string pwd)
+		public static async Task SendLoginRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
 			using (MD5 md5hash = MD5.Create())
@@ -113,7 +113,7 @@ namespace nuntiusClientChat.Controller
 			}
 		}
 
-		public async static Task SendMsgRequest(string toAlias, DateTime sendTime, string msgText)
+		public static async Task SendMsgRequest(string toAlias, DateTime sendTime, string msgText)
 		{
 
 			if (UserController.CurrentTocken == null)
@@ -132,7 +132,7 @@ namespace nuntiusClientChat.Controller
 				return;
 		}
 
-		public async static Task SendNaggRequstAsync()
+		public static async Task SendNaggRequstAsync()
 		{
 			Request request = new Request();
 			request.NaggRequst(UserController.CurrentTocken);
@@ -160,20 +160,20 @@ namespace nuntiusClientChat.Controller
 		public static async Task<Response> SendReqestToServerAsync(Request request)
 		{
 			byte[] bytes = new byte[4096];
-		
+
 			string message = JsonSerializer.Serialize(request);
 			try
 			{
 
 				IPAddress ipAddress = IPAddress.Parse(ServerAddres);
 				//IPAddress ipAddress = IPAddress.Loopback;
-				 
+
 				//IPAddress ipAddress = IPAddress.Parse(ServerAddres);
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				// Create a TCP/IP  socket.    
 				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-				//sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
+				sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 
 				// Connect the socket to the remote endpoint. Catch any errors.    
 				try
@@ -194,7 +194,7 @@ namespace nuntiusClientChat.Controller
 
 					//Server Response
 					Response response = JsonSerializer.Deserialize<Response>(text);
-					
+
 					// Release the socket.    
 					sender.Shutdown(SocketShutdown.Both);
 					sender.Close();
@@ -204,16 +204,19 @@ namespace nuntiusClientChat.Controller
 				catch (ArgumentNullException ane)
 				{
 					Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+					DisplayError(ane);
 					return null;
 				}
 				catch (SocketException se)
 				{
 					Console.WriteLine("SocketException : {0}", se.ToString());
+					DisplayError(se);
 					return null;
 				}
 				catch (Exception e)
 				{
 					Console.WriteLine("Unexpected exception : {0}", e.ToString());
+					DisplayError(e);
 					return null;
 				}
 
@@ -221,8 +224,17 @@ namespace nuntiusClientChat.Controller
 			catch (Exception e)
 			{
 				Console.WriteLine(e.ToString());
+				DisplayError(e);
 				return null;
-			} 
+			}
+
+		}
+		//TODO: Remove Only for debug 
+		public static void DisplayError(Exception exception)
+		{
+			Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+				Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Exception", exception.Message, "Ok");
+			});
 		}
 	}
 }

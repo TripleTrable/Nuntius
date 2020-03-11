@@ -1,7 +1,6 @@
 ﻿using nuntiusClientChat.Controller;
 using nuntiusModel;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -30,7 +29,7 @@ namespace nuntiusClientChat
 				return;
 			}
 
-			this.Chat = chat;
+			Chat = chat;
 
 			foreach (Message m in chat.ChatMessages)
 			{

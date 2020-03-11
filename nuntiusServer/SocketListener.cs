@@ -1,19 +1,19 @@
-﻿using System;
-using System.Text.Json;
+﻿using nuntiusModel;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using nuntiusModel;
+using System.Text.Json;
 
 namespace NuntiusServer
 {
-	class SocketListener
+	internal class SocketListener
 	{
 		private Socket listenSocket;
 		private List<Socket> clientSockets;
 		private IPEndPoint listenEndPoint;
-		byte[] buffer;
+		private byte[] buffer;
 
 		public SocketListener()
 		{

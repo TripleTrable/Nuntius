@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -25,7 +21,7 @@ namespace nuntiusClientChat.Controls
 		{
 			InitializeComponent();
 			UnReadMsgs = 0;
-			this.chatPage = chat;
+			chatPage = chat;
 			PartnerAlias = chatPage.Chat.Partner;
 			PartnerAlias = "   " + PartnerAlias;
 
