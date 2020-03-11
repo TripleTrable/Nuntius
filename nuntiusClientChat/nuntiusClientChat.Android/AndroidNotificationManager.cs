@@ -8,8 +8,8 @@ using System;
 using Xamarin.Forms;
 using AndroidApp = Android.App.Application;
 
-[assembly: Dependency(typeof(LocalNotifications.Droid.AndroidNotificationManager))]
-namespace LocalNotifications.Droid
+[assembly: Dependency(typeof(nuntiusClientChat.Droid.AndroidNotificationManager))]
+namespace nuntiusClientChat.Droid
 {
 	public class AndroidNotificationManager : INotificationManager
 	{

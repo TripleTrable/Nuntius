@@ -1,5 +1,4 @@
-﻿using LocalNotifications;
-using nuntiusClientChat.Controller;
+﻿using nuntiusClientChat.Controller;
 using Xamarin.Forms;
 
 namespace nuntiusClientChat
@@ -20,6 +19,7 @@ namespace nuntiusClientChat
 			if (Controller.UserController.LogedInUser != null)
 			{
 				MainPage = new NavigationPage(new ChatSelectionPage());
+				
 			}
 			else
 			{

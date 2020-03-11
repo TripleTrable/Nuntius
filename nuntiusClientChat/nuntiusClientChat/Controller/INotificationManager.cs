@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace LocalNotifications
+namespace nuntiusClientChat
 {
 	public interface INotificationManager
 	{

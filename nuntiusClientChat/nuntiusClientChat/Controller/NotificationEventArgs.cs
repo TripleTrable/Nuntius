@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LocalNotifications
+namespace nuntiusClientChat
 {
 	public class NotificationEventArgs : EventArgs
 	{

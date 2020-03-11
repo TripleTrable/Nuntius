@@ -1,5 +1,4 @@
-﻿using LocalNotifications;
-using nuntiusClientChat.Controller;
+﻿using nuntiusClientChat.Controller;
 using nuntiusClientChat.Controls;
 using nuntiusModel;
 using System;
@@ -18,6 +17,7 @@ namespace nuntiusClientChat
 
 		private INotificationManager notificationManager;
 
+		private List<int> notificationIDs;
 
 		public ChatSelectionPage()
 		{
@@ -31,17 +31,20 @@ namespace nuntiusClientChat
 
 			if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
 			{
+				notificationIDs = new List<int>();
 				notificationManager = DependencyService.Get<INotificationManager>();
-				notificationManager.NotificationReceived += (sender, eventArgs) =>
+				notificationManager.NotificationReceived += async(sender, eventArgs) =>
 				{
 					var evtData = (NotificationEventArgs)eventArgs;
-					NotificationHandel(evtData.Title, evtData.Message);
-
+					await NotificationHandel(evtData.Title, evtData.Message);
+					
 				};
+				
 			}
+
 		}
 
-		private async void NotificationHandel(string partner, string m)
+		private async Task NotificationHandel(string partner, string m)
 		{
 			NetworkController.NagTimerRun = false;
 
@@ -94,8 +97,7 @@ namespace nuntiusClientChat
 		}
 
 		private void ChatSelection_MessagesAdded(object sender, ChatEventArgs e)
-		{
-
+		{ 
 			Device.BeginInvokeOnMainThread(() =>
 			{
 
@@ -124,24 +126,25 @@ namespace nuntiusClientChat
 						{
 							OrderMostRecentChat(tile[0]);
 
-							//Notification Specific code only exec Whenn Android or IOS
+							//Notification Specific code only exec when Android or IOS
 							if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
 							{
 								foreach (var msg in updatedChat.ChatMessages)
 								{
 									IReadOnlyList<Page> pages = App.Current.MainPage.Navigation.NavigationStack;
+									//if the User is in a Conversation wher he is receiving new Msg no Notifications are Send for this chat
 									if (pages[pages.Count - 1] is ChatPage)
 									{
 										ChatPage cp = pages[pages.Count - 1] as ChatPage;
 
 										if (cp.Chat.Partner != msg.From)
 										{
-											notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text);
+											notificationIDs.Add(notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text));
 										}
 									}
 									else
 									{
-										notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text);
+										notificationIDs.Add(notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text));
 									}
 
 
@@ -192,9 +195,7 @@ namespace nuntiusClientChat
 
 		public void OrderMostRecentChat(ChatSelectionTile tile)
 		{
-
-	
-
+			
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				List<ChatSelectionTile> selectionTiles = RemoveDuplicats(CurrentChatSelectionTiles());
@@ -256,6 +257,7 @@ namespace nuntiusClientChat
 
 
 		}
+
 		public List<ChatSelectionTile> RemoveDuplicats(List<ChatSelectionTile> current)
 		{
 
@@ -295,6 +297,21 @@ namespace nuntiusClientChat
 		public void PopToRootPage()
 		{
 			Device.BeginInvokeOnMainThread(async () => { await Navigation.PopToRootAsync(); });
+		}
+
+		private void DebugMenuItem_Clicked(object sender, EventArgs e)
+		{
+
+		}
+
+		private void UserInfo_Clicked(object sender, EventArgs e)
+		{
+
+		}
+
+		private void Credits_Clicked(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

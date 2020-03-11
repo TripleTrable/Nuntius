@@ -57,11 +57,11 @@ namespace nuntiusClientChat.Controller
 				if (chats.Count < 0)
 					return;
 
+				NetworkController.NagTimerRun = false;
 				foreach (Chat chat in Chats)
 				{
 					if (chat.Owner == UserController.LogedInUser.Alias)
-					{
-						NetworkController.NagTimerRun = false;
+					{						
 						selectionController.AddSavedChat(chat);
 					}
 					else

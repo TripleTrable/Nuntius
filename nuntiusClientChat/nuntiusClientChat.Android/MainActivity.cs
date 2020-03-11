@@ -4,8 +4,6 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
-using LocalNotifications;
-using LocalNotifications.Droid;
 using Xamarin.Forms;
 
 namespace nuntiusClientChat.Droid
