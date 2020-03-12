@@ -11,7 +11,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="nuntiusModel">
+    <Reference Include="rsaEncryption">
       <HintPath>../rsaEncryption.dll</HintPath>
     </Reference>
   </ItemGroup>

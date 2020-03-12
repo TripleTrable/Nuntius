@@ -36,7 +36,7 @@ namespace RSAEncryption
 		{
 			byte[] decryptedData = rsa.Decrypt(dataToDecrypt, RSAEncryptionPadding.OaepSHA512);
 
-			return Encoding.Unicode.GetString(decryptedData);
+			return Convert.ToBase64String(decryptedData);
 		}
 
 		/// <summary>
