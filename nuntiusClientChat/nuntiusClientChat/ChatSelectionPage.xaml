@@ -10,7 +10,10 @@
 
 
 	<ContentPage.ToolbarItems>
+		<ToolbarItem Text="ADD Chat" Order="Primary" Clicked="AddNewChat_Clicked"/>
 		<ToolbarItem Text="Debug" Order="Secondary" Clicked="DebugMenuItem_Clicked"/>
+		<ToolbarItem Text="Loade Saved Chats" Order="Secondary" Clicked="DebugLoade_Clicked"/>
+		<ToolbarItem Text="Clear Chats" Order="Secondary" Clicked="DebugClear_Clicked"/>
 		<ToolbarItem Text="User Info" Order="Secondary" Clicked="UserInfo_Clicked"/>
 		<ToolbarItem Text="Credits" Order="Secondary" Clicked="Credits_Clicked"/>
 	</ContentPage.ToolbarItems>
@@ -18,7 +21,6 @@
 	<ScrollView x:Name="chatSelctScroll">
 		<StackLayout x:Name="chatSelectionStack" Spacing="2" >
 			<!--The Diffrent Chats will be Placed in this StachLayout-->
-			<Button x:Name="addNewChat" Text="Neuer Chat." Clicked="AddNewChat_Clicked"/>
 		</StackLayout>
 	</ScrollView>
 </ContentPage>

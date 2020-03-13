@@ -1,4 +1,6 @@
 ﻿using nuntiusClientChat.Controller;
+using nuntiusModel;
+using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace nuntiusClientChat
@@ -34,6 +36,7 @@ namespace nuntiusClientChat
 			if (appOpend == 1)
 			{
 				StorageController.Loade = true;
+				StorageController.LoadeData();
 			}
 			else
 			{
@@ -55,7 +58,7 @@ namespace nuntiusClientChat
 				}
 				
 			}
-			StorageController.SaveData();
+			StorageController.SaveData(saveData);
 		}
 
 		protected override void OnResume()
@@ -64,6 +67,16 @@ namespace nuntiusClientChat
 			//{
 			//	StorageController.LoadeData();
 			//}
+		}
+
+
+		//TODO: Look into a better Solution
+		private static List<Chat> saveData;
+
+		public static List<Chat> SaveData
+		{
+			get { return saveData; }
+			set { saveData = value; }
 		}
 
 

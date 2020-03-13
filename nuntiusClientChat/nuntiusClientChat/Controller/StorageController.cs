@@ -11,7 +11,7 @@ namespace nuntiusClientChat.Controller
 		private static List<Chat> chats;
 		private static readonly ChatSelectionController selectionController = NetworkController.selectionController;
 		public static bool Loade = true;
-		public static bool Loaded = false;
+
 		//static string fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "temp2.txt");
 		private static readonly string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
 		private const string dataFile = "NuntiusData.txt";
@@ -31,6 +31,19 @@ namespace nuntiusClientChat.Controller
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
 				formatter.Serialize(fileStream, selectionController.CurrentChats);
+				fileStream.Close();
+			}
+
+		}
+		public static void SaveData(object data)
+		{
+			//Reset saved chats List
+			//data = new List<Chat>();
+
+			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
+			{
+				BinaryFormatter formatter = new BinaryFormatter();
+				formatter.Serialize(fileStream, data);
 				fileStream.Close();
 			}
 
@@ -55,24 +68,25 @@ namespace nuntiusClientChat.Controller
 				}
 
 				if (chats.Count < 0)
-					return;
-
-				NetworkController.NagTimerRun = false;
-				foreach (Chat chat in Chats)
 				{
-					if (chat.Owner == UserController.LogedInUser.Alias)
-					{						
-						selectionController.AddSavedChat(chat);
-					}
-					else
-					{
-						return;
-					}
+					fileStream.Close();
+					return;
 				}
 
+				NetworkController.NagTimerRun = false;
+				if (UserController.LogedInUser == null)
+				{
+					fileStream.Close();
+					return;
+				}
+				else
+				{
+					selectionController.AddSavedChat(chats);
+				}
+							   				 			  			  
 				fileStream.Close();
 				NetworkController.NagTimerRun = true;
-				Loaded = true;
+				Loade = false;
 			}
 		}
 

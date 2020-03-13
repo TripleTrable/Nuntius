@@ -23,9 +23,9 @@ namespace nuntiusClientChat.Controller
 			ChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
 		}
 
-		protected virtual void OnSavedChatAdded(Chat chat)
+		protected virtual void OnSavedChatAdded(List<Chat> chats)
 		{
-			SavedChatAdded?.Invoke(this, new ChatEventArgs { Chat = chat });
+			SavedChatAdded?.Invoke(this, new ChatEventArgs { ChatList = chats });
 		}
 
 		protected virtual void OnMessagesAdded(List<Chat> chats)
@@ -91,10 +91,13 @@ namespace nuntiusClientChat.Controller
 
 		}
 
-		public void AddSavedChat(Chat chat)
+		public void AddSavedChat(List<Chat> chats)
 		{
-			currentChats.Add(chat);
-			OnSavedChatAdded(chat);
+			foreach (Chat chat in chats)
+			{
+				currentChats.Add(chat);
+			}
+			OnSavedChatAdded(chats);
 		}
 
 		public void AddChat(Chat chat)
@@ -110,7 +113,7 @@ namespace nuntiusClientChat.Controller
 		}
 
 
-	
+
 	}
 
 	public class ChatEventArgs : EventArgs

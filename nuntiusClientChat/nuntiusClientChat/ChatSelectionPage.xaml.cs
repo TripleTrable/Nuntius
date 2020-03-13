@@ -33,15 +33,22 @@ namespace nuntiusClientChat
 			{
 				notificationIDs = new List<int>();
 				notificationManager = DependencyService.Get<INotificationManager>();
-				notificationManager.NotificationReceived += async(sender, eventArgs) =>
+				notificationManager.NotificationReceived += async (sender, eventArgs) =>
 				{
 					var evtData = (NotificationEventArgs)eventArgs;
 					await NotificationHandel(evtData.Title, evtData.Message);
-					
+
 				};
-				
 			}
 
+			try
+			{   //if the date is Loaded incored the Duplicats are removed
+				RemoveDuplicats();
+			}
+			catch (Exception)
+			{
+
+			}
 		}
 
 		private async Task NotificationHandel(string partner, string m)
@@ -67,37 +74,56 @@ namespace nuntiusClientChat
 			NetworkController.NagTimerRun = true;
 		}
 
-		private async Task NotificationsOpenedAsync(string titel, string message)
-		{
-			//Opens the Chat 
-			List<ChatSelectionTile> selectionTiles = CurrentChatSelectionTiles();
-
-			var ChatPage = (from c in selectionTiles
-							where c.ChatPage.Chat.Partner == titel
-							select c.ChatPage).ToList();
-
-			await Task.Run(() => Device.BeginInvokeOnMainThread(async () => await Navigation.PushAsync(ChatPage[0])));
-		}
-
 		private void ChatSelection_SavedChatAdded(object sender, ChatEventArgs e)
 		{
-			Device.BeginInvokeOnMainThread(() =>
+			List<Chat> savedChats = e.ChatList;
+			int curruntNummerOfChatSeletionTiles = CurrentChatSelectionTiles().Count;
+
+			if (savedChats.Count == curruntNummerOfChatSeletionTiles)
 			{
-				ChatPage chatPage = new ChatPage(e.Chat);
+				return;
+			}
+			else if (savedChats.Count >= curruntNummerOfChatSeletionTiles)
+			{
+				Device.BeginInvokeOnMainThread(() =>
+				{
+					foreach (Chat chat in savedChats)
+					{
+						ChatPage chatPage = new ChatPage(chat);
 
-				ChatSelectionTile chatSelectionTile = new ChatSelectionTile(chatPage);
-				chatSelectionStack.Children.Add(chatSelectionTile);
+						ChatSelectionTile chatSelectionTile = new ChatSelectionTile(chatPage);
+						chatSelectionStack.Children.Add(chatSelectionTile);
 
-			});
+					}
+				});
+				return;
+			}
+			else if (savedChats.Count <= curruntNummerOfChatSeletionTiles)
+			{
+				Device.BeginInvokeOnMainThread(() =>
+				{
+					foreach (Chat chat in savedChats)
+					{
+
+						ChatPage chatPage = new ChatPage(chat);
+
+						ChatSelectionTile chatSelectionTile = new ChatSelectionTile(chatPage);
+						chatSelectionStack.Children.Add(chatSelectionTile);
+
+					}
+				});
+			}
+			App.SaveData = GetChatsCurrentChats();
 		}
 
 		private async void AddNewChat_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushAsync(new OpenConversationPage(), true);
+			App.SaveData = GetChatsCurrentChats();
 		}
 
 		private void ChatSelection_MessagesAdded(object sender, ChatEventArgs e)
-		{ 
+		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
 
@@ -151,6 +177,7 @@ namespace nuntiusClientChat
 								}
 							}
 						}
+						App.SaveData = GetChatsCurrentChats();
 					}
 					catch (Exception ex)
 					{
@@ -169,10 +196,14 @@ namespace nuntiusClientChat
 					select tile).ToList();
 		}
 
-		private List<Button> GetButtons()
+		private List<Chat> GetChatsCurrentChats()
 		{
-			return (from button in chatSelectionStack.Children.OfType<Button>()
-					select button).ToList();
+			List<Chat> temp = new List<Chat>();
+			foreach (ChatSelectionTile cst in CurrentChatSelectionTiles())
+			{
+				temp.Add(cst.ChatPage.Chat);
+			}
+			return temp;
 		}
 
 		private void Chat_Added(object source, ChatEventArgs args)
@@ -195,7 +226,7 @@ namespace nuntiusClientChat
 
 		public void OrderMostRecentChat(ChatSelectionTile tile)
 		{
-			
+
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				List<ChatSelectionTile> selectionTiles = RemoveDuplicats(CurrentChatSelectionTiles());
@@ -208,9 +239,7 @@ namespace nuntiusClientChat
 
 				selectionTiles.Reverse();
 
-				Button tempButton = GetButtons()[0];
-				chatSelectionStack.Children.Clear();
-				chatSelectionStack.Children.Add(tempButton);
+				
 				//add´s the new Order of Chat Seletion Tiles and Removes Duplicats
 				foreach (var item in selectionTiles)
 				{
@@ -312,6 +341,22 @@ namespace nuntiusClientChat
 		private void Credits_Clicked(object sender, EventArgs e)
 		{
 
+		}
+
+		private void DebugLoade_Clicked(object sender, EventArgs e)
+		{
+			StorageController.Loade = true;
+			StorageController.LoadeData();
+		}
+
+		private void DebugClear_Clicked(object sender, EventArgs e)
+		{
+			StorageController.SaveData(new List<Chat>());
+
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				chatSelectionStack.Children.Clear();
+			});
 		}
 	}
 }
