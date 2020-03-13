@@ -1,6 +1,6 @@
+using nuntiusModel;
 using System;
 using System.Collections.Generic;
-using nuntiusModel;
 
 namespace NuntiusServer
 {
@@ -102,7 +102,7 @@ namespace NuntiusServer
 			}
 
 			//User must exist
-			if(DbController.CheckUsersAliasAvalible(toAlias))
+			if (DbController.CheckUsersAliasAvalible(toAlias))
 			{
 				response.SendErrorResponse();
 				return response;
@@ -133,7 +133,7 @@ namespace NuntiusServer
 			string userAlias = request.Parameters[0].ToString();
 			int? userID = DbController.GetIdFromToken(userAlias);
 
-			if(userID == null)
+			if (userID == null)
 			{
 				response.UnknownErrorRespone();
 				return response;

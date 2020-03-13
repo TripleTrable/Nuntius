@@ -13,7 +13,7 @@ namespace nuntiusClientChat
 		public LoginRegisterPage()
 		{
 			InitializeComponent();
-			AliasEntry.Text = null; PasswordEntry.Text = null;
+			AliasEntry.Text = null; PasswordEntry.Text = null; VersionLabel.Text = "alpha_1.0.3  " + NetworkController.ServerAddres;
 		}
 
 		private void Entry_Completed(object sender, EventArgs e)
@@ -29,12 +29,11 @@ namespace nuntiusClientChat
 		private void Switch_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			LoginTyp.Text = typSwitch.IsToggled == false ? "Login" : "Registrieren";
-			
 		}
 
 		private async void ContinueButton_ClickedAsync(object sender, EventArgs e)
 		{
-			
+
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
@@ -47,13 +46,16 @@ namespace nuntiusClientChat
 					if (await SendPingAsync())
 					{
 						await Task.WhenAny(NetworkController.SendLoginRequestAsync(AliasEntry.Text, PasswordEntry.Text));
-					}			
+					}
 
 					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-					{  
+					{
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-						StorageController.LoadeData();
+						if (Navigation.NavigationStack.Count == 0)
+						{
+							StorageController.LoadeData();
+						}
 					}
 					else
 					{
@@ -71,16 +73,16 @@ namespace nuntiusClientChat
 				//Regiter
 				else
 				{
-				
+
 					if (await SendPingAsync())
 					{
 						await Task.WhenAll(NetworkController.SendRegisterRequestAsync(AliasEntry.Text, PasswordEntry.Text));
 					}
-					
+
 					if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-					{   //Open the Chat selection
+					{
+						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-						StorageController.LoadeData();
 					}
 					else
 					{

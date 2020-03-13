@@ -4,37 +4,37 @@ using Xamarin.Forms;
 
 namespace nuntiusClientChat
 {
-  
-    class MessageControll : Label
-    {
-        /// <summary>
-        /// Custem Controll, Dispays a Message
-        /// </summary>
-        /// <param name="send">ture: User has send the Message false: User has receved the Message</param>
-        /// <param name="message"></param>
-        public MessageControll(bool send, Message message)
-        {
-            Device.BeginInvokeOnMainThread(() => { 
-            LineBreakMode = LineBreakMode.WordWrap;
+	internal class MessageControll : Label
+	{
+		/// <summary>
+		/// Custem Controll, Dispays a Message
+		/// </summary>
+		/// <param name="send">ture: User has send the Message false: User has receved the Message</param>
+		/// <param name="message"></param>
+		public MessageControll(bool send, Message message)
+		{
+			Device.BeginInvokeOnMainThread(() =>
+			{
+				LineBreakMode = LineBreakMode.WordWrap;
 
-            Text += message.Text;
+				Text += message.Text;
 
-            //HeightRequest = HeightRequest + 30;
-            VerticalTextAlignment = TextAlignment.Center;
-            FontSize = 16;
+				//HeightRequest = HeightRequest + 30;
+				VerticalTextAlignment = TextAlignment.Center;
+				FontSize = 16;
 
 
-            if (send)
-            {
-                BackgroundColor = Color.LightSkyBlue;
-                //TranslationX = 100;
-                HorizontalTextAlignment = TextAlignment.End;
-            }
-            else
-            {
-                BackgroundColor = Color.Lavender;
-            };
-            });
-        }
-    }
+				if (send)
+				{
+					BackgroundColor = Color.LightSkyBlue;
+					//TranslationX = 100;
+					HorizontalTextAlignment = TextAlignment.End;
+				}
+				else
+				{
+					BackgroundColor = Color.Lavender;
+				};
+			});
+		}
+	}
 }
