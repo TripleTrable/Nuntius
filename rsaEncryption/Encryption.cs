@@ -22,7 +22,7 @@ namespace RSAEncryption
 		public byte[] EncryptString(string text)
 		{
 			byte[] dataToEncrypt = Encoding.Unicode.GetBytes(text);
-			byte[] encryptedData = rsa.Encrypt(dataToEncrypt, RSAEncryptionPadding.OaepSHA512);
+			byte[] encryptedData = rsa.Encrypt(dataToEncrypt, RSAEncryptionPadding.OaepSHA256);
 
 			return encryptedData;
 		}
