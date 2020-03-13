@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json;
+﻿using nuntiusModel;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -9,7 +9,7 @@ using RSAEncryption;
 
 namespace NuntiusServer
 {
-	class SocketListener
+	internal class SocketListener
 	{
 		private Socket listenSocket;
 		private List<Socket> clientSockets;

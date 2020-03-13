@@ -1,7 +1,6 @@
 ﻿using nuntiusClientChat.Controller;
 using nuntiusModel;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,7 +10,7 @@ namespace nuntiusClientChat
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class ChatPage : ContentPage
 	{
-		
+
 		public ChatPage()
 		{
 			InitializeComponent();
@@ -24,13 +23,13 @@ namespace nuntiusClientChat
 			InitializeComponent();
 			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
 			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
-			
+
 			if (chat == null)
 			{
 				return;
 			}
 
-			this.Chat = chat;
+			Chat = chat;
 
 			foreach (Message m in chat.ChatMessages)
 			{
@@ -49,7 +48,7 @@ namespace nuntiusClientChat
 		}
 
 
-	
+
 
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
@@ -59,7 +58,8 @@ namespace nuntiusClientChat
 			}
 
 			//Send Msg via Networkkontroller
-			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text));
+			//TODO: Settings Trim On/Off
+			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text.Trim()));
 
 			//Add Msg to View
 			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text };
@@ -67,7 +67,7 @@ namespace nuntiusClientChat
 			Chat.ChatMessages.Add(message);
 			MsgEditor.Text = null;
 
-			chatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, false);
+			await chatScroll.ScrollToAsync(ChatStackLayout, ScrollToPosition.End, false);
 
 
 		}
@@ -78,7 +78,7 @@ namespace nuntiusClientChat
 			get { return MsgChatStack; }
 			set { MsgChatStack = value; }
 		}
-		
+
 		public ScrollView ChatScrollView
 		{
 			get { return chatScroll; }

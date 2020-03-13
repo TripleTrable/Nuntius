@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using nuntiusModel;
 
 namespace NuntiusServer
 {
@@ -55,9 +53,9 @@ namespace NuntiusServer
 					token[i] = chars[random.Next(chars.Length)];
 				}
 
-			} while (!DbController.IsTokenFree(new String(token)));
+			} while (!DbController.IsTokenFree(new string(token)));
 
-			return new String(token);
-	}
+			return new string(token);
+		}
 	}
 }
