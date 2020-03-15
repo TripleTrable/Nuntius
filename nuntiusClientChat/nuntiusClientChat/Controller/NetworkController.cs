@@ -61,7 +61,7 @@ namespace nuntiusClientChat.Controller
 				hashPwd = EncryptionMD5.GetMd5Hash(md5hash, pwd);
 			}
 
-			RSAEncryption.Encryption encryption = UserController.CreateRsaKey();
+			Encryption encryption = UserController.CreateRsaKey();
 
 			Console.WriteLine(encryption.PrivateKey);
 

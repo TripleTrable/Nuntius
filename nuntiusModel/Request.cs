@@ -24,13 +24,14 @@ namespace nuntiusModel
 			parameters[0] = token;
 		}
 
-		public void RegisterRequest(string alias, string passwd)
+		public void RegisterRequest(string alias, string passwd, string publicKey)
 		{
 			type = "register";
-			parameters = new object[2];
+			parameters = new object[3];
 
 			parameters[0] = alias;
 			parameters[1] = passwd;
+			parameters[2] = publicKey;
 		}
 
 		public void SendRequest(string token, string toAlias, DateTime sent, string text)
