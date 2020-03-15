@@ -1,8 +1,10 @@
 ﻿using nuntiusModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using Xamarin.Essentials;
+using RSAEncryption;
 
 namespace nuntiusClientChat.Controller
 {
@@ -40,6 +42,33 @@ namespace nuntiusClientChat.Controller
 			//Reset saved chats List
 			//data = new List<Chat>();
 
+			if (data == null)
+				return;
+			if (UserController.LogedInUser == null)
+				return;
+
+			string dataFile = "NuntiusData" + UserController.LogedInUser.Alias + ".txt";
+			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
+
+			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
+			{
+				BinaryFormatter formatter = new BinaryFormatter();
+				formatter.Serialize(fileStream, data);
+				fileStream.Close();
+			}
+			SaveRsaKeySet(UserController.UserRsaKeys);
+		}
+
+		public static void SaveRsaKeySet(object data)
+		{
+			if (data == null)
+				return;
+			if (UserController.LogedInUser == null)
+				return;
+
+			string dataFile = "NuntiusKey" + UserController.LogedInUser.Alias + ".txt";
+			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
+
 			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
@@ -49,46 +78,90 @@ namespace nuntiusClientChat.Controller
 
 		}
 
+
 		public static void LoadeData()
 		{
+			if (UserController.LogedInUser == null)
+			{
+				return;
+			}
+
+			string dataFile = "NuntiusData" + UserController.LogedInUser.Alias + ".txt";
+			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
+
 			if (Loade)
 			{
-
-				BinaryFormatter formatter = new BinaryFormatter();
-				FileStream fileStream;
-
-				if (File.Exists(fileName))
-				{
-					fileStream = new FileStream(fileName, FileMode.Open);
-					chats = (List<Chat>)(formatter.Deserialize(fileStream));
-				}
-				else
-				{
-					return;
-				}
-
-				if (chats.Count < 0)
-				{
-					fileStream.Close();
-					return;
-				}
-
-				NetworkController.NagTimerRun = false;
-				if (UserController.LogedInUser == null)
-				{
-					fileStream.Close();
-					return;
-				}
-				else
-				{
-					selectionController.AddSavedChat(chats);
-				}
-							   				 			  			  
-				fileStream.Close();
-				NetworkController.NagTimerRun = true;
-				Loade = false;
+				LoadeRsa();
+				LoadeChats();
 			}
+
 		}
 
+		private static void LoadeRsa()
+		{
+			string dataFile = "NuntiusKey" + UserController.LogedInUser.Alias + ".txt";
+			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
+			Encryption encryption;
+
+			BinaryFormatter formatter = new BinaryFormatter();
+			FileStream fileStream;
+
+			if (File.Exists(fileName))
+			{
+				fileStream = new FileStream(fileName, FileMode.Open);
+				encryption = (Encryption)(formatter.Deserialize(fileStream));
+			}
+			else
+			{
+				return;
+			}
+
+			if (encryption.PrivateKey != "" && encryption.PublicKey != "")
+			{
+				UserController.UserRsaKeys = encryption;
+				fileStream.Close();
+			}
+			
+		}
+
+		private static void LoadeChats()
+		{
+			string dataFile = "NuntiusData" + UserController.LogedInUser.Alias + ".txt";
+			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
+
+			BinaryFormatter formatter = new BinaryFormatter();
+			FileStream fileStream;
+
+			if (File.Exists(fileName))
+			{
+				fileStream = new FileStream(fileName, FileMode.Open);
+				chats = (List<Chat>)(formatter.Deserialize(fileStream));
+			}
+			else
+			{
+				return;
+			}
+
+			if (chats.Count < 0)
+			{
+				fileStream.Close();
+				return;
+			}
+
+			NetworkController.NagTimerRun = false;
+			if (UserController.LogedInUser == null)
+			{
+				fileStream.Close();
+				return;
+			}
+			else
+			{
+				selectionController.AddSavedChat(chats);
+			}
+
+			fileStream.Close();
+			NetworkController.NagTimerRun = true;
+			Loade = false;
+		}
 	}
 }
