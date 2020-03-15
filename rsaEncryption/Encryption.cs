@@ -22,7 +22,7 @@ namespace RSAEncryption
 		public byte[] EncryptString(string text)
 		{
 			byte[] dataToEncrypt = Encoding.Unicode.GetBytes(text);
-			byte[] encryptedData = rsa.Encrypt(dataToEncrypt, RSAEncryptionPadding.OaepSHA512);
+			byte[] encryptedData = rsa.Encrypt(dataToEncrypt, RSAEncryptionPadding.Pkcs1);
 
 			return encryptedData;
 		}
@@ -34,7 +34,7 @@ namespace RSAEncryption
 		/// <returns>Decrypted unicode string</returns>
 		public string DecryptString(byte[] dataToDecrypt)
 		{
-			byte[] decryptedData = rsa.Decrypt(dataToDecrypt, RSAEncryptionPadding.OaepSHA512);
+			byte[] decryptedData = rsa.Decrypt(dataToDecrypt, RSAEncryptionPadding.Pkcs1);
 
 			return Encoding.Unicode.GetString(decryptedData);
 		}
