@@ -21,11 +21,11 @@ namespace nuntiusClientChat
 			if (Controller.UserController.LogedInUser != null)
 			{
 				MainPage = new NavigationPage(new ChatSelectionPage());
-				
+
 			}
 			else
 			{
-				MainPage = new LoginRegisterPage();
+				MainPage = new NavigationPage(new LoginRegisterPage());
 			}
 
 		}

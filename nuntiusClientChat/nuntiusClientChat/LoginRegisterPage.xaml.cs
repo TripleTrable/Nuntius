@@ -23,7 +23,7 @@ namespace nuntiusClientChat
 
 		private void PasswordEntry_Completed(object sender, EventArgs e)
 		{
-
+		
 		}
 
 		private void Switch_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -110,6 +110,23 @@ namespace nuntiusClientChat
 			reachable = await connectivity.IsRemoteReachable("google.de", 80, 3000);
 
 			return reachable;
+		}
+
+		private async void ChangeServerIP_ClickedAsync(object sender, EventArgs e)
+		{
+		  	string serverIP = await DisplayPromptAsync("Server Addresse", "Die Aktuelle Server Adresse lautet:" , "OK", "Cancel", NetworkController.ServerAddres);
+
+			try
+			{
+				if (serverIP != "" || serverIP != null)
+				{
+					NetworkController.ServerAddres = serverIP;
+				}
+			}
+			catch (Exception ex)
+			{
+				DisplayAlert("Exception", ex.Message, "OK");
+			}
 		}
 	}
 }
