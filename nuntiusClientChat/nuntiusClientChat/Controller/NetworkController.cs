@@ -18,12 +18,8 @@ namespace nuntiusClientChat.Controller
 
 		//public static readonly string ServerAddres = "172.16.13.28";
 		//public static readonly string ServerAddres = "10.100.100.15";
-<<<<<<< HEAD
-		public static  string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
-=======
 		public static string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
 			
->>>>>>> 351b00428c439d216a03dbc457e89cf6d3f45da7
 
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();

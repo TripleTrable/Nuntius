@@ -23,7 +23,7 @@ namespace nuntiusClientChat
 
 		private void PasswordEntry_Completed(object sender, EventArgs e)
 		{
-		
+
 		}
 
 		private void Switch_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -112,10 +112,9 @@ namespace nuntiusClientChat
 			return reachable;
 		}
 
-<<<<<<< HEAD
 		private async void ChangeServerIP_ClickedAsync(object sender, EventArgs e)
 		{
-		  	string serverIP = await DisplayPromptAsync("Server Addresse", "Die Aktuelle Server Adresse lautet:" , "OK", "Cancel", NetworkController.ServerAddres);
+			string serverIP = await DisplayPromptAsync("Server Addresse", "Die Aktuelle Server Adresse lautet:\nBitte geben Sie eine gültige IP Adresse an", "OK", "Cancel", NetworkController.ServerAddres);
 
 			try
 			{
@@ -126,11 +125,8 @@ namespace nuntiusClientChat
 			}
 			catch (Exception ex)
 			{
-				DisplayAlert("Exception", ex.Message, "OK");
+				await DisplayAlert("Exception", ex.Message, "OK");
 			}
 		}
-=======
-	
->>>>>>> 351b00428c439d216a03dbc457e89cf6d3f45da7
 	}
 }
