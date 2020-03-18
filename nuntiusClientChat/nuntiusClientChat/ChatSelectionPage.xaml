@@ -14,7 +14,6 @@
 		<ToolbarItem Text="Debug" Order="Secondary" Clicked="DebugMenuItem_Clicked"/>
 		<ToolbarItem Text="Loade Saved Chats" Order="Secondary" Clicked="DebugLoade_Clicked"/>
 		<ToolbarItem Text="Clear Chats" Order="Secondary" Clicked="DebugClear_Clicked"/>
-		<ToolbarItem Text="User Info" Order="Secondary" Clicked="UserInfo_Clicked"/>
 		<ToolbarItem Text="Credits" Order="Secondary" Clicked="Credits_Clicked"/>
 	</ContentPage.ToolbarItems>
 
