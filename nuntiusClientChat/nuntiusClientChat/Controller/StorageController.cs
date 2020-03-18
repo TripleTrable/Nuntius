@@ -39,12 +39,15 @@ namespace nuntiusClientChat.Controller
 		{
 			//Reset saved chats List
 			//data = new List<Chat>();
-
-			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
+			if (!Loade)
 			{
-				BinaryFormatter formatter = new BinaryFormatter();
-				formatter.Serialize(fileStream, data);
-				fileStream.Close();
+				using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
+				{
+					BinaryFormatter formatter = new BinaryFormatter();
+					formatter.Serialize(fileStream, data);
+					fileStream.Close();
+				}
+
 			}
 
 		}

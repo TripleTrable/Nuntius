@@ -111,5 +111,22 @@ namespace nuntiusClientChat
 
 			return reachable;
 		}
+
+		private async void ChangeServerIP_ClickedAsync(object sender, EventArgs e)
+		{
+			string serverIP = await DisplayPromptAsync("Server Addresse", "Die Aktuelle Server Adresse lautet:\nBitte geben Sie eine gültige IP Adresse an", "OK", "Cancel", NetworkController.ServerAddres);
+
+			try
+			{
+				if (serverIP != "" || serverIP != null)
+				{
+					NetworkController.ServerAddres = serverIP;
+				}
+			}
+			catch (Exception ex)
+			{
+				await DisplayAlert("Exception", ex.Message, "OK");
+			}
+		}
 	}
 }
