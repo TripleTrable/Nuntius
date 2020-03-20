@@ -23,7 +23,7 @@ namespace nuntiusClientChat.Controller
 			get { return chats; }
 			set { chats = selectionController.CurrentChats; }
 		}
-
+		//TODO: Remove befor release
 		public static void SaveData()
 		{
 			//Reset saved chats List
@@ -56,12 +56,12 @@ namespace nuntiusClientChat.Controller
 				formatter.Serialize(fileStream, data);
 				fileStream.Close();
 			}
-			SaveRsaKeySet(UserController.UserRsaKeys);
+			SaveRsaKeySet(UserController.GetEncryption());
 		}
 
 		public static void SaveRsaKeySet(object data)
 		{
-			if (data == null)
+			/*if (data == null)
 				return;
 			if (UserController.LogedInUser == null)
 				return;
@@ -74,7 +74,7 @@ namespace nuntiusClientChat.Controller
 				BinaryFormatter formatter = new BinaryFormatter();
 				formatter.Serialize(fileStream, data);
 				fileStream.Close();
-			}
+			}*/
 
 		}
 
@@ -91,13 +91,12 @@ namespace nuntiusClientChat.Controller
 
 			if (Loade)
 			{
-				LoadeRsa();
 				LoadeChats();
 			}
 
 		}
 
-		private static void LoadeRsa()
+		public static void LoadeRsa()
 		{
 			string dataFile = "NuntiusKey" + UserController.LogedInUser.Alias + ".txt";
 			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
@@ -121,7 +120,7 @@ namespace nuntiusClientChat.Controller
 				UserController.UserRsaKeys = encryption;
 				fileStream.Close();
 			}
-			
+
 		}
 
 		private static void LoadeChats()

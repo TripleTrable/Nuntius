@@ -1,6 +1,7 @@
 ﻿using nuntiusClientChat.Controller;
 using Plugin.Connectivity;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -111,5 +112,6 @@ namespace nuntiusClientChat
 
 			return reachable;
 		}
+
 	}
 }
