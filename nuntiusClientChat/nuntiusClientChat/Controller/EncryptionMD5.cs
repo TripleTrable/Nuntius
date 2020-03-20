@@ -4,7 +4,7 @@ using System.Text;
 
 namespace nuntiusClientChat.Controller
 {
-	internal class Encryption
+	internal class EncryptionMD5
 	{
 		public static string GetMd5Hash(MD5 md5Hash, string input)
 		{

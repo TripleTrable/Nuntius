@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using System;
 
 namespace NuntiusServer
@@ -27,9 +28,9 @@ namespace NuntiusServer
 		/// <summary>
 		/// Register a new user if the alias is free and assing a token
 		/// </summary>
-		public static string RegisterNewUser(string alias, string password)
+		public static string RegisterNewUser(string alias, string password, string publicKey)
 		{
-			if (!DbController.RegisterUser(alias, password))
+			if (!DbController.RegisterUser(alias, password, publicKey))
 				return null;
 
 			string token = GenerateToken(alias);

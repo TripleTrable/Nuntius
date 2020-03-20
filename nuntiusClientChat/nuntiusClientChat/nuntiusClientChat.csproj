@@ -23,6 +23,9 @@
     <Reference Include="nuntiusModel">
       <HintPath>..\..\nuntiusModel.dll</HintPath>
     </Reference>
+    <Reference Include="rsaEncryption">
+      <HintPath>..\..\rsaEncryption.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
