@@ -73,7 +73,6 @@ namespace RSAEncryption
 
 				if (dataToDecrypt.Length > len)
 				{
-					System.Console.WriteLine(dataToDecrypt.Length);
 					byte[] b = new byte[len];
 					Array.Copy(dataToDecrypt, b, len);
 					data = b;
