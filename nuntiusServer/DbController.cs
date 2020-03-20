@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Npgsql;
 using nuntiusModel;
 using System;
@@ -6,16 +7,38 @@ using System.Data;
 
 namespace NuntiusServer
 {
-	public static class DbController
+	public class DbController : IDbController
 	{
-		private static string connectionString = "Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
-		//private static string connectionString = "Driver={PostgreSQL Unicode};Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
-		//private static string connectionString = "Driver={MySQL ODBC 5.2 UNICODE Driver};Server=localhost;Database=nuntius;User=nuntiusserver;Password=;Option=3;";
+		private static DbController instance = null;
+		private static readonly object padlock = new object();
+		public string ConnectionString { get; set; }
+
+		private DbController()
+		{
+			ConnectionString = "Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
+		}
+
+		/// <summary>
+		/// Current DbController object
+		/// </summary>
+		public static DbController Instance
+		{
+			get
+			{
+				lock (padlock)
+				{
+					if (instance == null)
+						instance = new DbController();
+
+					return instance;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Check the login data
 		/// </summary>
-		public static bool LogInUser(string alias, string password)
+		public bool LogInUser(string alias, string password)
 		{
 			//ToDo: Use sql parameter
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM users WHERE alias = '{alias}' AND pwd_md5 = '{password}'");
@@ -34,7 +57,7 @@ namespace NuntiusServer
 		/// <summary>
 		/// Check if a alias already exists
 		/// </summary>
-		public static bool CheckUsersAliasAvalible(string alias)
+		public bool CheckUsersAliasAvalible(string alias)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM users WHERE alias = '{alias}'");
 			DataTable data = SelectDataTable(command);
@@ -51,7 +74,7 @@ namespace NuntiusServer
 		/// <summary>
 		/// Register a new unique user
 		/// </summary>
-		public static bool RegisterUser(string alias, string password, string publicKey)
+		public bool RegisterUser(string alias, string password, string publicKey)
 		{
 			if (!CheckUsersAliasAvalible(alias))
 				return false;
@@ -66,7 +89,7 @@ namespace NuntiusServer
 		/// <summary>
 		/// Get the alias of a user from the token 
 		/// </summary>
-		public static string GetAliasFromToken(string token)
+		public string GetAliasFromToken(string token)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.alias FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
 			DataTable data = SelectDataTable(command);
@@ -82,7 +105,7 @@ namespace NuntiusServer
 		/// <summary>
 		/// Check if a user already has a token
 		/// </summary>
-		public static string HasUserAToken(string alias)
+		public string HasUserAToken(string alias)
 		{
 			//ToDo: sql Prameter
 			string sql = $@"SELECT token FROM token
@@ -109,7 +132,7 @@ namespace NuntiusServer
 		/// </summary>
 		/// <param name="token">token to check</param>
 		/// <returns>true if the token is not used</returns>
-		public static bool IsTokenFree(string token)
+		public bool IsTokenFree(string token)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM token WHERE token = '{token}'");
 			DataTable data = SelectDataTable(command);
@@ -132,7 +155,7 @@ namespace NuntiusServer
 		/// <param name="send">date when the message was sent</param>
 		/// <param name="message">message</param>
 		/// <returns>1 when the message was inseted sucessfuly else 0</returns>
-		public static int InsertNewMessage(string fromAlias, string toAlias, DateTime send, string message)
+		public int InsertNewMessage(string fromAlias, string toAlias, DateTime send, string message)
 		{
 			//ToDo: add parameter
 			string sql = $@"INSERT INTO messages(from_user, to_user, send, content) 
@@ -150,7 +173,7 @@ namespace NuntiusServer
 		/// </summary>
 		/// <param name="userID"></param>
 		/// <returns></returns>
-		public static List<Message> SelectUnreadMessages(string token)
+		public List<Message> SelectUnreadMessages(string token)
 		{
 			string sql = $@"SELECT uf.alias, ut.alias, m.send, m.content, m.id
 						     FROM messages m
@@ -189,7 +212,7 @@ namespace NuntiusServer
 		/// <summary>
 		/// Assing a new token to a user
 		/// </summary>
-		public static void AssignToken(string alias, string token)
+		public void AssignToken(string alias, string token)
 		{
 			//ToDo: sql parameter
 			string sql = $"INSERT INTO token(token, expire, userID)" +
@@ -207,9 +230,9 @@ namespace NuntiusServer
 		/// </summary>
 		/// <param name="alias">user alias</param>
 		/// <returns>public key as a xml string</returns>
-		public static string GetUserPublicKey(string alias)
+		public string GetUserPublicKey(string alias)
 		{
-			string sql = $"SELECT u.publickey FROM token t JOIN users u ON t.userID = u.id WHERE u.alias = '{alias}'" ;
+			string sql = $"SELECT u.publickey FROM token t JOIN users u ON t.userID = u.id WHERE u.alias = '{alias}'";
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 			DataTable data = SelectDataTable(command);
 
@@ -223,12 +246,12 @@ namespace NuntiusServer
 		/// <summary>
 		/// Select a Query and return a DataTable
 		/// </summary>
-		private static DataTable SelectDataTable(NpgsqlCommand cmd)
+		private DataTable SelectDataTable(NpgsqlCommand cmd)
 		{
 			DataTable dt;
 
 			//Connect
-			using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
+			using (NpgsqlConnection con = new NpgsqlConnection(ConnectionString))
 			{
 				cmd.Connection = con;
 				try
@@ -258,12 +281,12 @@ namespace NuntiusServer
 		/// <summary>
 		///  Connect to the database and execute a non querry
 		/// </summary>
-		private static int ExecuteNonQuerry(NpgsqlCommand command)
+		private int ExecuteNonQuerry(NpgsqlCommand command)
 		{
 			int result;
 
 			// create SqlConnection object
-			using (NpgsqlConnection con = new NpgsqlConnection(connectionString))
+			using (NpgsqlConnection con = new NpgsqlConnection(ConnectionString))
 			{
 				try
 				{
