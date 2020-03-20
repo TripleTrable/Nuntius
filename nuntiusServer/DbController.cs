@@ -6,7 +6,7 @@ using System.Data;
 
 namespace NuntiusServer
 {
-	public static class DbController
+	public static class DbController 
 	{
 		private static string connectionString = "Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
 		//private static string connectionString = "Driver={PostgreSQL Unicode};Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
@@ -64,7 +64,7 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
-		/// 
+		/// Get the alias of a user from the token 
 		/// </summary>
 		public static string GetAliasFromToken(string token)
 		{
