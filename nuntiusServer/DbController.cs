@@ -51,12 +51,12 @@ namespace NuntiusServer
 		/// <summary>
 		/// Register a new unique user
 		/// </summary>
-		public static bool RegisterUser(string alias, string password)
+		public static bool RegisterUser(string alias, string password, string publicKey)
 		{
 			if (!CheckUsersAliasAvalible(alias))
 				return false;
 
-			string sql = $"INSERT INTO users(alias, pwd_md5) VALUES('{alias}','{password}');";
+			string sql = $"INSERT INTO users(alias, pwd_md5, publicKey) VALUES('{alias}','{password}', '{publicKey}');";
 
 			//ToDo: Send Unknown error
 			ExecuteNonQuerry(new NpgsqlCommand(sql));
@@ -64,19 +64,19 @@ namespace NuntiusServer
 		}
 
 		/// <summary>
-		/// 
+		/// Get the alias of a user from the token 
 		/// </summary>
-		public static int? GetIdFromToken(string token)
+		public static string GetAliasFromToken(string token)
 		{
-			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.id FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
+			NpgsqlCommand command = new NpgsqlCommand($"SELECT u.alias FROM users u JOIN token t ON u.id = t.userID WHERE t.token = '{token}';");
 			DataTable data = SelectDataTable(command);
 
 			if (data == null)
 				return null;
 			else if (data.Rows.Count == 0)
-				return 0;
+				return "";
 
-			return Convert.ToInt32(data.Rows[0].ItemArray[0].ToString());
+			return data.Rows[0].ItemArray[0].ToString();
 		}
 
 		/// <summary>
@@ -85,8 +85,8 @@ namespace NuntiusServer
 		public static string HasUserAToken(string alias)
 		{
 			//ToDo: sql Prameter
-			string sql = "SELECT token FROM token " +
-						$"WHERE userID = (SELECT id FROM users WHERE alias = '{alias}');";
+			string sql = $@"SELECT token FROM token
+						     WHERE userID = (SELECT id FROM users WHERE alias = '{alias}');";
 
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 			DataTable data = SelectDataTable(command);
@@ -107,6 +107,8 @@ namespace NuntiusServer
 		/// <summary>
 		/// Check if a token is alrady used
 		/// </summary>
+		/// <param name="token">token to check</param>
+		/// <returns>true if the token is not used</returns>
 		public static bool IsTokenFree(string token)
 		{
 			NpgsqlCommand command = new NpgsqlCommand($"SELECT 1 FROM token WHERE token = '{token}'");
@@ -125,16 +127,30 @@ namespace NuntiusServer
 		/// <summary>
 		/// Inset a new message in the table
 		/// </summary>
-		public static int InsertNewMessage(int fromID, string toAlias, DateTime send, string message)
+		/// <param name="fromAlias">alias from the user who sent the message</param>
+		/// <param name="toAlias">alias of the user which get the message</param>
+		/// <param name="send">date when the message was sent</param>
+		/// <param name="message">message</param>
+		/// <returns>1 when the message was inseted sucessfuly else 0</returns>
+		public static int InsertNewMessage(string fromAlias, string toAlias, DateTime send, string message)
 		{
 			//ToDo: add parameter
-			string sql = $"INSERT INTO messages(from_user, to_user, send, content) VALUES({fromID}, (SELECT id FROM users WHERE alias = '{toAlias}'), '{send.ToString()}', '{message}')";
+			string sql = $@"INSERT INTO messages(from_user, to_user, send, content) 
+							VALUES((SELECT id FROM users WHERE alias = '{fromAlias}'), 
+							(SELECT id FROM users WHERE alias = '{toAlias}'), 
+							'{send.ToString()}', 
+							'{message}')";
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 
 			return ExecuteNonQuerry(command);
 		}
 
-		public static List<Message> SelectUnreadMessages(int userID)
+		/// <summary>
+		/// Get all unread messages of a user
+		/// </summary>
+		/// <param name="userID"></param>
+		/// <returns></returns>
+		public static List<Message> SelectUnreadMessages(string token)
 		{
 			string sql = $@"SELECT uf.alias, ut.alias, m.send, m.content, m.id
 						     FROM messages m
@@ -142,7 +158,7 @@ namespace NuntiusServer
 							   ON m.from_user = uf.id
 							 JOIN users ut
 							   ON m.to_user = ut.id
-						    WHERE m.to_user = {userID} 
+						    WHERE m.to_user = (SELECT userID FROM token WHERE token = '{token}')
 							  AND m.unread = true;";
 
 			NpgsqlCommand command = new NpgsqlCommand(sql);
@@ -184,6 +200,24 @@ namespace NuntiusServer
 
 			//ToDo: unknown exeption
 			ExecuteNonQuerry(command);
+		}
+
+		/// <summary>
+		/// Select the public key of an user
+		/// </summary>
+		/// <param name="alias">user alias</param>
+		/// <returns>public key as a xml string</returns>
+		public static string GetUserPublicKey(string alias)
+		{
+			string sql = $"SELECT u.publickey FROM token t JOIN users u ON t.userID = u.id WHERE u.alias = '{alias}'" ;
+			NpgsqlCommand command = new NpgsqlCommand(sql);
+			DataTable data = SelectDataTable(command);
+
+			//ToDo: Send unknown error
+			if (data == null)
+				return null;
+
+			return data.Rows[0].ItemArray[0].ToString();
 		}
 
 		/// <summary>

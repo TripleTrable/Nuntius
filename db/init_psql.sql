@@ -8,7 +8,8 @@ CREATE USER nuntiusserver;
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY,
 	alias VARCHAR(32) NOT NULL UNIQUE,
-	pwd_md5 text NOT NULL
+	pwd_md5 text NOT NULL,
+	publicKey text NOT NULL
 );
 
 CREATE TABLE token (

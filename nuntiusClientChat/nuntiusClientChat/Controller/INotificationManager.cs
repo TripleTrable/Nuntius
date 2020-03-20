@@ -13,4 +13,10 @@ namespace nuntiusClientChat
 
 		void ReceiveNotification(string title, string message);
 	}
+
+	public class NotificationEventArgs : EventArgs
+	{
+		public string Title { get; set; }
+		public string Message { get; set; }
+	}
 }

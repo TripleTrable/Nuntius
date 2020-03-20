@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
+using RSAEncryption;
 
 
 namespace nuntiusClientChat.Controller
@@ -22,6 +23,7 @@ namespace nuntiusClientChat.Controller
 
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
+
 
 		#region NagTimer
 		/// <summary>
@@ -50,17 +52,30 @@ namespace nuntiusClientChat.Controller
 		}
 
 		#endregion
+		/// <summary>
+		/// Register Request:
+		/// Sends the User Name and a Md5 hashed Pwd
+		/// </summary>
+		/// <param name="alias">User Name</param>
+		/// <param name="pwd">Password String</param>
+		/// <returns></returns>
 		public static async Task SendRegisterRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
 
+			//Create a hashed pwd
 			using (MD5 md5hash = MD5.Create())
 			{
-				hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+				hashPwd = EncryptionMD5.GetMd5Hash(md5hash, pwd);
 			}
 
+			RSAEncryption.Encryption userEncryption = UserController.GetEncryption();
+
+
 			Request request = new Request();
-			request.RegisterRequest(alias, hashPwd);
+			request.RegisterRequest(alias, hashPwd, userEncryption.PublicKey);
+
+			//var t = userEncryption.Rsa.KeySize;
 
 			Response r = await SendReqestToServerAsync(request);
 
@@ -85,12 +100,16 @@ namespace nuntiusClientChat.Controller
 		public static async Task SendLoginRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
+
+			//Create a hashed pwd
 			using (MD5 md5hash = MD5.Create())
 			{
-				hashPwd = Encryption.GetMd5Hash(md5hash, pwd);
+				hashPwd = EncryptionMD5.GetMd5Hash(md5hash, pwd);
 			}
+			//StorageController.LoadeRsa();
 
 			Request request = new Request();
+
 			request.LoginRequest(alias, hashPwd);
 
 			Response r = await SendReqestToServerAsync(request);
@@ -157,11 +176,16 @@ namespace nuntiusClientChat.Controller
 			}
 
 		}
+
 		public static async Task<Response> SendReqestToServerAsync(Request request)
 		{
 			byte[] bytes = new byte[4096];
+			Encryption serverPubKey = new Encryption();
+			serverPubKey.PublicKey = "<RSAKeyValue><Modulus>nyY7GtgnDvu0w1AJvbrLo+R7f5lRjnZsASBMfZcYGW6SXwprMtW8E+U312oXA26fl8WLoW9U/AvbYKfecm2Kdn911o6dAwT6FS0CHFQueaZF+5g5hf3SB/qBvvA/suFibAjsHkfe2ssL8j+q9x0j4axG0dBBVKOKXu/B2eePDongvRTIUgNReQ1xYWR+MYAYOqiRMstV0eVvpynUTrW8WQ3GEoL+SunpgAIkJ+1GWQje65GoEWE9TFZSWS3RkBZf2wOHPITpY7j87m+oOO8AxLOtvptNb9u0tNkPQTCu10prtFB1NuJBzn3p7IepNRd2EbawQQ8HrnvW05ksjdaeOXrnugJXXKLwScGPg0VhdjB+/aCG1n/81CGIFEL4jx4GvV+ydpgJ+VyKSqLrr62oo4rZofM7Ye3hgo4YJ6fD6V6qvswAvOY+Y36DB4juOZns9qcaBYymJaSvgPAbfkcdNvuamTOk7DDtQ1SKRw4WpDlICB16RRLeJ65cMStNoViSQsXKkflKqoDusq5cKpa0/Wp5IZk7wlSZl0mT4tS0wEuMT5a8Ob/mGcy4uqxM41/V2Cz1ONHiqlVjKsJ8v7LjebK7sIZ2qSb7wM/E2p9JNujm55+QtWODRq5b82bLnHa8oujKNXs3jmbrwfN0t0SbOD3zJ/Qkl2hyoVm8GVYyLnk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+
 
 			string message = JsonSerializer.Serialize(request);
+
 			try
 			{
 
@@ -182,15 +206,24 @@ namespace nuntiusClientChat.Controller
 					await sender.ConnectAsync(remoteEP);
 
 					// Encode the data string into a byte array.    
-					byte[] msg = Encoding.ASCII.GetBytes(message);
+					byte[] msg = serverPubKey.EncryptString(message);
 
 					// Send the data through the socket.    
 					int bytesSent = sender.Send(msg);
 
 					// Receive the response from the remote device.    
 					int bytesRec = sender.Receive(bytes);
+					Console.WriteLine(bytesRec);
+					//string text = Encoding.ASCII.GetString(bytes, 0, bytesRec)
+					//System.Console.WriteLine(bytes.Length);
+					byte[] b = new byte[bytesRec];
 
-					string text = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+					for (int i = 0; i < bytesRec; i++)
+					{
+						b[i] = bytes[i];
+					}
+
+					string text = UserController.GetEncryption().DecryptString(b);
 
 					//Server Response
 					Response response = JsonSerializer.Deserialize<Response>(text);
@@ -213,18 +246,18 @@ namespace nuntiusClientChat.Controller
 					DisplayError(se);
 					return null;
 				}
-				catch (Exception e)
+				catch (Exception ee)
 				{
-					Console.WriteLine("Unexpected exception : {0}", e.ToString());
-					DisplayError(e);
+					Console.WriteLine("Unexpected exception : {0}", ee.ToString());
+					DisplayError(ee);
 					return null;
 				}
 
 			}
-			catch (Exception e)
+			catch (Exception eee)
 			{
-				Console.WriteLine(e.ToString());
-				DisplayError(e);
+				Console.WriteLine(eee.ToString());
+				DisplayError(eee);
 				return null;
 			}
 
@@ -232,7 +265,8 @@ namespace nuntiusClientChat.Controller
 		//TODO: Remove Only for debug 
 		public static void DisplayError(Exception exception)
 		{
-			Xamarin.Forms.Device.BeginInvokeOnMainThread(() => {
+			Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+			{
 				Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Exception", exception.Message, "Ok");
 			});
 		}
