@@ -46,4 +46,3 @@ GRANT DELETE ON token TO nuntiusServer;
 GRANT SELECT ON messages TO nuntiusServer;
 GRANT INSERT ON messages TO nuntiusServer;
 GRANT UPDATE ON messages TO nuntiusServer;
-GRANT UPDATE ON messages_id_seq TO nuntiusServer

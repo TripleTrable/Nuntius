@@ -9,16 +9,16 @@ namespace NuntiusServer
         /// <summary>
         /// True = psql ; false = mysql
         /// </summary>
-       static bool dbms = true; 
+       static bool dbms = false; 
 
         public static IDbController Instance
         {
             get 
             {
-                // if(dbms)
+                if(dbms)
                     return PsqlController.Instance;
-                // else
-                //     return MysqlController.Instance;
+                else
+                    return MysqlController.Instance;
             }
         }
     }

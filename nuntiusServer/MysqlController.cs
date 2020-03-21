@@ -1,34 +1,33 @@
-using Npgsql;
-using NpgsqlTypes;
-using nuntiusModel;
 using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Collections.Generic;
+using MySql.Data.MySqlClient;
+using nuntiusModel;
 
 namespace NuntiusServer
 {
-	public class PsqlController : IDbController
+	public class MysqlController : IDbController
 	{
-		private static PsqlController instance = null;
+		private static MysqlController instance = null;
 		private static readonly object padlock = new object();
 		public string ConnectionString { get; set; }
 
-		private PsqlController()
+		private MysqlController()
 		{
-			ConnectionString = "Server=localhost;Port=5432;Database=nuntius;Uid=nuntiusserver;Pwd=;";
+			ConnectionString = "Server=89.0.127.193;Port=3306;Database=nuntius;Uid=nuntiusserver;Pwd=;";
 		}
 
 		/// <summary>
 		/// Current DbController object
 		/// </summary>
-		public static PsqlController Instance
+		public static MysqlController Instance
 		{
 			get
 			{
 				lock (padlock)
 				{
 					if (instance == null)
-						instance = new PsqlController();
+						instance = new MysqlController();
 
 					return instance;
 				}
@@ -41,7 +40,7 @@ namespace NuntiusServer
 		public bool LogInUser(string alias, string password)
 		{
 			//ToDo: Use sql parameter
-			NpgsqlCommand command = new NpgsqlCommand("SELECT 1 FROM users WHERE alias = @alias AND pwd_md5 = @pwd");
+			MySqlCommand command = new MySqlCommand("SELECT 1 FROM users WHERE alias = @alias AND pwd_md5 = @pwd");
 			command.Parameters.AddWithValue("alias", alias);
 			command.Parameters.AddWithValue("pwd", password);
 
@@ -61,7 +60,7 @@ namespace NuntiusServer
 		/// </summary>
 		public bool CheckUsersAliasAvalible(string alias)
 		{
-			NpgsqlCommand command = new NpgsqlCommand("SELECT 1 FROM users WHERE alias = @alias");
+			MySqlCommand command = new MySqlCommand("SELECT 1 FROM users WHERE alias = @alias");
 			command.Parameters.AddWithValue("alias", alias);
 			DataTable data = SelectDataTable(command);
 
@@ -83,7 +82,7 @@ namespace NuntiusServer
 				return false;
 
 			string sql = "INSERT INTO users(alias, pwd_md5, publicKey) VALUES(@alias,@pwd, @key);";
-			NpgsqlCommand command = new NpgsqlCommand(sql);
+			MySqlCommand command = new MySqlCommand(sql);
 			command.Parameters.AddWithValue("alias", alias);
 			command.Parameters.AddWithValue("pwd", password);
 			command.Parameters.AddWithValue("key", publicKey);
@@ -98,7 +97,7 @@ namespace NuntiusServer
 		/// </summary>
 		public string GetAliasFromToken(string token)
 		{
-			NpgsqlCommand command = new NpgsqlCommand("SELECT u.alias FROM users u JOIN token t ON u.id = t.userID WHERE t.token = @token;");
+			MySqlCommand command = new MySqlCommand("SELECT u.alias FROM users u JOIN token t ON u.id = t.userID WHERE t.token = @token;");
 			command.Parameters.AddWithValue("token", token);
 			DataTable data = SelectDataTable(command);
 
@@ -119,7 +118,7 @@ namespace NuntiusServer
 			string sql = @"SELECT token FROM token
 						     WHERE userID = (SELECT id FROM users WHERE alias = @alias);";
 
-			NpgsqlCommand command = new NpgsqlCommand(sql);
+			MySqlCommand command = new MySqlCommand(sql);
 			command.Parameters.AddWithValue("alias", alias);
 			DataTable data = SelectDataTable(command);
 
@@ -143,7 +142,7 @@ namespace NuntiusServer
 		/// <returns>true if the token is not used</returns>
 		public bool IsTokenFree(string token)
 		{
-			NpgsqlCommand command = new NpgsqlCommand("SELECT 1 FROM token WHERE token = @token");
+			MySqlCommand command = new MySqlCommand("SELECT 1 FROM token WHERE token = @token");
 			command.Parameters.AddWithValue("token", token);
 			DataTable data = SelectDataTable(command);
 
@@ -174,10 +173,10 @@ namespace NuntiusServer
 							@send, 
 							@message)";
 
-			NpgsqlCommand command = new NpgsqlCommand(sql);
+			MySqlCommand command = new MySqlCommand(sql);
 			command.Parameters.AddWithValue("fromAlias", fromAlias);
 			command.Parameters.AddWithValue("toAlias", toAlias);
-			command.Parameters.AddWithValue("send", NpgsqlDbType.Date, send);
+			command.Parameters.AddWithValue("send", send);
 			command.Parameters.AddWithValue("message", message);
 
 			return ExecuteNonQuerry(command);
@@ -199,7 +198,7 @@ namespace NuntiusServer
 						    WHERE m.to_user = (SELECT userID FROM token WHERE token = @token)
 							  AND m.unread = true;";
 
-			NpgsqlCommand command = new NpgsqlCommand(sql);
+			MySqlCommand command = new MySqlCommand(sql);
 			command.Parameters.AddWithValue("token", token);
 
 			DataTable data = SelectDataTable(command);
@@ -218,7 +217,7 @@ namespace NuntiusServer
 				newMessages.Add(message);
 
 				//Set the message to read
-				NpgsqlCommand updateCommand = new NpgsqlCommand($"UPDATE messages SET unread = false WHERE id = {row.ItemArray[4]};");
+				MySqlCommand updateCommand = new MySqlCommand($"UPDATE messages SET unread = false WHERE id = {row.ItemArray[4]};");
 				ExecuteNonQuerry(updateCommand);
 			}
 
@@ -235,9 +234,9 @@ namespace NuntiusServer
 						   VALUES(@token, @exp,
 						   (SELECT id FROM users WHERE alias = @alias));";
 
-			NpgsqlCommand command = new NpgsqlCommand(sql);
+			MySqlCommand command = new MySqlCommand(sql);
 			command.Parameters.AddWithValue("token", token);
-			command.Parameters.AddWithValue("exp", NpgsqlDbType.Date, DateTime.Now.AddHours(24));
+			command.Parameters.AddWithValue("exp", DateTime.Now.AddHours(24));
 			command.Parameters.AddWithValue("alias", alias);
 
 			//ToDo: unknown exeption
@@ -252,7 +251,7 @@ namespace NuntiusServer
 		public string GetUserPublicKey(string alias)
 		{
 			string sql = "SELECT u.publickey FROM token t JOIN users u ON t.userID = u.id WHERE u.alias = @alias";
-			NpgsqlCommand command = new NpgsqlCommand(sql);
+			MySqlCommand command = new MySqlCommand(sql);
 			command.Parameters.AddWithValue("alias", alias);
 			DataTable data = SelectDataTable(command);
 
@@ -266,12 +265,12 @@ namespace NuntiusServer
 		/// <summary>
 		/// Select a Query and return a DataTable
 		/// </summary>
-		private DataTable SelectDataTable(NpgsqlCommand cmd)
+		private DataTable SelectDataTable(MySqlCommand cmd)
 		{
 			DataTable dt;
 
 			//Connect
-			using (NpgsqlConnection con = new NpgsqlConnection(ConnectionString))
+			using (MySqlConnection con = new MySqlConnection(ConnectionString))
 			{
 				cmd.Connection = con;
 				try
@@ -279,7 +278,7 @@ namespace NuntiusServer
 					con.Open();
 
 					//Execute SQL Statement
-					using (NpgsqlDataAdapter a = new NpgsqlDataAdapter(cmd))
+					using (MySqlDataAdapter a = new MySqlDataAdapter(cmd))
 					{
 						dt = new DataTable();
 						a.Fill(dt);
@@ -301,12 +300,12 @@ namespace NuntiusServer
 		/// <summary>
 		///  Connect to the database and execute a non querry
 		/// </summary>
-		private int ExecuteNonQuerry(NpgsqlCommand command)
+		private int ExecuteNonQuerry(MySqlCommand command)
 		{
 			int result;
 
 			// create SqlConnection object
-			using (NpgsqlConnection con = new NpgsqlConnection(ConnectionString))
+			using (MySqlConnection con = new MySqlConnection(ConnectionString))
 			{
 				try
 				{
