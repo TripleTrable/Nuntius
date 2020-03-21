@@ -2,6 +2,7 @@
 CREATE DATABASE nuntius;
 USE nuntius;
 CREATE USER nuntiusserver;
+GRANT ALL PRIVILEGES ON *.* TO 'nuntiusserver'@'localhost';
 
 
 -- Create tabels
