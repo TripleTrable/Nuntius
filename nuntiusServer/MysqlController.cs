@@ -14,7 +14,7 @@ namespace NuntiusServer
 
 		private MysqlController()
 		{
-			ConnectionString = "Server=89.0.127.193;Port=3306;Database=nuntius;Uid=nuntiusserver;Pwd=;";
+			ConnectionString = "Server=localhost;Port=3306;Database=nuntius;Uid=nuntiusserver;Pwd=;";
 		}
 
 		/// <summary>
