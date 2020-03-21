@@ -65,8 +65,9 @@ namespace nuntiusClientChat
 					{
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
-						if (Navigation.NavigationStack.Count == 0)
+						if (Navigation.NavigationStack.Count == 1)
 						{   //Loaded the staved Chats
+							StorageController.Loade = true;
 							StorageController.LoadeData();
 						}
 					}
@@ -162,11 +163,5 @@ namespace nuntiusClientChat
 			}
 		}
 
-		public async Task ShowDisplayAllert(string messag)
-		{
-			
-				await DisplayAlert("Fehler", messag, "Ok");
-		
-		}
 	}
 }
