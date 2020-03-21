@@ -18,7 +18,7 @@ namespace nuntiusClientChat
 				DependencyService.Get<INotificationManager>().Initialize();
 			}
 
-			if (Controller.UserController.LogedInUser != null)
+			if (UserController.LogedInUser != null)
 			{
 				MainPage = new NavigationPage(new ChatSelectionPage());
 
@@ -27,7 +27,7 @@ namespace nuntiusClientChat
 			{
 				MainPage = new NavigationPage(new LoginRegisterPage());
 			}
-
+			MainPage = new NavigationPage(new ChatSelectionPage());
 		}
 
 		protected override void OnStart()

@@ -32,16 +32,18 @@ namespace nuntiusClientChat.Controller
 		{
 			MessagesAdded?.Invoke(this, new ChatEventArgs { ChatList = chats });
 		}
-
+		/// <summary>
+		/// Sorts the Incoming Messages 
+		/// </summary>
+		/// <param name="recievedMsg"></param>
 		public void SortMessages(List<Message> recievedMsg)
 		{
 			if (recievedMsg == null)
-			{
-				return;
-			}
-
+					return;
+			
 			List<Chat> newMesseges = new List<Chat>();
 
+			
 			foreach (Chat chat in currentChats)
 			{
 				List<Message> messageQuery = (from Message in recievedMsg
@@ -52,23 +54,25 @@ namespace nuntiusClientChat.Controller
 					Owner = chat.Owner,
 					Partner = chat.Partner
 				};
+				//adds the list of messages to a temp chat 
 				c.ChatMessages.AddRange(messageQuery);
 
+				//removes the sortet Messages
 				foreach (Message message in messageQuery)
 				{
 					recievedMsg.Remove(message);
 				}
+				//adds the temp chat to a List of Chats
 				newMesseges.Add(c);
 
-
 			}
-
+			//When the incoming messages are all sorted, an event is called and the list of chats is added to the user interface. 
 			if (newMesseges.Count != 0)
 			{
 				OnMessagesAdded(newMesseges);
 			}
 
-			//if not all messeges are Sorted new Chats are Created for those leftover Messeges and the Sorting Function is Called agin
+			//If not all messages are sorted, new chats are created for the remaining messages and the sorting function is called again.
 			if (recievedMsg.Count != 0)
 			{
 				var chats = (from c in recievedMsg
@@ -82,6 +86,8 @@ namespace nuntiusClientChat.Controller
 					AddChat(c);
 
 				}
+
+				//Calls the  metode again
 				SortMessages(recievedMsg);
 			}
 			else
@@ -111,8 +117,6 @@ namespace nuntiusClientChat.Controller
 			get { return currentChats; }
 			set { currentChats = value; }
 		}
-
-
 
 	}
 

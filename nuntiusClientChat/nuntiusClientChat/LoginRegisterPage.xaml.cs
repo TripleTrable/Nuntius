@@ -31,10 +31,10 @@ namespace nuntiusClientChat
 		{
 			LoginTyp.Text = typSwitch.IsToggled == false ? "Login" : "Registrieren";
 		}
-
+		
 		private async void ContinueButton_ClickedAsync(object sender, EventArgs e)
 		{
-
+			//Check if the user has made an Input
 			if (AliasEntry.Text == null || PasswordEntry.Text == null || AliasEntry.Text == "" || PasswordEntry.Text == "")
 			{
 				return;
@@ -54,7 +54,7 @@ namespace nuntiusClientChat
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
 						if (Navigation.NavigationStack.Count == 0)
-						{
+						{	//Loaded the staved Chats
 							StorageController.LoadeData();
 						}
 					}
@@ -100,7 +100,10 @@ namespace nuntiusClientChat
 				}
 			}
 		}
-
+		/// <summary>
+		/// Checks if the user chan reach the Internet
+		/// </summary>
+		/// <returns></returns>
 		public static async Task<bool> SendPingAsync()
 		{
 			var connectivity = CrossConnectivity.Current; bool reachable;
@@ -112,11 +115,15 @@ namespace nuntiusClientChat
 
 			return reachable;
 		}
-
+		/// <summary>
+		/// User can change the IP for the Server
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void ChangeServerIP_ClickedAsync(object sender, EventArgs e)
 		{
 			string serverIP = await DisplayPromptAsync("Server Addresse", "Die Aktuelle Server Adresse lautet:\nBitte geben Sie eine gültige IP Adresse an", "OK", "Cancel", NetworkController.ServerAddres);
-
+			//TODO: Check the ip with ipaddres.pars();
 			try
 			{
 				if (serverIP != "" && serverIP != null)

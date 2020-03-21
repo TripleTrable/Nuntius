@@ -33,7 +33,7 @@ namespace nuntiusClientChat
 
 			foreach (Message m in chat.ChatMessages)
 			{
-				//Sedn
+				//Send
 				if (m.From == UserController.LogedInUser.Alias)
 				{
 					ChatStackLayout.Children.Add(new MessageControll(true, m));
@@ -47,9 +47,11 @@ namespace nuntiusClientChat
 
 		}
 
-
-
-
+		/// <summary>
+		/// Send a Messag to the Server via the SendMsgRequest
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
 			if (Chat.Partner == null || MsgEditor.Text == null || MsgEditor.Text == "")

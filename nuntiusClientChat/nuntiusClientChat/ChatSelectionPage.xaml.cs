@@ -73,7 +73,11 @@ namespace nuntiusClientChat
 
 			NetworkController.NagTimerRun = true;
 		}
-
+		/// <summary>
+		/// Adds the saved Chats to the UI
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ChatSelection_SavedChatAdded(object sender, ChatEventArgs e)
 		{
 			List<Chat> savedChats = e.ChatList;
@@ -115,13 +119,21 @@ namespace nuntiusClientChat
 			}
 			App.SaveData = GetChatsCurrentChats();
 		}
-
+		/// <summary>
+		/// Adds a new Chat 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void AddNewChat_Clicked(object sender, EventArgs e)
 		{
 			await Navigation.PushAsync(new OpenConversationPage(), true);
 			App.SaveData = GetChatsCurrentChats();
 		}
-
+		/// <summary>
+		/// adds a New Messag to the UI
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ChatSelection_MessagesAdded(object sender, ChatEventArgs e)
 		{
 			Device.BeginInvokeOnMainThread(() =>
@@ -131,18 +143,20 @@ namespace nuntiusClientChat
 
 				foreach (var updatedChat in e.ChatList)
 				{
-
+					//gets the chat selection tile to which the messages should be added 
 					var tile = (from t in chatSeletion
 								where t.ChatPage.Chat.Partner == updatedChat.Partner
 								select t).ToList();
 
 					if (tile.Count == 0)
 						continue;
+
 					try
 					{
+				
 						tile[0].ChatPage.Chat.ChatMessages.AddRange(updatedChat.ChatMessages);
 
-						//Add Messeges to the ChatView 
+						//Add Messeges to the UI 
 						foreach (Message message in updatedChat.ChatMessages)
 						{
 							tile[0].ChatPage.ChatStackLayout.Children.Add(new MessageControll(false, message));
@@ -151,37 +165,14 @@ namespace nuntiusClientChat
 						if (updatedChat.ChatMessages.Count != 0)
 						{
 							OrderMostRecentChat(tile[0]);
-
-							//Notification Specific code only exec when Android or IOS
-							if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
-							{
-								foreach (var msg in updatedChat.ChatMessages)
-								{
-									IReadOnlyList<Page> pages = App.Current.MainPage.Navigation.NavigationStack;
-									//if the User is in a Conversation wher he is receiving new Msg no Notifications are Send for this chat
-									if (pages[pages.Count - 1] is ChatPage)
-									{
-										ChatPage cp = pages[pages.Count - 1] as ChatPage;
-
-										if (cp.Chat.Partner != msg.From)
-										{
-											notificationIDs.Add(notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text));
-										}
-									}
-									else
-									{
-										notificationIDs.Add(notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text));
-									}
-
-
-								}
-							}
+							SendNotification(updatedChat);
 						}
+					
 						App.SaveData = GetChatsCurrentChats();
 					}
 					catch (Exception ex)
 					{
-						DisplayAlert("", ex.ToString(), "Ok");
+						DisplayAlert("", ex.Message, "Ok");
 					}
 
 
@@ -189,13 +180,51 @@ namespace nuntiusClientChat
 
 			});
 		}
+		/// <summary>
+		/// If the user is Using a Android Device a Notification is Pushed
+		/// </summary>
+		/// <param name="updatedChat"></param>
+		private void SendNotification(Chat updatedChat)
+		{
+			//Notification Specific code only exec when Android or IOS
+			if (Device.RuntimePlatform == Device.Android || Device.RuntimePlatform == Device.iOS)
+			{
+				foreach (var msg in updatedChat.ChatMessages)
+				{
+					IReadOnlyList<Page> pages = App.Current.MainPage.Navigation.NavigationStack;
+					//if the User is in a Conversation wher he is receiving new Msg no Notifications are Send for this chat
+					if (pages[pages.Count - 1] is ChatPage)
+					{
+						ChatPage cp = pages[pages.Count - 1] as ChatPage;
 
+						if (cp.Chat.Partner != msg.From)
+						{
+							notificationIDs.Add(notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text));
+						}
+					}
+					else
+					{
+						notificationIDs.Add(notificationManager.ScheduleNotification(updatedChat.Partner, msg.Text));
+					}
+
+
+				}
+			}
+		}
+
+		/// <summary>
+		/// Returs the Current Chats selection tiles in the chatSelectionStack
+		/// </summary>
+		/// <returns></returns>
 		private List<ChatSelectionTile> CurrentChatSelectionTiles()
 		{
 			return (from tile in chatSelectionStack.Children.OfType<ChatSelectionTile>()
 					select tile).ToList();
 		}
-
+		/// <summary>
+		/// Retunrs the Current chats form the Current Chat seletion tiles 
+		/// </summary>
+		/// <returns></returns>
 		private List<Chat> GetChatsCurrentChats()
 		{
 			List<Chat> temp = new List<Chat>();
@@ -205,7 +234,11 @@ namespace nuntiusClientChat
 			}
 			return temp;
 		}
-
+		/// <summary>
+		/// Adds a ChatSelection tile the the Chat seletion stack
+		/// </summary>
+		/// <param name="source"></param>
+		/// <param name="args"></param>
 		private void Chat_Added(object source, ChatEventArgs args)
 		{
 			ChatPage chatPage = new ChatPage(args.Chat);
@@ -223,12 +256,16 @@ namespace nuntiusClientChat
 		}
 
 		#region Sorting ChatSelection Tiles
-
+		/// <summary>
+		/// Places the last manipulatat ChatSelection tile as the first of the chatSelectionStack 
+		/// </summary>
+		/// <param name="tile"></param>
 		public void OrderMostRecentChat(ChatSelectionTile tile)
 		{
-
+			//Reordes the List so that the chat with the Newest Message is the first in the Chat Selection stack
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				//Removes Possible duplicats
 				List<ChatSelectionTile> selectionTiles = RemoveDuplicats(CurrentChatSelectionTiles());
 
 				selectionTiles.Remove(tile);
@@ -239,7 +276,7 @@ namespace nuntiusClientChat
 
 				selectionTiles.Reverse();
 
-				
+
 				//add´s the new Order of Chat Seletion Tiles and Removes Duplicats
 				foreach (var item in selectionTiles)
 				{
@@ -248,7 +285,10 @@ namespace nuntiusClientChat
 			});
 
 		}
-
+		/// <summary>
+		/// Removes all duplicats in the Chats Selection stack
+		/// </summary>
+		/// <returns></returns>
 		public List<ChatSelectionTile> RemoveDuplicats()
 		{
 			List<ChatSelectionTile> current = CurrentChatSelectionTiles();
@@ -257,7 +297,7 @@ namespace nuntiusClientChat
 			{
 				return current;
 			}
-
+			//Compers a and b 
 			int com(ChatSelectionTile a, ChatSelectionTile b)
 			{
 				if (a.PartnerAlias == b.PartnerAlias)
@@ -278,15 +318,15 @@ namespace nuntiusClientChat
 				return 0;
 			}
 			current.Sort(com);
-
+			//Grups the sortet List and SELECTS the first of each group
 			List<ChatSelectionTile> distinctItems = current.GroupBy(c => c.PartnerAlias).Select(y => y.First()).ToList();
 
-
 			return distinctItems;
-
-
 		}
-
+		/// <summary>
+		/// Removes all duplicats in the Chats Selection stack
+		/// </summary>
+		/// <returns></returns>
 		public List<ChatSelectionTile> RemoveDuplicats(List<ChatSelectionTile> current)
 		{
 
@@ -294,7 +334,7 @@ namespace nuntiusClientChat
 			{
 				return current;
 			}
-
+			//Compers a and b 
 			int com(ChatSelectionTile a, ChatSelectionTile b)
 			{
 				if (a.PartnerAlias == b.PartnerAlias)
@@ -315,7 +355,7 @@ namespace nuntiusClientChat
 				return 0;
 			}
 			current.Sort(com);
-
+			//Grups the sortet List and SELECTS the first of each group
 			List<ChatSelectionTile> distinctItems = current.GroupBy(c => c.PartnerAlias).Select(y => y.First()).ToList();
 
 			return distinctItems;
@@ -323,32 +363,40 @@ namespace nuntiusClientChat
 
 		#endregion
 
-		public void PopToRootPage()
-		{
-			Device.BeginInvokeOnMainThread(async () => { await Navigation.PopToRootAsync(); });
-		}
+
 
 		private void DebugMenuItem_Clicked(object sender, EventArgs e)
 		{
+			try
+			{
+				DisplayAlert("Current User", UserController.LogedInUser.Alias + "\n" + UserController.LogedInUser.Messages.Count + "\n" + UserController.CurrentTocken, "Ok");
+			}
+			catch (Exception)
+			{
 
+			}
 		}
 
-		private void UserInfo_Clicked(object sender, EventArgs e)
-		{
-
-		}
 
 		private void Credits_Clicked(object sender, EventArgs e)
 		{
 
 		}
-
+		/// <summary>
+		/// Loades the saved Data 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void DebugLoade_Clicked(object sender, EventArgs e)
 		{
 			StorageController.Loade = true;
 			StorageController.LoadeData();
 		}
-
+		/// <summary>
+		/// Clears the chatSelectionStack
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void DebugClear_Clicked(object sender, EventArgs e)
 		{
 			StorageController.SaveData(new List<Chat>());

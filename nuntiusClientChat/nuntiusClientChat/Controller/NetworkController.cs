@@ -20,7 +20,7 @@ namespace nuntiusClientChat.Controller
 		//public static readonly string ServerAddres = "172.16.13.28";
 		//public static readonly string ServerAddres = "10.100.100.15";
 		public static string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
-			
+
 
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
@@ -97,7 +97,12 @@ namespace nuntiusClientChat.Controller
 				UserController.LogedInUser = null;
 			}
 		}
-
+		/// <summary>
+		/// Sends a Login Request 
+		/// </summary>
+		/// <param name="alias"></param>
+		/// <param name="pwd"></param>
+		/// <returns></returns>
 		public static async Task SendLoginRequestAsync(string alias, string pwd)
 		{
 			string hashPwd;
@@ -124,6 +129,8 @@ namespace nuntiusClientChat.Controller
 				UserController.CurrentTocken = r.Parameters[0].ToString();
 				UserController.LogedInUser = new User(request.Parameters[0].ToString(), request.Parameters[1].ToString());
 				ConfigurNagServer();
+				//debug
+				sendAllert = 0;
 
 			}
 			else
@@ -132,7 +139,12 @@ namespace nuntiusClientChat.Controller
 				UserController.LogedInUser = null;
 			}
 		}
-
+		/// <summary>
+		/// Sends a Message request 
+		/// </summary>
+		/// <param name="alias"></param>
+		/// <param name="pwd"></param>
+		/// <returns></returns>
 		public static async Task SendMsgRequest(string toAlias, DateTime sendTime, string msgText)
 		{
 
@@ -150,8 +162,13 @@ namespace nuntiusClientChat.Controller
 
 			if (r == null)
 				return;
+			//debug
+			sendAllert = 0b0;
 		}
-
+		/// <summary>
+		/// Sends a Nag Request when the user has new messages, the server sends the reply with the new messages
+		/// </summary>
+		/// <returns></returns>
 		public static async Task SendNaggRequstAsync()
 		{
 			Request request = new Request();
@@ -181,25 +198,23 @@ namespace nuntiusClientChat.Controller
 		public static async Task<Response> SendReqestToServerAsync(Request request)
 		{
 			byte[] bytes = new byte[4096];
+
 			Encryption serverPubKey = new Encryption();
 			serverPubKey.PublicKey = "<RSAKeyValue><Modulus>nyY7GtgnDvu0w1AJvbrLo+R7f5lRjnZsASBMfZcYGW6SXwprMtW8E+U312oXA26fl8WLoW9U/AvbYKfecm2Kdn911o6dAwT6FS0CHFQueaZF+5g5hf3SB/qBvvA/suFibAjsHkfe2ssL8j+q9x0j4axG0dBBVKOKXu/B2eePDongvRTIUgNReQ1xYWR+MYAYOqiRMstV0eVvpynUTrW8WQ3GEoL+SunpgAIkJ+1GWQje65GoEWE9TFZSWS3RkBZf2wOHPITpY7j87m+oOO8AxLOtvptNb9u0tNkPQTCu10prtFB1NuJBzn3p7IepNRd2EbawQQ8HrnvW05ksjdaeOXrnugJXXKLwScGPg0VhdjB+/aCG1n/81CGIFEL4jx4GvV+ydpgJ+VyKSqLrr62oo4rZofM7Ye3hgo4YJ6fD6V6qvswAvOY+Y36DB4juOZns9qcaBYymJaSvgPAbfkcdNvuamTOk7DDtQ1SKRw4WpDlICB16RRLeJ65cMStNoViSQsXKkflKqoDusq5cKpa0/Wp5IZk7wlSZl0mT4tS0wEuMT5a8Ob/mGcy4uqxM41/V2Cz1ONHiqlVjKsJ8v7LjebK7sIZ2qSb7wM/E2p9JNujm55+QtWODRq5b82bLnHa8oujKNXs3jmbrwfN0t0SbOD3zJ/Qkl2hyoVm8GVYyLnk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-
-
+			//Converts the request to the JSON format
 			string message = JsonSerializer.Serialize(request);
 
 			try
 			{
-
 				IPAddress ipAddress = IPAddress.Parse(ServerAddres);
-				//IPAddress ipAddress = IPAddress.Loopback;
 
 				IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
 
 				// Create a TCP/IP  socket.    
 				Socket sender = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-				//checks is the ip Added is a IPv6
-				if (ipAddress.AddressFamily ==  AddressFamily.InterNetworkV6)
+				//Checks is the ip Added is a IPv6
+				if (ipAddress.AddressFamily == AddressFamily.InterNetworkV6)
 				{
 					sender.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.IPv6Only, false);
 				}
@@ -218,9 +233,7 @@ namespace nuntiusClientChat.Controller
 
 					// Receive the response from the remote device.    
 					int bytesRec = sender.Receive(bytes);
-					Console.WriteLine(bytesRec);
-					//string text = Encoding.ASCII.GetString(bytes, 0, bytesRec)
-					//System.Console.WriteLine(bytes.Length);
+
 					byte[] b = new byte[bytesRec];
 
 					for (int i = 0; i < bytesRec; i++)
@@ -267,13 +280,29 @@ namespace nuntiusClientChat.Controller
 			}
 
 		}
+
 		//TODO: Remove Only for debug 
+		private static int sendAllert = 0;
+
+		/// <summary>
+		/// Converts an exception into a display alert.
+		/// </summary>
+		/// <param name="exception"></param>
 		public static void DisplayError(Exception exception)
 		{
-			Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+			sendAllert++;
+			
+			if (sendAllert >= 30)
 			{
-				Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Exception", exception.Message, "Ok");
-			});
+				return;
+			}
+			else
+			{
+				Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+				{
+					Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Exception", exception.Message, "Ok");
+				});
+			}
 		}
 	}
 }

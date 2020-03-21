@@ -18,35 +18,18 @@ namespace nuntiusClientChat.Controller
 		private static readonly string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
 		private const string dataFile = "NuntiusData.txt";
 
-		public static List<Chat> Chats
-		{
-			get { return chats; }
-			set { chats = selectionController.CurrentChats; }
-		}
-		//TODO: Remove befor release
-		public static void SaveData()
-		{
-			//Reset saved chats List
-			//selectionController.CurrentChats = new List<Chat>();
 
-			using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
-			{
-				BinaryFormatter formatter = new BinaryFormatter();
-				formatter.Serialize(fileStream, selectionController.CurrentChats);
-				fileStream.Close();
-			}
-
-		}
+		/// <summary>
+		/// Saves the Chat data
+		/// </summary>
+		/// <param name="data"></param>
 		public static void SaveData(object data)
 		{
 			//Reset saved chats List
 			//data = new List<Chat>();
 
-			if (data == null)
+			if (data == null || UserController.LogedInUser == null)
 				return;
-			if (UserController.LogedInUser == null)
-				return;
-
 			string dataFile = "NuntiusData" + UserController.LogedInUser.Alias + ".txt";
 			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
 
@@ -56,9 +39,12 @@ namespace nuntiusClientChat.Controller
 					formatter.Serialize(fileStream, data);
 					fileStream.Close();
 			}
-			SaveRsaKeySet(UserController.GetEncryption());
+			
 		}
-
+		/// <summary>
+		/// Saves the RSA Key (not in use)
+		/// </summary>
+		/// <param name="data"></param>
 		public static void SaveRsaKeySet(object data)
 		{
 			/*if (data == null)
@@ -78,7 +64,9 @@ namespace nuntiusClientChat.Controller
 
 		}
 
-
+		/// <summary>
+		/// Loades the Saved Data
+		/// </summary>
 		public static void LoadeData()
 		{
 			if (UserController.LogedInUser == null)
@@ -95,10 +83,12 @@ namespace nuntiusClientChat.Controller
 			}
 
 		}
-
+		/// <summary>
+		/// Loades the saved RSA Keys (not in use)
+		/// </summary>
 		public static void LoadeRsa()
 		{
-			string dataFile = "NuntiusKey" + UserController.LogedInUser.Alias + ".txt";
+			/*string dataFile = "NuntiusKey" + UserController.LogedInUser.Alias + ".txt";
 			string fileName = Path.Combine(FileSystem.AppDataDirectory, dataFile);
 			Encryption encryption;
 
@@ -119,10 +109,12 @@ namespace nuntiusClientChat.Controller
 			{
 				UserController.UserRsaKeys = encryption;
 				fileStream.Close();
-			}
+			}*/
 
 		}
-
+		/// <summary>
+		/// Loades the saved Chat data calls the event to add them to the UI
+		/// </summary>
 		private static void LoadeChats()
 		{
 			string dataFile = "NuntiusData" + UserController.LogedInUser.Alias + ".txt";

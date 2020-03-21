@@ -43,7 +43,11 @@ namespace nuntiusClientChat.Controls
 			Grid.Children.Remove(OpenChatButten);
 			Grid.Children.Add(OpenChatButten);
 		}
-
+		/// <summary>
+		/// Opens the underlying Caht Instanc
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void OpenChatButten_Clicked(object sender, EventArgs e)
 		{
 			if (chatPage == null)

@@ -13,7 +13,7 @@ namespace nuntiusClientChat.Controller
 		private static string currentToken = null;
 
 		/// <summary>
-		/// NO
+		/// Returns the User Encyption Insance
 		/// </summary>
 		/// <returns></returns>
 		public static Encryption GetEncryption()
