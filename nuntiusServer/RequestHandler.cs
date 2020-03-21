@@ -91,28 +91,28 @@ namespace NuntiusServer
 			string message = request.Parameters[3].ToString();
 
 			//Check token
-			string fromAlias = DbController.GetAliasFromToken(token);
+			string fromAlias = DbController.Instance.GetAliasFromToken(token);
 
 			if (fromAlias == null)
 			{
 				response.UnknownErrorRespone();
 				return Tuple.Create(response, fromAlias);
 			}
-			else if (fromAlias == "")
+			else if (token == "")
 			{
 				response.InvalidToken();
 				return Tuple.Create(response, fromAlias);
 			}
 
 			//User must exist
-			if (DbController.CheckUsersAliasAvalible(toAlias))
+			if (DbController.Instance.CheckUsersAliasAvalible(toAlias))
 			{
 				response.SendErrorResponse();
 				return Tuple.Create(response, fromAlias);
 			}
 
 			//Save messages
-			int result = DbController.InsertNewMessage(fromAlias, toAlias, send, message);
+			int result = DbController.Instance.InsertNewMessage(fromAlias, toAlias, send, message);
 
 			if (result == 0)
 			{
@@ -136,12 +136,12 @@ namespace NuntiusServer
 			string token = request.Parameters[0].ToString();
 
 			//Get the unread messages
-			List<Message> newMessages = DbController.SelectUnreadMessages(token);
+			List<Message> newMessages = DbController.Instance.SelectUnreadMessages(token);
 
 			//Send the messages
 			response.ParentResponse(newMessages);
 
-			return Tuple.Create(response, DbController.GetAliasFromToken(token));
+			return Tuple.Create(response, DbController.Instance.GetAliasFromToken(token));
 		}
 }
 }

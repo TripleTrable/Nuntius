@@ -10,16 +10,16 @@ namespace NuntiusServer
 		/// </summary>
 		public static string Login(string alias, string password)
 		{
-			if (!DbController.LogInUser(alias, password))
+			if (!DbController.Instance.LogInUser(alias, password))
 				return null;
 
-			string token = DbController.HasUserAToken(alias);
+			string token = DbController.Instance.HasUserAToken(alias);
 
 			//Check if the user has a token
 			if (token == "")
 			{
 				token = GenerateToken(alias);
-				DbController.AssignToken(alias, token);
+				DbController.Instance.AssignToken(alias, token);
 			}
 
 			return token;
@@ -30,11 +30,11 @@ namespace NuntiusServer
 		/// </summary>
 		public static string RegisterNewUser(string alias, string password, string publicKey)
 		{
-			if (!DbController.RegisterUser(alias, password, publicKey))
+			if (!DbController.Instance.RegisterUser(alias, password, publicKey))
 				return null;
 
 			string token = GenerateToken(alias);
-			DbController.AssignToken(alias, token);
+			DbController.Instance.AssignToken(alias, token);
 			return token;
 		}
 
@@ -54,7 +54,7 @@ namespace NuntiusServer
 					token[i] = chars[random.Next(chars.Length)];
 				}
 
-			} while (!DbController.IsTokenFree(new string(token)));
+			} while (!DbController.Instance.IsTokenFree(new string(token)));
 
 			return new string(token);
 		}
