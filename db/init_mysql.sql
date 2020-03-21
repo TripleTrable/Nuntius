@@ -2,6 +2,7 @@
 CREATE DATABASE nuntius;
 USE nuntius;
 CREATE USER nuntiusserver;
+GRANT ALL PRIVILEGES ON *.* TO 'nuntiusserver'@'localhost';
 
 
 -- Create tabels
@@ -46,4 +47,3 @@ GRANT DELETE ON token TO nuntiusServer;
 GRANT SELECT ON messages TO nuntiusServer;
 GRANT INSERT ON messages TO nuntiusServer;
 GRANT UPDATE ON messages TO nuntiusServer;
-GRANT UPDATE ON messages_id_seq TO nuntiusServer
