@@ -176,8 +176,6 @@ namespace nuntiusClientChat
 					{
 						DisplayAlert("", ex.Message, "Ok");
 					}
-
-
 				}
 
 			});

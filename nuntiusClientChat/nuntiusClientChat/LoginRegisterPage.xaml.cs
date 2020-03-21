@@ -18,7 +18,7 @@ namespace nuntiusClientChat
 			AliasEntry.Text = null; PasswordEntry.Text = null;
 			VersionLabel.Text = "alpha_1.0.3  " + NetworkController.ServerAddres;
 			VersionLabel.TextColor = Color.FromHex("ffffff");
-			
+
 		}
 
 
@@ -139,6 +139,25 @@ namespace nuntiusClientChat
 			catch (Exception ex)
 			{
 				await DisplayAlert("Exception", ex.Message, "OK");
+			}
+		}
+
+		private void pwdShowButton_Clicked(object sender, EventArgs e)
+		{
+			if (PasswordEntry.Text == null)
+				return;
+
+
+			if (PasswordEntry.Text.Length >= 0)
+			{
+				if (PasswordEntry.IsPassword == true)
+				{
+					PasswordEntry.IsPassword = false;
+				}
+				else
+				{
+					PasswordEntry.IsPassword = true;
+				}
 			}
 		}
 	}

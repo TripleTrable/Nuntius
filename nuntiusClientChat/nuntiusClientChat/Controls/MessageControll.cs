@@ -1,4 +1,5 @@
 ﻿using nuntiusModel;
+using System;
 using Xamarin.Forms;
 
 
@@ -17,24 +18,32 @@ namespace nuntiusClientChat
 			{
 				LineBreakMode = LineBreakMode.WordWrap;
 
-				Text += message.Text;
+				Text += message.Text.Trim();
+
+				DateTime d = message.Sent.ToLocalTime();
+
+				Text = "\n" + Text + "\n";
+
 				TextColor = Color.FromHex("fdfdfd");
-				//HeightRequest = HeightRequest + 30;
+
 				VerticalTextAlignment = TextAlignment.Center;
 				FontSize = 16;
 
+				Margin = new Thickness(0, 0, 2, 0);
 
 				if (send)
 				{
 					BackgroundColor = Color.FromHex("397cb3");
-					//TranslationX = 100;
 					HorizontalTextAlignment = TextAlignment.End;
+
 				}
 				else
 				{
 					BackgroundColor = Color.FromHex("1f191b");
 				};
+
 			});
+
 		}
 	}
 }

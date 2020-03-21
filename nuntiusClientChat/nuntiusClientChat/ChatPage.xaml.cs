@@ -39,12 +39,16 @@ namespace nuntiusClientChat
 				//Send
 				if (m.From == UserController.LogedInUser.Alias)
 				{
-					ChatStackLayout.Children.Add(new MessageControll(true, m));
+					MessageControll messageControll = new MessageControll(true, m);
+			
+					ChatStackLayout.Children.Add(messageControll);
 				}
 				//Receved
 				else if (m.From != UserController.LogedInUser.Alias)
 				{
-					ChatStackLayout.Children.Add(new MessageControll(false, m));
+					MessageControll messageControll = new MessageControll(true, m);
+					
+					ChatStackLayout.Children.Add(messageControll);
 				}
 			}
 
@@ -64,11 +68,15 @@ namespace nuntiusClientChat
 
 			//Send Msg via Networkkontroller
 
-			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text.Trim()));
+			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.UtcNow, MsgEditor.Text.Trim()));
 
 			//Add Msg to View
-			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text };
-			MsgChatStack.Children.Add(new MessageControll(true, message));
+			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.UtcNow, Text = MsgEditor.Text };
+			
+			MessageControll messageControll = new MessageControll(true, message);
+
+			
+			MsgChatStack.Children.Add(messageControll);
 			Chat.ChatMessages.Add(message);
 			MsgEditor.Text = null;
 

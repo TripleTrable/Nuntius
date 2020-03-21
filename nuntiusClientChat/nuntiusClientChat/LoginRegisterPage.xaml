@@ -23,29 +23,6 @@
 		
 		<Grid Grid.Row="0">
 				<RelativeLayout>
-					<!--<BoxView BackgroundColor="#1a1a1a" 
-                             CornerRadius="30"
-                             RelativeLayout.WidthConstraint=
-                             "{ConstraintExpression
-                             Type=RelativeToView,
-                             ElementName=layoutStack,
-                             Property=Width,
-                             Factor=1
-                             }"
-                             RelativeLayout.HeightConstraint=
-                             "{ConstraintExpression
-                             Type=RelativeToView,
-                             Property=Height,
-                             ElementName=layoutStack,Factor=1
-                            }"
-                             RelativeLayout.YConstraint=
-                            "{ConstraintExpression
-                            Type=RelativeToParent,
-                            Property=Height,
-                            Factor=0.27
-                            }"
-
-                    />-->
 					<StackLayout x:Name="layoutStack" Spacing="8"
                                 RelativeLayout.WidthConstraint=
                                 "{ConstraintExpression
@@ -71,7 +48,7 @@
 						<StackLayout Orientation="Horizontal" >
 							<Switch x:Name="typSwitch" HorizontalOptions="Start" OnColor="#2CA38E" PropertyChanged="Switch_PropertyChanged" Margin="10,0,0,0" ThumbColor="#e2dddd" />
 							<Label x:Name="LoginTyp" Text="Login" FontSize="Subtitle" VerticalOptions="Center" TextColor="#ffffff"/>
-							<!--<Button Text="Show Pwd" HorizontalOptions="EndAndExpand"  BackgroundColor="#2CA38E" CornerRadius="15" Margin="10" />-->
+							<Button x:Name="pwdShowButton" Text="Passwort anzeigen" HorizontalOptions="EndAndExpand"  BackgroundColor="#2CA38E" CornerRadius="15" Margin="10" Clicked="pwdShowButton_Clicked" />
 						</StackLayout>
 
 					</StackLayout>
