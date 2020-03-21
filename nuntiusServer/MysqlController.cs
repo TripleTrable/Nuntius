@@ -39,7 +39,6 @@ namespace NuntiusServer
 		/// </summary>
 		public bool LogInUser(string alias, string password)
 		{
-			//ToDo: Use sql parameter
 			MySqlCommand command = new MySqlCommand("SELECT 1 FROM users WHERE alias = @alias AND pwd_md5 = @pwd");
 			command.Parameters.AddWithValue("alias", alias);
 			command.Parameters.AddWithValue("pwd", password);
@@ -114,7 +113,6 @@ namespace NuntiusServer
 		/// </summary>
 		public string HasUserAToken(string alias)
 		{
-			//ToDo: sql Prameter
 			string sql = @"SELECT token FROM token
 						     WHERE userID = (SELECT id FROM users WHERE alias = @alias);";
 
@@ -166,7 +164,6 @@ namespace NuntiusServer
 		/// <returns>1 when the message was inseted sucessfuly else 0</returns>
 		public int InsertNewMessage(string fromAlias, string toAlias, DateTime send, string message)
 		{
-			//ToDo: add parameter
 			string sql = @"INSERT INTO messages(from_user, to_user, send, content) 
 							VALUES((SELECT id FROM users WHERE alias = @fromAlias), 
 							(SELECT id FROM users WHERE alias = @toAlias), 
@@ -229,7 +226,6 @@ namespace NuntiusServer
 		/// </summary>
 		public void AssignToken(string alias, string token)
 		{
-			//ToDo: sql parameter
 			string sql = @"INSERT INTO token(token, expire, userID)
 						   VALUES(@token, @exp,
 						   (SELECT id FROM users WHERE alias = @alias));";
