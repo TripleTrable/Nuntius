@@ -4,9 +4,10 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="nuntiusClientChat.OpenConversationPage">
+             x:Class="nuntiusClientChat.OpenConversationPage"
+			 Title="Open New Chat">
 
-	<Grid x:Name="Grid">
+	<Grid x:Name="Grid" BackgroundColor="#202022">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="5*"/>
 			<RowDefinition Height="50*"/>
@@ -19,10 +20,10 @@
 		</Grid.ColumnDefinitions>
 
 		<Grid Grid.Row="0" Grid.Column="1">
-			<Entry x:Name="SerchEntry"/>
+			<Entry x:Name="SerchEntry" TextColor="#ffffff" Placeholder="Enter User Name" PlaceholderColor="#9EA1A3"/>
 		</Grid>
 		<Grid Grid.Row="1" Grid.Column="1">
-			<Button x:Name="SerchButton" Text="Neuer Chat" Clicked="SerchButton_Clicked" ></Button>
+			<Button x:Name="SerchButton" Text="Neuer Chat" Clicked="SerchButton_Clicked" TextColor="#ffffff" BackgroundColor="#2CA38E" CornerRadius="15"></Button>
 		</Grid>
 	</Grid>
 </ContentPage>

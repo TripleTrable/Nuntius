@@ -27,7 +27,7 @@ namespace nuntiusClientChat
 			{
 				MainPage = new NavigationPage(new LoginRegisterPage());
 			}
-			MainPage = new NavigationPage(new ChatSelectionPage());
+			//MainPage = new NavigationPage(new ChatSelectionPage());
 		}
 
 		protected override void OnStart()
@@ -69,8 +69,6 @@ namespace nuntiusClientChat
 			//}
 		}
 
-
-		//TODO: Look into a better Solution
 		private static List<Chat> saveData;
 
 		public static List<Chat> SaveData

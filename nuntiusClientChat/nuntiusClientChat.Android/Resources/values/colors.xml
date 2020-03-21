@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="launcher_background">#181818</color>
-    <color name="colorPrimary">#73b1e0</color>
+    <color name="launcher_background">#1a1a1a</color>
+    <color name="colorPrimary">#1a1a1a</color>
     <color name="colorPrimaryDark">#23598a</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#23598a</color>
+	<style name="bottomNavigationStyle">#1a1a1a</style>
+	<color name="bottomAppBarStyle">#1a1a1a</color>
+	<color name="buttonBarButtonStyle">#1a1a1a</color>
+	
 </resources>

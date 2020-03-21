@@ -14,8 +14,13 @@ namespace nuntiusClientChat
 		public LoginRegisterPage()
 		{
 			InitializeComponent();
-			AliasEntry.Text = null; PasswordEntry.Text = null; VersionLabel.Text = "alpha_1.0.3  " + NetworkController.ServerAddres;
+
+			AliasEntry.Text = null; PasswordEntry.Text = null;
+			VersionLabel.Text = "alpha_1.0.3  " + NetworkController.ServerAddres;
+			VersionLabel.TextColor = Color.FromHex("ffffff");
+			
 		}
+
 
 		private void Entry_Completed(object sender, EventArgs e)
 		{
@@ -31,7 +36,7 @@ namespace nuntiusClientChat
 		{
 			LoginTyp.Text = typSwitch.IsToggled == false ? "Login" : "Registrieren";
 		}
-		
+
 		private async void ContinueButton_ClickedAsync(object sender, EventArgs e)
 		{
 			//Check if the user has made an Input
@@ -54,7 +59,7 @@ namespace nuntiusClientChat
 						//Open the Chat selection
 						App.Current.MainPage = new NavigationPage(new ChatSelectionPage());
 						if (Navigation.NavigationStack.Count == 0)
-						{	//Loaded the staved Chats
+						{   //Loaded the staved Chats
 							StorageController.LoadeData();
 						}
 					}

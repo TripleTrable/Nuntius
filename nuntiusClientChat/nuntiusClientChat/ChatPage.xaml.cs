@@ -16,6 +16,8 @@ namespace nuntiusClientChat
 			InitializeComponent();
 			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
 			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+
+			BackgroundColor = Color.FromHex("0a0a0a");
 		}
 
 		public ChatPage(Chat chat)
@@ -23,6 +25,7 @@ namespace nuntiusClientChat
 			InitializeComponent();
 			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
 			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+			BackgroundColor = Color.FromHex("0a0a0a");
 
 			if (chat == null)
 			{
@@ -60,7 +63,7 @@ namespace nuntiusClientChat
 			}
 
 			//Send Msg via Networkkontroller
-			//TODO: Settings Trim On/Off
+
 			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text.Trim()));
 
 			//Add Msg to View

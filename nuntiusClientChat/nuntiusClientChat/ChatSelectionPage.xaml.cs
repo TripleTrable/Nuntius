@@ -22,6 +22,8 @@ namespace nuntiusClientChat
 		public ChatSelectionPage()
 		{
 			InitializeComponent();
+			BackgroundColor = Color.FromHex("0a0a0a");
+
 			chatSelection = NetworkController.selectionController;
 
 			chatSelection.ChatAdded += Chat_Added;

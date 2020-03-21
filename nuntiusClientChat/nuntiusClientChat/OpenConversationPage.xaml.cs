@@ -14,14 +14,13 @@ namespace nuntiusClientChat
 		public OpenConversationPage()
 		{
 			InitializeComponent();
-
 		}
 
 
 
 		private async void SerchButton_Clicked(object sender, EventArgs e)
 		{
-			if (SerchEntry.Text != null)
+			if (SerchEntry.Text != null && SerchEntry.Text != "")
 			{
 				Chat chat = new Chat();
 

@@ -36,9 +36,9 @@ namespace nuntiusClientChat.Controls
 			//Adding the User Item
 			Grid.Children.Add(new Image(), 1, 1);
 			//Adding the User Alias
-			Grid.Children.Add(new Label { Text = PartnerAlias, FontAttributes = FontAttributes.Bold, VerticalTextAlignment = TextAlignment.Center }, 2, 1);
+			Grid.Children.Add(new Label { Text = PartnerAlias, FontAttributes = FontAttributes.Bold, VerticalTextAlignment = TextAlignment.Center, TextColor= Color.FromHex("ffffff") }, 2, 1);
 			//Displaing the Unred Messeges
-			Grid.Children.Add(new Label { Text = UnReadMsgs.ToString() }, 3, 1);
+			Grid.Children.Add(new Label { Text = UnReadMsgs.ToString(),TextColor = Color.FromHex("ffffff") }, 3, 1);
 
 			Grid.Children.Remove(OpenChatButten);
 			Grid.Children.Add(OpenChatButten);
@@ -56,6 +56,7 @@ namespace nuntiusClientChat.Controls
 			}
 			else
 			{
+				chatPage.Title = ChatPage.Chat.Partner;
 				await Navigation.PushAsync(chatPage, true);
 				await chatPage.ChatScrollView.ScrollToAsync(chatPage.ChatStackLayout, ScrollToPosition.End, false);
 			}

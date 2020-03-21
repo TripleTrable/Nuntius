@@ -6,7 +6,7 @@
              mc:Ignorable="d"
              x:Class="nuntiusClientChat.ChatPage">
 
-	<Grid x:Name="MainGrid">
+	<Grid x:Name="MainGrid" BackgroundColor="#202022">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="90*"/>
 			<RowDefinition Height="10*"/>
@@ -18,22 +18,22 @@
 		</Grid>
 		<Grid Grid.Row="1">
 			<RelativeLayout>
-				<BoxView x:Name="EditorBackround" BackgroundColor="#B1A6A6" Opacity="1" CornerRadius="12"		
+				<BoxView x:Name="EditorBackround" BackgroundColor="#1a1a1a" Opacity="1" 		
 				RelativeLayout.HeightConstraint=
 				"{ConstraintExpression
 					Type=RelativeToParent,
 					Property=Height,
-					Constant=-4
+					Constant=0
 				}" 
 				RelativeLayout.WidthConstraint=
 				"{ConstraintExpression
 					Type=RelativeToParent,
 					Property=Width,
-					Factor=0.97
+					Factor=1
 				}"/>
 
 				<Editor x:Name="MsgEditor" AutoSize="TextChanges" IsTabStop="True" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" Keyboard="Text" MinimumWidthRequest="100"
-						HorizontalOptions="FillAndExpand"
+						HorizontalOptions="FillAndExpand" TextColor="#ffffff"
 						RelativeLayout.WidthConstraint=
 						"{ConstraintExpression
 							Type=RelativeToParent,
@@ -50,32 +50,25 @@
 						Constant=-5
 						}"/>
 
-				<Button x:Name="MsgSend" Text="->"  Clicked="MsgSend_Clicked"
+				<Button x:Name="MsgSend" Text="➤" Clicked="MsgSend_Clicked" BackgroundColor="#1a1a1a" TextColor="#818181"
 						RelativeLayout.HeightConstraint=
 						"{ConstraintExpression 
 							Type=RelativeToParent,
 							Property=Height,
-							Factor=0.66
+							Factor=1
 						}"
 						RelativeLayout.WidthConstraint=
 						"{ConstraintExpression
 							Type=RelativeToParent,
 							Property=Width,
-							Factor=0.1
+							Factor=0.14
 						}"
 						RelativeLayout.XConstraint=
 						"{ConstraintExpression
 						Type=RelativeToView,
 						ElementName=EditorBackround,
 						Factor=0.87,Property=Width
-						}" 
-							RelativeLayout.YConstraint=
-						"{ConstraintExpression
-						Type=RelativeToView,
-						ElementName=EditorBackround,
-						Factor=0.02,Property=Width
-						}"
-						CornerRadius="15"/>
+						}" />
 			</RelativeLayout>
 		</Grid>
 	</Grid>

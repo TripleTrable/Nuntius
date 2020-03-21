@@ -17,10 +17,8 @@ namespace nuntiusClientChat.Controller
 	{
 		private static readonly Timer nagTimer = new Timer();
 
-		//public static readonly string ServerAddres = "172.16.13.28";
-		//public static readonly string ServerAddres = "10.100.100.15";
+		//public static string ServerAddres = "10.100.100.15";
 		public static string ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
-
 
 		public static bool NagTimerRun { get; set; }
 		public static ChatSelectionController selectionController = new ChatSelectionController();
@@ -292,7 +290,7 @@ namespace nuntiusClientChat.Controller
 		{
 			sendAllert++;
 			
-			if (sendAllert >= 30)
+			if (sendAllert >= 15)
 			{
 				return;
 			}

@@ -18,7 +18,7 @@ namespace nuntiusClientChat
 				LineBreakMode = LineBreakMode.WordWrap;
 
 				Text += message.Text;
-
+				TextColor = Color.FromHex("fdfdfd");
 				//HeightRequest = HeightRequest + 30;
 				VerticalTextAlignment = TextAlignment.Center;
 				FontSize = 16;
@@ -26,13 +26,13 @@ namespace nuntiusClientChat
 
 				if (send)
 				{
-					BackgroundColor = Color.LightSkyBlue;
+					BackgroundColor = Color.FromHex("397cb3");
 					//TranslationX = 100;
 					HorizontalTextAlignment = TextAlignment.End;
 				}
 				else
 				{
-					BackgroundColor = Color.Lavender;
+					BackgroundColor = Color.FromHex("1f191b");
 				};
 			});
 		}

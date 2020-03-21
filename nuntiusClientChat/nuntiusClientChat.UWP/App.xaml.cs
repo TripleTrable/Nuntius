@@ -46,7 +46,7 @@ namespace nuntiusClientChat.UWP
 
 				if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
 				{
-					//TODO: Load state from previously suspended application
+					
 				}
 
 				// Place the frame in the current Window
@@ -61,7 +61,7 @@ namespace nuntiusClientChat.UWP
 				rootFrame.Navigate(typeof(MainPage), e.Arguments);
 			}
 			// Ensure the current window is active
-			//TODO: Fix Chrash 
+		
 			try
 			{
 				Window.Current.Activate();
@@ -92,7 +92,6 @@ namespace nuntiusClientChat.UWP
 		private void OnSuspending(object sender, SuspendingEventArgs e)
 		{
 			var deferral = e.SuspendingOperation.GetDeferral();
-			//TODO: Save application state and stop any background activity
 			deferral.Complete();
 		}
 	}
