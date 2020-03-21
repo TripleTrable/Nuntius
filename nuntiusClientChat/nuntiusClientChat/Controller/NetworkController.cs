@@ -131,10 +131,18 @@ namespace nuntiusClientChat.Controller
 				sendAllert = 0;
 
 			}
-			else
+			else if (r.Type == "loginError")
 			{
+				string messg = r.Parameters[0].ToString();
+
+				DisplayError(messg);
+
 				UserController.CurrentTocken = "";
 				UserController.LogedInUser = null;
+			}
+			else
+			{
+				
 			}
 		}
 		/// <summary>
@@ -253,19 +261,19 @@ namespace nuntiusClientChat.Controller
 				catch (ArgumentNullException ane)
 				{
 					Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-					DisplayError(ane);
+					DisplayError(ane.Message);
 					return null;
 				}
 				catch (SocketException se)
 				{
 					Console.WriteLine("SocketException : {0}", se.ToString());
-					DisplayError(se);
+					DisplayError(se.Message);
 					return null;
 				}
 				catch (Exception ee)
 				{
 					Console.WriteLine("Unexpected exception : {0}", ee.ToString());
-					DisplayError(ee);
+					DisplayError(ee.Message);
 					return null;
 				}
 
@@ -273,7 +281,7 @@ namespace nuntiusClientChat.Controller
 			catch (Exception eee)
 			{
 				Console.WriteLine(eee.ToString());
-				DisplayError(eee);
+				DisplayError(eee.Message);
 				return null;
 			}
 
@@ -286,7 +294,7 @@ namespace nuntiusClientChat.Controller
 		/// Converts an exception into a display alert.
 		/// </summary>
 		/// <param name="exception"></param>
-		public static void DisplayError(Exception exception)
+		public static void DisplayError(string exception)
 		{
 			sendAllert++;
 			
@@ -298,7 +306,7 @@ namespace nuntiusClientChat.Controller
 			{
 				Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
 				{
-					Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Exception", exception.Message, "Ok");
+					Xamarin.Forms.Application.Current.MainPage.DisplayAlert("Exception", exception, "Ok");
 				});
 			}
 		}
