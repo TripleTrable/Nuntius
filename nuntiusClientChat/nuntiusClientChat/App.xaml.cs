@@ -27,7 +27,7 @@ namespace nuntiusClientChat
 			{
 				MainPage = new NavigationPage(new LoginRegisterPage());
 			}
-			//MainPage = new NavigationPage(new ChatSelectionPage());
+		
 		}
 
 		protected override void OnStart()
@@ -63,10 +63,7 @@ namespace nuntiusClientChat
 
 		protected override void OnResume()
 		{
-			//if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-			//{
-			//	StorageController.LoadeData();
-			//}
+		
 		}
 
 		private static List<Chat> saveData;

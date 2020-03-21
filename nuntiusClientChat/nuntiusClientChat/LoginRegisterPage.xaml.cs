@@ -21,6 +21,13 @@ namespace nuntiusClientChat
 
 		}
 
+		private static LoginRegisterPage loginRegister;
+
+		public static LoginRegisterPage GetLoginRegisterPage()
+		{
+			return loginRegister ?? (loginRegister = new LoginRegisterPage());
+		}
+
 
 		private void Entry_Completed(object sender, EventArgs e)
 		{
@@ -67,12 +74,9 @@ namespace nuntiusClientChat
 					{
 						if (!await SendPingAsync())
 						{
-							await DisplayAlert("Error", "Sie Haben keine verbindung zum Nuntius Server", "Ok");
+							//await DisplayAlert("Error", "Sie Haben keine verbindung zum Nuntius Server", "Ok");
 						}
-						else
-						{
-							await DisplayAlert("Error", "Überprüfen Sie Ihre eingabe", "Ok");
-						}
+						
 						return;
 					}
 				}
@@ -94,12 +98,9 @@ namespace nuntiusClientChat
 					{
 						if (!await SendPingAsync())
 						{
-							await DisplayAlert("Error", "Sie Haben keine verbindung zum Nuntius Server", "Ok");
+							//await DisplayAlert("Error", "Sie Haben keine verbindung zum Nuntius Server", "Ok");
 						}
-						else
-						{
-							await DisplayAlert("Error", "Überprüfen Sie Ihre eingabe", "Ok");
-						}
+						
 						return;
 					}
 				}
@@ -159,6 +160,13 @@ namespace nuntiusClientChat
 					PasswordEntry.IsPassword = true;
 				}
 			}
+		}
+
+		public async Task ShowDisplayAllert(string messag)
+		{
+			
+				await DisplayAlert("Fehler", messag, "Ok");
+		
 		}
 	}
 }
