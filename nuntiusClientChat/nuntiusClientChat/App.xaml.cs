@@ -27,7 +27,7 @@ namespace nuntiusClientChat
 			{
 				MainPage = new NavigationPage(new LoginRegisterPage());
 			}
-		
+
 		}
 
 		protected override void OnStart()
