@@ -16,5 +16,21 @@ namespace nuntiusClientChat
 		{
 			InitializeComponent();
 		}
+
+
+		private void ArthFinkGitHubButton_Clicked(object sender, EventArgs e)
+		{
+			Xamarin.Essentials.Browser.OpenAsync("https://github.com/ArthFink", Xamarin.Essentials.BrowserLaunchMode.External);
+		}
+
+		private void XohooxGitHubButton_Clicked(object sender, EventArgs e)
+		{
+			Xamarin.Essentials.Browser.OpenAsync("https://github.com/Xohoox", Xamarin.Essentials.BrowserLaunchMode.External);
+		}
+
+		private void NuntiusGitHubButton_Clicked(object sender, EventArgs e)
+		{
+			Xamarin.Essentials.Browser.OpenAsync("https://github.com/GSO-SW/iah71-messenger-nuntius", Xamarin.Essentials.BrowserLaunchMode.External);
+		}
 	}
 }

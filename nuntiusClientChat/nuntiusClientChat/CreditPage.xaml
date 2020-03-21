@@ -10,16 +10,21 @@
 		<StackLayout VerticalOptions="CenterAndExpand">
 			<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
 				<Label Text="GitHub: " FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#000000"/>
-				<Label Text="ArthFink" FontSize="27" FontAttributes="Bold" CharacterSpacing="2" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#696969"/>
+				<Button Text="ArthFink" FontSize="27" FontAttributes="Bold" CharacterSpacing="2" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#696969" BackgroundColor="#202022" CornerRadius="50" Clicked="ArthFinkGitHubButton_Clicked" />
 			</StackLayout>
 			<Label Text="Arthur Finkelmann" FontSize="27" FontAttributes="Bold" CharacterSpacing="5" HorizontalOptions="CenterAndExpand" TextColor="#696969"></Label>
 			<Label Text="  "></Label>
 			<StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-				<Label Text="GitHub: " FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#000000"/>
-				<Label Text="Xohoox" FontSize="27" FontAttributes="Bold" CharacterSpacing="2" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#696969"/>
+				<Label Text="GitHub: " FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#000000" />
+				<Button Text=" Xohoox " FontSize="27" FontAttributes="Bold" CharacterSpacing="2" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#696969" BackgroundColor="#202022" CornerRadius="50" Clicked="XohooxGitHubButton_Clicked" />
 			</StackLayout>
 			<Label Text="Fynn Michell-Auli" FontSize="27" FontAttributes="Bold" CharacterSpacing="5" HorizontalOptions="CenterAndExpand" TextColor="#696969"></Label>
-
+			<Label Text="   "></Label>
+			<Label Text="   "></Label>
+			<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+				<Label Text="GitHub Repository: " FontSize="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#000000"/>
+				<Button Text="Nuntius" FontSize="27" FontAttributes="Bold" CharacterSpacing="5" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" TextColor="#696969" BackgroundColor="#202022" CornerRadius="50" Clicked="NuntiusGitHubButton_Clicked" />
+			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>
