@@ -2,13 +2,15 @@
 CREATE DATABASE nuntius;
 USE nuntius;
 CREATE USER nuntiusserver;
+GRANT ALL PRIVILEGES ON *.* TO 'nuntiusserver'@'localhost';
 
 
 -- Create tabels
 CREATE TABLE users (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	alias VARCHAR(32) NOT NULL UNIQUE,
-	pwd_md5 text NOT NULL
+	pwd_md5 text NOT NULL,
+	publicKey text NOT NULL
 );
 
 CREATE TABLE token (
@@ -45,4 +47,3 @@ GRANT DELETE ON token TO nuntiusServer;
 GRANT SELECT ON messages TO nuntiusServer;
 GRANT INSERT ON messages TO nuntiusServer;
 GRANT UPDATE ON messages TO nuntiusServer;
-GRANT UPDATE ON messages_id_seq TO nuntiusServer

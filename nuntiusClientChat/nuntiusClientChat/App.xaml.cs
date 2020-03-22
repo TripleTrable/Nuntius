@@ -1,12 +1,13 @@
-﻿using Xamarin.Forms;
-using nuntiusClientChat.Controller;
-using LocalNotifications;
+﻿using nuntiusClientChat.Controller;
+using nuntiusModel;
+using System.Collections.Generic;
+using Xamarin.Forms;
 
 namespace nuntiusClientChat
 {
 	public partial class App : Application
 	{
-		int appOpend = 0;
+		private int appOpend = 0;
 		public App()
 		{
 			InitializeComponent();
@@ -17,18 +18,14 @@ namespace nuntiusClientChat
 				DependencyService.Get<INotificationManager>().Initialize();
 			}
 
-			if (Device.RuntimePlatform == Device.UWP)
-			{
-				NetworkController.SendLoginRequestAsync("WIN","WIN");				
-			}
-
-			if (Controller.UserController.LogedInUser != null)
+			if (UserController.LogedInUser != null)
 			{
 				MainPage = new NavigationPage(new ChatSelectionPage());
+
 			}
 			else
 			{
-				MainPage = new LoginRegisterPage();
+				MainPage = new NavigationPage(new LoginRegisterPage());
 			}
 
 		}
@@ -39,6 +36,7 @@ namespace nuntiusClientChat
 			if (appOpend == 1)
 			{
 				StorageController.Loade = true;
+				StorageController.LoadeData();
 			}
 			else
 			{
@@ -48,18 +46,34 @@ namespace nuntiusClientChat
 
 		protected override void OnSleep()
 		{
-			MainPage.Navigation.PopToRootAsync();
-			StorageController.SaveData();
+			if (MainPage.Navigation.NavigationStack.Count >= 0)
+			{
+				try
+				{
+					MainPage.Navigation.PopToRootAsync();
+				}
+				catch (System.Exception)
+				{
+									
+				}
+				
+			}
+			StorageController.SaveData(saveData);
 		}
 
 		protected override void OnResume()
 		{
-			//if (UserController.LogedInUser != null && UserController.CurrentTocken != "")
-			//{
-			//	StorageController.LoadeData();
-			//}
-		}
 		
+		}
+
+		private static List<Chat> saveData;
+
+		public static List<Chat> SaveData
+		{
+			get { return saveData; }
+			set { saveData = value; }
+		}
+
 
 	}
 }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using nuntiusClientChat.Controller;
 using nuntiusModel;
-using nuntiusClientChat.Controller;
-using nuntiusClientChat.Controls;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,30 +9,29 @@ namespace nuntiusClientChat
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class OpenConversationPage : ContentPage
 	{
-		ChatSelectionController selectionController = NetworkController.selectionController;
+		private ChatSelectionController selectionController = NetworkController.selectionController;
 
 		public OpenConversationPage()
 		{
 			InitializeComponent();
-			
 		}
 
 
 
 		private async void SerchButton_Clicked(object sender, EventArgs e)
 		{
-			if (SerchEntry.Text != null)
+			if (SerchEntry.Text != null && SerchEntry.Text != "")
 			{
 				Chat chat = new Chat();
 
 				chat.Partner = SerchEntry.Text;
 				chat.Owner = UserController.LogedInUser.Alias;
-			
+
 				selectionController.AddChat(chat);
 
 				await Navigation.PopAsync();
 			}
-			
+
 		}
 	}
 }

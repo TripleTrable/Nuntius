@@ -1,7 +1,6 @@
 ﻿using nuntiusClientChat.Controller;
 using nuntiusModel;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,6 +16,8 @@ namespace nuntiusClientChat
 			InitializeComponent();
 			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
 			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+
+			BackgroundColor = Color.FromHex("0a0a0a");
 		}
 
 		public ChatPage(Chat chat)
@@ -24,33 +25,40 @@ namespace nuntiusClientChat
 			InitializeComponent();
 			chatScroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Never;
 			chatScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Never;
+			BackgroundColor = Color.FromHex("0a0a0a");
 
 			if (chat == null)
 			{
 				return;
 			}
 
-			this.Chat = chat;
+			Chat = chat;
 
 			foreach (Message m in chat.ChatMessages)
 			{
-				//Sedn
+				//Send
 				if (m.From == UserController.LogedInUser.Alias)
 				{
-					ChatStackLayout.Children.Add(new MessageControll(true, m));
+					MessageControll messageControll = new MessageControll(true, m);
+			
+					ChatStackLayout.Children.Add(messageControll);
 				}
 				//Receved
 				else if (m.From != UserController.LogedInUser.Alias)
 				{
-					ChatStackLayout.Children.Add(new MessageControll(false, m));
+					MessageControll messageControll = new MessageControll(true, m);
+					
+					ChatStackLayout.Children.Add(messageControll);
 				}
 			}
 
 		}
 
-
-
-
+		/// <summary>
+		/// Send a Messag to the Server via the SendMsgRequest
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private async void MsgSend_Clicked(object sender, EventArgs e)
 		{
 			if (Chat.Partner == null || MsgEditor.Text == null || MsgEditor.Text == "")
@@ -59,12 +67,16 @@ namespace nuntiusClientChat
 			}
 
 			//Send Msg via Networkkontroller
-			//TODO: Settings Trim On/Off
-			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.Now, MsgEditor.Text.Trim()));
+
+			await Task.Run(() => NetworkController.SendMsgRequest(Chat.Partner, DateTime.UtcNow, MsgEditor.Text.Trim()));
 
 			//Add Msg to View
-			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.Now, Text = MsgEditor.Text };
-			MsgChatStack.Children.Add(new MessageControll(true, message));
+			Message message = new Message { From = UserController.LogedInUser.Alias, To = Chat.Partner, Sent = DateTime.UtcNow, Text = MsgEditor.Text };
+			
+			MessageControll messageControll = new MessageControll(true, message);
+
+			
+			MsgChatStack.Children.Add(messageControll);
 			Chat.ChatMessages.Add(message);
 			MsgEditor.Text = null;
 

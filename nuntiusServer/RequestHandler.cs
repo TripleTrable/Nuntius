@@ -1,46 +1,48 @@
+using nuntiusModel;
 using System;
 using System.Collections.Generic;
-using nuntiusModel;
 
 namespace NuntiusServer
 {
 	public static class RequstHandler
 	{
-		public static Response NewRequest(Request request)
+		public static Tuple<Response, string> NewRequest(Request request)
 		{
-			Response response = new Response();
+			Tuple<Response, string> r;
 
 			// Check the Request Type
 			switch (request.Type)
 			{
 				case "login":
-					response = LoginResponse(request);
+					r = LoginResponse(request);
 					break;
 
 				case "nagg":
-					response = NagResponse(request);
+					r = NagResponse(request);
 					break;
 
 				case "register":
-					response = RegisterResponse(request);
+					r = RegisterResponse(request);
 					break;
 
 				case "send":
-					response = SendResponse(request);
+					r = SendResponse(request);
 					break;
 
 				default:
+					Response response = new Response();
 					response.UnknownErrorRespone();
+					r = Tuple.Create(response, "");
 					break;
 			}
 
-			return response;
+			return r;
 		}
 
 		/// <summary>
 		/// Handel the login request
 		/// </summary>
-		private static Response LoginResponse(Request request)
+		private static Tuple<Response, string> LoginResponse(Request request)
 		{
 			Response response = new Response();
 			string alias = request.Parameters[0].ToString();
@@ -53,33 +55,34 @@ namespace NuntiusServer
 			else
 				response.LoginErrorResponse("Invalid alias or password");
 
-			return response;
+			return Tuple.Create(response, alias);
 		}
 
 		/// <summary>
 		/// Handel the register request
 		/// </summary>
-		private static Response RegisterResponse(Request request)
+		private static Tuple<Response, string> RegisterResponse(Request request)
 		{
 			Response response = new Response();
 
 			string alias = request.Parameters[0].ToString();
 			string password = request.Parameters[1].ToString();
+			string publicKey = request.Parameters[2].ToString();
 
 			//Was the registration successfull?
-			string token = UserController.RegisterNewUser(alias, password);
+			string token = UserController.RegisterNewUser(alias, password, publicKey);
 			if (token != null)
 				response.RegistrationSuccessResponse(token);
 			else
 				response.RegistrationErrorResponse();
 
-			return response;
+			return Tuple.Create(response, alias);
 		}
 
 		/// <summary>
 		/// Handel the send request
 		/// </summary>
-		private static Response SendResponse(Request request)
+		private static Tuple<Response, string> SendResponse(Request request)
 		{
 			Response response = new Response();
 			string token = request.Parameters[0].ToString();
@@ -88,69 +91,57 @@ namespace NuntiusServer
 			string message = request.Parameters[3].ToString();
 
 			//Check token
-			int? fromUserID = DbController.GetIdFromToken(token);
+			string fromAlias = DbController.Instance.GetAliasFromToken(token);
 
-			if (fromUserID == null)
+			if (fromAlias == null)
 			{
 				response.UnknownErrorRespone();
-				return response;
+				return Tuple.Create(response, fromAlias);
 			}
-			else if (fromUserID == 0)
+			else if (token == "")
 			{
 				response.InvalidToken();
-				return response;
+				return Tuple.Create(response, fromAlias);
 			}
 
 			//User must exist
-			if(DbController.CheckUsersAliasAvalible(toAlias))
+			if (DbController.Instance.CheckUsersAliasAvalible(toAlias))
 			{
 				response.SendErrorResponse();
-				return response;
+				return Tuple.Create(response, fromAlias);
 			}
 
 			//Save messages
-			int result = DbController.InsertNewMessage(fromUserID.Value, toAlias, send, message);
+			int result = DbController.Instance.InsertNewMessage(fromAlias, toAlias, send, message);
 
 			if (result == 0)
 			{
 				response.SendErrorResponse();
-				return response;
+				return Tuple.Create(response, fromAlias);
 			}
 
 			//succsess
 			response.SendSuccessResponse();
 
-			return response;
+			return Tuple.Create(response, fromAlias);
 		}
 
 		/// <summary>
 		/// Send unread messages
 		/// </summary>
-		private static Response NagResponse(Request request)
+		private static Tuple<Response, string> NagResponse(Request request)
 		{
 			Response response = new Response();
 
-			string userAlias = request.Parameters[0].ToString();
-			int? userID = DbController.GetIdFromToken(userAlias);
-
-			if(userID == null)
-			{
-				response.UnknownErrorRespone();
-				return response;
-			}
-			else if (userID == 0)
-			{
-				response.InvalidToken();
-				return response;
-			}
+			string token = request.Parameters[0].ToString();
 
 			//Get the unread messages
-			List<Message> newMessages = DbController.SelectUnreadMessages(userID.Value);
+			List<Message> newMessages = DbController.Instance.SelectUnreadMessages(token);
 
 			//Send the messages
 			response.ParentResponse(newMessages);
 
-			return response;
+			return Tuple.Create(response, DbController.Instance.GetAliasFromToken(token));
 		}
-	}
+}
 }

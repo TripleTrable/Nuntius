@@ -1,7 +1,7 @@
 ﻿
 using System;
 
-namespace LocalNotifications
+namespace nuntiusClientChat
 {
 	public interface INotificationManager
 	{
@@ -12,5 +12,11 @@ namespace LocalNotifications
 		int ScheduleNotification(string title, string message);
 
 		void ReceiveNotification(string title, string message);
+	}
+
+	public class NotificationEventArgs : EventArgs
+	{
+		public string Title { get; set; }
+		public string Message { get; set; }
 	}
 }
