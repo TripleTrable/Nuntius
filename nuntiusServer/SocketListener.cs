@@ -65,7 +65,8 @@ namespace NuntiusServer
 				byte[] dataBuf = new byte[received];
 				Array.Copy(buffer, dataBuf, received);
 
-				string text = serverE.DecryptString(dataBuf);
+				string text = Encoding.Unicode.GetString(dataBuf, 0, received);
+				// string text = serverE.DecryptString(dataBuf);       //Removed RSA Encryption
 				Console.WriteLine($"Request:  {text}");
 
 				//React to the request
@@ -80,7 +81,8 @@ namespace NuntiusServer
 				Encryption e  = new Encryption();
 				string key = DbController.Instance.GetUserPublicKey(t.Item2);
 				e.PublicKey = key;
-				byte[] data = e.EncryptString(json);
+				// byte[] data = e.EncryptString(json);     //Removed RSA Encryption
+				byte[] data = Encoding.Unicode.GetBytes(json);
 				socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
 			}
 			catch (Exception e)
