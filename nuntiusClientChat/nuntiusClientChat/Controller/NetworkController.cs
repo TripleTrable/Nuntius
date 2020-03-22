@@ -142,7 +142,7 @@ namespace nuntiusClientChat.Controller
 			}
 			else
 			{
-				
+
 			}
 		}
 		/// <summary>
@@ -162,7 +162,7 @@ namespace nuntiusClientChat.Controller
 			UserController.CurrentTocken = UserController.CurrentTocken;
 
 			Request request = new Request();
-			request.SendRequest(UserController.CurrentTocken, toAlias, sendTime, msgText);
+			request.SendRequest(UserController.CurrentTocken, toAlias, sendTime, msgText.Trim());
 
 			Response r = await SendReqestToServerAsync(request);
 
@@ -297,7 +297,7 @@ namespace nuntiusClientChat.Controller
 		public static void DisplayError(string exception)
 		{
 			sendAllert++;
-			
+
 			if (sendAllert >= 15)
 			{
 				return;
