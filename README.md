@@ -12,6 +12,8 @@ Notifications werden nur gesendet, wenn man nicht in dem Chat ist von dem man ei
 - IP Adress kann nicht in UWP geändert werden, da UWP seltsam ist, noch seltsamer als Xamrin Froms
   - IP kann in nuntiusClientChat/Controller/NetworkController.cs Zeile 20 eingestellt werden
   - In der Android App funktioniert dies aber
+  
+- Auf manchen Android Geräten kann der Schalter fürs Registrieren nicht betätigt werden. (Dummy Account zum Testen: Nutzername: "test-user" Password: "123") 
 
 ## Leider fehlende Features
 - Ablaufen von Tokens
