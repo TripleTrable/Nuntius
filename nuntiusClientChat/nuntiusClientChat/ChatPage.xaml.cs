@@ -46,7 +46,7 @@ namespace nuntiusClientChat
 				//Receved
 				else if (m.From != UserController.LogedInUser.Alias)
 				{
-					MessageControll messageControll = new MessageControll(true, m);
+					MessageControll messageControll = new MessageControll(false, m);
 					
 					ChatStackLayout.Children.Add(messageControll);
 				}

@@ -16,7 +16,7 @@ namespace nuntiusClientChat
 			InitializeComponent();
 
 			AliasEntry.Text = null; PasswordEntry.Text = null;
-			VersionLabel.Text = "alpha_1.0.3  " + NetworkController.ServerAddres;
+			VersionLabel.Text = "alpha_1.1.0  " + NetworkController.ServerAddres;
 			VersionLabel.TextColor = Color.FromHex("ffffff");
 
 		}
