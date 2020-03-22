@@ -380,7 +380,7 @@ namespace nuntiusClientChat
 
 		private void Credits_Clicked(object sender, EventArgs e)
 		{
-
+			Navigation.PushAsync(new CreditPage());
 		}
 		/// <summary>
 		/// Loades the saved Data 

@@ -22,14 +22,14 @@ namespace nuntiusClientChat
 
 				DateTime d = message.Sent.ToLocalTime();
 
-				Text = "\n" + Text + "\n";
+				Text = "\n" + Text + "\t\n\t";
 
 				TextColor = Color.FromHex("fdfdfd");
 
 				VerticalTextAlignment = TextAlignment.Center;
-				FontSize = 16;
+				FontSize = 17;
 
-				Margin = new Thickness(0, 0, 2, 0);
+				Margin = new Thickness(1, 0, 1, 0);
 
 				if (send)
 				{
