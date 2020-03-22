@@ -11,6 +11,8 @@
 		<ToolbarItem Text="Change Server IP" Order="Primary" Clicked="ChangeServerIP_ClickedAsync"/>
 	</ContentPage.ToolbarItems>
 
+
+
     <ContentPage.Content>
 		<Grid BackgroundColor="#202022">
             <Grid.RowDefinitions>
@@ -42,8 +44,8 @@
 						<Label Text="Willkommen" FontSize="25" HorizontalOptions="Center" TextColor="#ffffff" VerticalOptions="Center"/>
 
 
-						<Entry x:Name="AliasEntry" Placeholder="Nutzer Name: " Completed="Entry_Completed" Margin="10,50,10,0" PlaceholderColor="#9EA1A3" TextColor="#ffffff"/>
-						<Entry x:Name="PasswordEntry" IsPassword="True" Placeholder="Password: " Completed="PasswordEntry_Completed" Margin="10,10,10,0" TextColor="#ffffff" PlaceholderColor="#9EA1A3"/>
+						<Entry x:Name="AliasEntry" Placeholder="Nutzer Name: " Completed="Entry_Completed" Margin="10,50,10,0" PlaceholderColor="#9EA1A3" TextColor="#ffffff" BackgroundColor="#202022"/>
+						<Entry x:Name="PasswordEntry" IsPassword="True" Placeholder="Password: " Completed="PasswordEntry_Completed" Margin="10,10,10,0" TextColor="#ffffff" PlaceholderColor="#9EA1A3" BackgroundColor="#202022"/>
 
 						<StackLayout Orientation="Horizontal" >
 							<Switch x:Name="typSwitch" HorizontalOptions="Start" OnColor="#2CA38E" PropertyChanged="Switch_PropertyChanged" Margin="10,0,0,0" ThumbColor="#e2dddd" />

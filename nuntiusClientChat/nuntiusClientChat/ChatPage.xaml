@@ -18,7 +18,7 @@
 		</Grid>
 		<Grid Grid.Row="1">
 			<RelativeLayout>
-				<BoxView x:Name="EditorBackround" BackgroundColor="#1a1a1a" Opacity="1" 		
+				<BoxView x:Name="EditorBackround" BackgroundColor="#1a1a1a" Opacity="1"		
 				RelativeLayout.HeightConstraint=
 				"{ConstraintExpression
 					Type=RelativeToParent,
@@ -33,7 +33,7 @@
 				}"/>
 
 				<Editor x:Name="MsgEditor" AutoSize="TextChanges" IsTabStop="True" IsSpellCheckEnabled="True" IsTextPredictionEnabled="True" Keyboard="Text" MinimumWidthRequest="100"
-						HorizontalOptions="FillAndExpand" TextColor="#ffffff"
+						HorizontalOptions="FillAndExpand" TextColor="#ffffff" BackgroundColor="#202022" 
 						RelativeLayout.WidthConstraint=
 						"{ConstraintExpression
 							Type=RelativeToParent,

@@ -20,7 +20,7 @@
 		</Grid.ColumnDefinitions>
 
 		<Grid Grid.Row="0" Grid.Column="1">
-			<Entry x:Name="SerchEntry" TextColor="#ffffff" Placeholder="Enter User Name" PlaceholderColor="#9EA1A3"/>
+			<Entry x:Name="SerchEntry" TextColor="#ffffff" Placeholder="Enter User Name" PlaceholderColor="#9EA1A3" BackgroundColor="#202022"/>
 		</Grid>
 		<Grid Grid.Row="1" Grid.Column="1">
 			<Button x:Name="SerchButton" Text="Neuer Chat" Clicked="SerchButton_Clicked" TextColor="#ffffff" BackgroundColor="#2CA38E" CornerRadius="15"></Button>
