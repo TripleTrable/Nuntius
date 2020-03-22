@@ -174,7 +174,7 @@ namespace NuntiusServer
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 			command.Parameters.AddWithValue("fromAlias", fromAlias);
 			command.Parameters.AddWithValue("toAlias", toAlias);
-			command.Parameters.AddWithValue("send", NpgsqlDbType.Date, send);
+			command.Parameters.AddWithValue("send", NpgsqlDbType.Timestamp, send);
 			command.Parameters.AddWithValue("message", message);
 
 			return ExecuteNonQuerry(command);
@@ -233,7 +233,7 @@ namespace NuntiusServer
 
 			NpgsqlCommand command = new NpgsqlCommand(sql);
 			command.Parameters.AddWithValue("token", token);
-			command.Parameters.AddWithValue("exp", NpgsqlDbType.Date, DateTime.Now.AddHours(24));
+			command.Parameters.AddWithValue("exp", NpgsqlDbType.Timestamp, DateTime.Now.AddHours(24));
 			command.Parameters.AddWithValue("alias", alias);
 
 			//ToDo: unknown exeption
