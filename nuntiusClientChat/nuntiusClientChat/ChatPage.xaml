@@ -50,7 +50,7 @@
 						Constant=-5
 						}"/>
 
-				<Button x:Name="MsgSend" Text="➤" Clicked="MsgSend_Clicked" BackgroundColor="#1a1a1a" TextColor="#818181"
+				<Button x:Name="MsgSend" FontSize="32" Text="➤" Clicked="MsgSend_Clicked" BackgroundColor="#1a1a1a" TextColor="#818181"
 						RelativeLayout.HeightConstraint=
 						"{ConstraintExpression 
 							Type=RelativeToParent,
