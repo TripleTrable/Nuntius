@@ -68,13 +68,12 @@ namespace nuntiusClientChat.Controller
 				hashPwd = EncryptionMD5.GetMd5Hash(md5hash, pwd);
 			}
 
-			RSAEncryption.Encryption userEncryption = UserController.GetEncryption();
+			//RSAEncryption.Encryption userEncryption = UserController.GetEncryption();
 
 
 			Request request = new Request();
-			request.RegisterRequest(alias, hashPwd, userEncryption.PublicKey);
-
-			//var t = userEncryption.Rsa.KeySize;
+			//request.RegisterRequest(alias, hashPwd,userEncryption.PublicKey);
+			request.RegisterRequest(alias, hashPwd,"");
 
 			Response r = await SendReqestToServerAsync(request);
 
@@ -205,9 +204,9 @@ namespace nuntiusClientChat.Controller
 		{
 			byte[] bytes = new byte[4096];
 
-			Encryption serverPubKey = new Encryption();
-			serverPubKey.PublicKey = "<RSAKeyValue><Modulus>nyY7GtgnDvu0w1AJvbrLo+R7f5lRjnZsASBMfZcYGW6SXwprMtW8E+U312oXA26fl8WLoW9U/AvbYKfecm2Kdn911o6dAwT6FS0CHFQueaZF+5g5hf3SB/qBvvA/suFibAjsHkfe2ssL8j+q9x0j4axG0dBBVKOKXu/B2eePDongvRTIUgNReQ1xYWR+MYAYOqiRMstV0eVvpynUTrW8WQ3GEoL+SunpgAIkJ+1GWQje65GoEWE9TFZSWS3RkBZf2wOHPITpY7j87m+oOO8AxLOtvptNb9u0tNkPQTCu10prtFB1NuJBzn3p7IepNRd2EbawQQ8HrnvW05ksjdaeOXrnugJXXKLwScGPg0VhdjB+/aCG1n/81CGIFEL4jx4GvV+ydpgJ+VyKSqLrr62oo4rZofM7Ye3hgo4YJ6fD6V6qvswAvOY+Y36DB4juOZns9qcaBYymJaSvgPAbfkcdNvuamTOk7DDtQ1SKRw4WpDlICB16RRLeJ65cMStNoViSQsXKkflKqoDusq5cKpa0/Wp5IZk7wlSZl0mT4tS0wEuMT5a8Ob/mGcy4uqxM41/V2Cz1ONHiqlVjKsJ8v7LjebK7sIZ2qSb7wM/E2p9JNujm55+QtWODRq5b82bLnHa8oujKNXs3jmbrwfN0t0SbOD3zJ/Qkl2hyoVm8GVYyLnk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
-			//Converts the request to the JSON format
+			//Encryption serverPubKey = new Encryption();
+			//serverPubKey.PublicKey = "<RSAKeyValue><Modulus>nyY7GtgnDvu0w1AJvbrLo+R7f5lRjnZsASBMfZcYGW6SXwprMtW8E+U312oXA26fl8WLoW9U/AvbYKfecm2Kdn911o6dAwT6FS0CHFQueaZF+5g5hf3SB/qBvvA/suFibAjsHkfe2ssL8j+q9x0j4axG0dBBVKOKXu/B2eePDongvRTIUgNReQ1xYWR+MYAYOqiRMstV0eVvpynUTrW8WQ3GEoL+SunpgAIkJ+1GWQje65GoEWE9TFZSWS3RkBZf2wOHPITpY7j87m+oOO8AxLOtvptNb9u0tNkPQTCu10prtFB1NuJBzn3p7IepNRd2EbawQQ8HrnvW05ksjdaeOXrnugJXXKLwScGPg0VhdjB+/aCG1n/81CGIFEL4jx4GvV+ydpgJ+VyKSqLrr62oo4rZofM7Ye3hgo4YJ6fD6V6qvswAvOY+Y36DB4juOZns9qcaBYymJaSvgPAbfkcdNvuamTOk7DDtQ1SKRw4WpDlICB16RRLeJ65cMStNoViSQsXKkflKqoDusq5cKpa0/Wp5IZk7wlSZl0mT4tS0wEuMT5a8Ob/mGcy4uqxM41/V2Cz1ONHiqlVjKsJ8v7LjebK7sIZ2qSb7wM/E2p9JNujm55+QtWODRq5b82bLnHa8oujKNXs3jmbrwfN0t0SbOD3zJ/Qkl2hyoVm8GVYyLnk=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
+			////Converts the request to the JSON format
 			string message = JsonSerializer.Serialize(request);
 
 			try
@@ -232,7 +231,8 @@ namespace nuntiusClientChat.Controller
 					await sender.ConnectAsync(remoteEP);
 
 					// Encode the data string into a byte array.    
-					byte[] msg = serverPubKey.EncryptString(message);
+					//byte[] msg = serverPubKey.EncryptString(message);
+					byte[] msg = Encoding.Unicode.GetBytes(message);
 
 					// Send the data through the socket.    
 					int bytesSent = sender.Send(msg);
@@ -240,15 +240,15 @@ namespace nuntiusClientChat.Controller
 					// Receive the response from the remote device.    
 					int bytesRec = sender.Receive(bytes);
 
-					byte[] b = new byte[bytesRec];
+					//byte[] b = new byte[bytesRec];
 
-					for (int i = 0; i < bytesRec; i++)
-					{
-						b[i] = bytes[i];
-					}
+					//for (int i = 0; i < bytesRec; i++)
+					//{
+					//	b[i] = bytes[i];
+					//}
 
-					string text = UserController.GetEncryption().DecryptString(b);
-
+					//string text = UserController.GetEncryption().DecryptString(b);
+					string text = Encoding.Unicode.GetString(bytes, 0, bytesRec);
 					//Server Response
 					Response response = JsonSerializer.Deserialize<Response>(text);
 
