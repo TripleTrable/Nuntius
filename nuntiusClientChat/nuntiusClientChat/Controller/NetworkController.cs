@@ -287,6 +287,28 @@ namespace nuntiusClientChat.Controller
 
 		}
 
+		public static bool TryParsIp(string UserInputIP)
+		{
+			try
+			{
+				if (IPAddress.TryParse(UserInputIP, out IPAddress userIP))
+				{
+					ServerAddres = UserInputIP;
+					return true;
+				}
+				else
+				{
+					ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
+					return false;
+				}
+			}
+			catch (Exception)
+			{
+				ServerAddres = "2a02:908:5b0:a480:7286:7d52:53e5:6ce";
+				return false;
+			}
+		}
+
 		//TODO: Remove Only for debug 
 		private static int sendAllert = 0;
 

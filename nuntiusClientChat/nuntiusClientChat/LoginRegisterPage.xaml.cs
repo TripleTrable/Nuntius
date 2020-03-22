@@ -21,14 +21,6 @@ namespace nuntiusClientChat
 
 		}
 
-		private static LoginRegisterPage loginRegister;
-
-		public static LoginRegisterPage GetLoginRegisterPage()
-		{
-			return loginRegister ?? (loginRegister = new LoginRegisterPage());
-		}
-
-
 		private void Entry_Completed(object sender, EventArgs e)
 		{
 			PasswordEntry.Focus();
@@ -77,7 +69,7 @@ namespace nuntiusClientChat
 						{
 							//await DisplayAlert("Error", "Sie Haben keine verbindung zum Nuntius Server", "Ok");
 						}
-						
+
 						return;
 					}
 				}
@@ -101,7 +93,7 @@ namespace nuntiusClientChat
 						{
 							//await DisplayAlert("Error", "Sie Haben keine verbindung zum Nuntius Server", "Ok");
 						}
-						
+
 						return;
 					}
 				}
@@ -133,9 +125,13 @@ namespace nuntiusClientChat
 			//TODO: Check the ip with ipaddres.pars();
 			try
 			{
-				if (serverIP != "" && serverIP != null)
+				if (NetworkController.TryParsIp(serverIP))
 				{
-					NetworkController.ServerAddres = serverIP;
+					await DisplayAlert("Server Addresse","Ihre Eingabe wurde übernommern, die Serveraddresse lautet jetzt:\n"+NetworkController.ServerAddres, "OK");
+				}
+				else
+				{
+					await DisplayAlert("Server Addresse", "Ihre Eingebe Konnte nicht verarbeitet werden die Server Addresse ist jetzt:\n" + NetworkController.ServerAddres, "OK");
 				}
 			}
 			catch (Exception ex)
