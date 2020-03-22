@@ -276,7 +276,7 @@ namespace nuntiusClientChat
 
 				selectionTiles.Reverse();
 
-
+				chatSelectionStack.Children.Clear();
 				//add´s the new Order of Chat Seletion Tiles and Removes Duplicats
 				foreach (var item in selectionTiles)
 				{
