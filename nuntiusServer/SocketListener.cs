@@ -78,9 +78,9 @@ namespace NuntiusServer
 				System.Console.WriteLine($"Response: {json}");
 
 				//Encrypt the string
-				Encryption e  = new Encryption();
-				string key = DbController.Instance.GetUserPublicKey(t.Item2);
-				e.PublicKey = key;
+				// Encryption e  = new Encryption();
+				// string key = DbController.Instance.GetUserPublicKey(t.Item2);
+				// e.PublicKey = key;
 				// byte[] data = e.EncryptString(json);     //Removed RSA Encryption
 				byte[] data = Encoding.Unicode.GetBytes(json);
 				socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
